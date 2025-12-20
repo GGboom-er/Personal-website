@@ -1,82 +1,292 @@
 import React from 'react';
 import { Project } from '../types';
+import { LayoutSettings } from './DebugPanel';
 
 interface ShowcaseProps {
   project: Project;
+  settings: LayoutSettings;
 }
 
-const Showcase: React.FC<ShowcaseProps> = ({ project }) => {
+const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
+  // 计算图标尺寸 (2:3 比例)
+  const iconWidth = Math.round(120 * settings.iconScale / 100);
+  const iconHeight = Math.round(180 * settings.iconScale / 100);
+
+  // 统一字体大小计算
+  const fontSize = {
+    title: settings.titleSize,                       // 主标题
+    titleEn: Math.round(settings.titleSize * 0.45),  // 英文标题
+    desc: settings.descSize,                         // 描述
+    button: 12,                                      // 按钮
+    statLabel: 10,                                   // 数据标签
+    statValue: 14,                                   // 数据值
+    tag: 10,                                         // 标签
+  };
+
   return (
-    <div className="relative w-full h-full rounded-b-xl overflow-hidden group">
-      {/* Animated Background */}
+    <div className="relative w-full h-full overflow-hidden">
+      {/* Background - 背景大图 + 液态玻璃效果 */}
       <div className="absolute inset-0 bg-[#1c1c1e]">
-        {/* The actual image */}
-        <img 
-          key={project.id} // Key change forces animation
-          src={project.heroImage} 
-          alt=""
-          onError={(e) => {
-            e.currentTarget.style.display = 'none';
-          }}
-          className="w-full h-full object-cover transition-transform duration-700 ease-out animate-[fadeIn_0.5s_ease-out]"
-        />
-        {/* Gradient Overlays for text readability and aesthetic */}
+        {project.heroImage && (
+          <img
+            key={project.id}
+            src={project.heroImage}
+            alt=""
+            className="w-full h-full object-cover transition-all duration-500 ease-out"
+            style={{
+              opacity: 1,
+              filter: `blur(${settings.imageGlassBlur * 0.5}px)`,
+            }}
+          />
+        )}
+        {/* Gradient Overlays */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-[#000000]/50 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#000000]/90 via-[#000000]/30 to-transparent" />
-        <div className="absolute top-0 right-0 p-20 opacity-30 blur-3xl bg-accent-blue rounded-full w-64 h-64 mix-blend-screen pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#000000]/70 via-transparent to-transparent" />
       </div>
 
-      {/* Content Content - Scaled to 80% (0.8) */}
-      <div className="absolute bottom-0 md:bottom-[8%] left-0 right-0 w-full px-8 md:px-16 flex flex-col md:flex-row items-end justify-between gap-10 z-10 md:origin-bottom md:scale-[0.85]">
-        
-        {/* LEFT COLUMN: Icon & Main Info (Title/Desc) */}
-        <div className="flex-1 flex gap-8 items-end min-w-0 max-w-4xl">
-          {/* Icon */}
-          <img 
-            src={project.icon} 
-            alt={project.title} 
-            className="w-24 h-24 md:w-56 md:h-56 rounded-[2rem] shadow-2xl border border-white/10 shrink-0 object-cover"
-          />
-          <div className="mb-2 flex-1">
-            <div className="flex items-center gap-3 text-accent-blue font-bold text-sm md:text-lg tracking-widest uppercase mb-4">
-              <span>{project.category}</span>
-              <span className="w-1.5 h-1.5 bg-gray-500 rounded-full"></span>
-              <span>{project.role}</span>
+      {/* Content - 支持上移偏移 */}
+      <div
+        className="absolute inset-x-0 bottom-0 flex items-end p-5 md:p-8 z-10"
+        style={{ bottom: `${settings.contentOffset}%` }}
+      >
+        <div className="w-full flex flex-col lg:flex-row items-end justify-between gap-4">
+
+          {/* LEFT: Icon + Info */}
+          <div className="flex gap-4 items-end flex-1 min-w-0">
+            {/* Icon - 2:3 比例 + 液态玻璃效果 + 边缘模糊 */}
+            <div
+              className="relative shrink-0 rounded-xl overflow-hidden"
+              style={{
+                width: iconWidth,
+                height: iconHeight,
+              }}
+            >
+              {/* 主图片 */}
+              <img
+                src={project.icon}
+                alt={project.title}
+                className="w-full h-full object-cover"
+              />
+              {/* 边缘模糊遮罩层 */}
+              {settings.imageGlassBlur > 0 && (
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    backdropFilter: `blur(${settings.imageGlassBlur * 2}px)`,
+                    WebkitBackdropFilter: `blur(${settings.imageGlassBlur * 2}px)`,
+                    maskImage: `linear-gradient(to bottom,
+                      black 0%, transparent 15%, transparent 85%, black 100%),
+                      linear-gradient(to right,
+                      black 0%, transparent 15%, transparent 85%, black 100%)`,
+                    WebkitMaskImage: `linear-gradient(to bottom,
+                      black 0%, transparent 15%, transparent 85%, black 100%),
+                      linear-gradient(to right,
+                      black 0%, transparent 15%, transparent 85%, black 100%)`,
+                    maskComposite: 'intersect',
+                    WebkitMaskComposite: 'source-in',
+                  }}
+                />
+              )}
+              {/* 玻璃厚度边框 - 彩色折射 */}
+              <div
+                className="absolute inset-0 rounded-xl pointer-events-none"
+                style={{
+                  border: `${settings.glassThickness}px solid transparent`,
+                  borderImage: `linear-gradient(135deg,
+                    rgba(255,100,100,${settings.glassRefraction / 100 * 0.5}),
+                    rgba(255,255,100,${settings.glassRefraction / 100 * 0.3}),
+                    rgba(100,255,100,${settings.glassRefraction / 100 * 0.5}),
+                    rgba(100,100,255,${settings.glassRefraction / 100 * 0.3}),
+                    rgba(255,100,255,${settings.glassRefraction / 100 * 0.5})) 1`,
+                  boxShadow: `
+                    inset 0 ${settings.glassThickness}px ${settings.glassThickness * 2}px rgba(255,255,255,${settings.glassRefraction / 100 * 0.3}),
+                    inset 0 -${settings.glassThickness}px ${settings.glassThickness * 2}px rgba(0,0,0,${settings.glassRefraction / 100 * 0.2}),
+                    0 0 ${settings.imageGlassBorder / 2}px rgba(255,255,255,${settings.imageGlassBorder / 100 * 0.4}),
+                    0 8px 32px rgba(0,0,0,${settings.imageGlassShadow / 100})
+                  `,
+                }}
+              />
+              {/* 高光层 */}
+              <div
+                className="absolute inset-0 rounded-xl pointer-events-none"
+                style={{
+                  background: `linear-gradient(135deg,
+                    rgba(255,255,255,${settings.glassRefraction / 100 * 0.15}) 0%,
+                    transparent 50%,
+                    rgba(0,0,0,${settings.glassRefraction / 100 * 0.1}) 100%)`,
+                }}
+              />
             </div>
-            
-            <h1 className="text-4xl md:text-7xl font-bold text-white mb-6 tracking-tight leading-none shadow-black drop-shadow-lg">
-              {project.title}
-            </h1>
-            <p className="text-gray-300 text-base md:text-2xl leading-relaxed opacity-90 line-clamp-3 font-light drop-shadow-md">
-              {project.description}
-            </p>
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN: Action & Stats - Moved to the far right */}
-        <div className="flex flex-col items-end gap-8 shrink-0 pb-2 pl-10">
-          {/* Main Action Button */}
-          <button className="bg-white text-black font-extrabold text-xl md:text-3xl py-6 px-20 rounded-full hover:bg-gray-200 transition-colors transform active:scale-95 shadow-[0_0_35px_rgba(255,255,255,0.3)]">
-            VIEW
-          </button>
-          
-          {/* Glassmorphism Stats Box */}
-          <div className="flex gap-10 bg-black/40 backdrop-blur-xl px-12 py-8 rounded-3xl border border-white/10 shadow-2xl">
-            {project.stats.map((stat, idx) => (
-              <div key={idx} className="text-center px-2 border-r border-white/10 last:border-0 min-w-[80px]">
-                <div className="text-gray-400 text-xs md:text-sm uppercase font-bold mb-3 tracking-wider">{stat.label}</div>
-                <div className="text-white font-bold text-xl md:text-4xl font-sans">{stat.value}</div>
+            {/* 文本区域 - 从顶部对齐，文字向下扩展 */}
+            <div className="flex-1 min-w-0 flex flex-col justify-start" style={{ height: iconHeight }}>
+              {/* 双语标题 - 顶部 */}
+              <div className="shrink-0 mb-2">
+                <h1
+                  className="font-bold text-white tracking-tight leading-tight drop-shadow-lg"
+                  style={{ fontSize: fontSize.title }}
+                >
+                  {project.title}
+                </h1>
+                {project.titleEn && (
+                  <h2
+                    className="text-gray-400 font-medium tracking-wide mt-0.5"
+                    style={{ fontSize: fontSize.titleEn }}
+                  >
+                    {project.titleEn}
+                  </h2>
+                )}
               </div>
-            ))}
+
+              {/* 描述 - 向下扩展，支持换行 */}
+              <p
+                className="text-gray-300 leading-relaxed opacity-90 drop-shadow-md overflow-hidden flex-1"
+                style={{
+                  fontSize: fontSize.desc,
+                  display: '-webkit-box',
+                  WebkitLineClamp: settings.descLines,
+                  WebkitBoxOrient: 'vertical',
+                  lineHeight: 1.6,
+                  whiteSpace: 'pre-line',
+                }}
+              >
+                {project.description}
+              </p>
+            </div>
           </div>
 
-          {/* Tags */}
-          <div className="flex gap-4 justify-end flex-wrap max-w-[500px] justify-items-end">
-             {project.tags.map(tag => (
-               <span key={tag} className="text-xs md:text-base font-medium bg-black/60 backdrop-blur-md text-gray-300 px-6 py-2.5 rounded-xl border border-white/10 hover:bg-white/10 transition-colors cursor-default">
-                 {tag}
-               </span>
-             ))}
+          {/* RIGHT: Action Buttons + Stats + Tags */}
+          <div className="flex flex-col items-end gap-3 shrink-0">
+            {/* 操作按钮 - 毛玻璃风格 */}
+            <div className="flex gap-2">
+              {project.bilibiliUrl && (
+                <a
+                  href={project.bilibiliUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-gradient-to-br from-[#00A1D6]/90 to-[#0088cc]/90
+                    backdrop-blur-xl
+                    text-white font-bold py-2.5 px-5 rounded-full
+                    border border-[#00A1D6]/50
+                    shadow-[0_4px_16px_rgba(0,161,214,0.4),inset_0_1px_0_rgba(255,255,255,0.2)]
+                    hover:from-[#00B5E5] hover:to-[#00A1D6]
+                    hover:shadow-[0_6px_24px_rgba(0,161,214,0.5),inset_0_1px_0_rgba(255,255,255,0.3)]
+                    hover:-translate-y-0.5
+                    active:scale-[0.97] active:translate-y-0
+                    active:shadow-[0_2px_8px_rgba(0,161,214,0.3),inset_0_2px_4px_rgba(0,0,0,0.1)]
+                    transition-all duration-200 ease-out
+                    inline-flex items-center gap-1.5"
+                  style={{ fontSize: fontSize.button }}
+                >
+                  <i className="fa-brands fa-bilibili"></i>
+                  Bilibili
+                </a>
+              )}
+              {project.youtubeUrl && (
+                <a
+                  href={project.youtubeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-gradient-to-br from-[#FF0000]/90 to-[#cc0000]/90
+                    backdrop-blur-xl
+                    text-white font-bold py-2.5 px-5 rounded-full
+                    border border-[#FF0000]/50
+                    shadow-[0_4px_16px_rgba(255,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.2)]
+                    hover:from-[#ff2020] hover:to-[#FF0000]
+                    hover:shadow-[0_6px_24px_rgba(255,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.3)]
+                    hover:-translate-y-0.5
+                    active:scale-[0.97] active:translate-y-0
+                    active:shadow-[0_2px_8px_rgba(255,0,0,0.3),inset_0_2px_4px_rgba(0,0,0,0.1)]
+                    transition-all duration-200 ease-out
+                    inline-flex items-center gap-1.5"
+                  style={{ fontSize: fontSize.button }}
+                >
+                  <i className="fa-brands fa-youtube"></i>
+                  YouTube
+                </a>
+              )}
+              {!project.bilibiliUrl && !project.youtubeUrl && (
+                <button
+                  className="bg-gradient-to-br from-white/90 to-white/80
+                    backdrop-blur-xl
+                    text-black font-bold py-2.5 px-6 rounded-full
+                    border border-white/50
+                    shadow-[0_4px_16px_rgba(255,255,255,0.2),inset_0_1px_0_rgba(255,255,255,0.5)]
+                    hover:from-white hover:to-white/90
+                    hover:shadow-[0_6px_24px_rgba(255,255,255,0.3)]
+                    hover:-translate-y-0.5
+                    active:scale-[0.97]
+                    transition-all duration-200 ease-out"
+                  style={{ fontSize: fontSize.button }}
+                >
+                  VIEW
+                </button>
+              )}
+            </div>
+
+            {/* 数据统计 - Apple Liquid Glass + 厚度感 */}
+            <div
+              className="flex gap-4 px-5 py-3 rounded-2xl relative overflow-hidden"
+              style={{
+                background: `rgba(255,255,255,${settings.glassBgOpacity / 100 * 1.25})`,
+                backdropFilter: `blur(${settings.glassBlur}px) saturate(${settings.glassSaturate}%)`,
+                WebkitBackdropFilter: `blur(${settings.glassBlur}px) saturate(${settings.glassSaturate}%)`,
+                border: `${settings.glassThickness}px solid transparent`,
+                borderImage: `linear-gradient(135deg,
+                  rgba(255,200,200,${settings.glassRefraction / 100 * 0.4}),
+                  rgba(200,255,200,${settings.glassRefraction / 100 * 0.3}),
+                  rgba(200,200,255,${settings.glassRefraction / 100 * 0.4})) 1`,
+                boxShadow: `
+                  0 8px 32px rgba(31, 38, 135, ${settings.glassShadowOpacity / 100 * 1.3}),
+                  inset 0 ${settings.glassThickness}px ${settings.glassThickness * 2}px rgba(255,255,255,${settings.glassRefraction / 100 * 0.25}),
+                  inset 0 -${settings.glassThickness}px ${settings.glassThickness * 2}px rgba(0,0,0,${settings.glassRefraction / 100 * 0.15})
+                `,
+              }}
+            >
+              {project.stats.map((stat, idx) => (
+                <div key={idx} className="text-center px-2 border-r border-white/20 last:border-0">
+                  <div
+                    className="text-white/60 uppercase font-semibold mb-0.5 tracking-wider"
+                    style={{ fontSize: fontSize.statLabel }}
+                  >
+                    {stat.label}
+                  </div>
+                  <div
+                    className="text-white font-bold"
+                    style={{ fontSize: fontSize.statValue }}
+                  >
+                    {stat.value}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* 标签 - Apple Liquid Glass */}
+            <div className="flex gap-1.5 flex-wrap justify-end max-w-[350px]">
+              {project.tags.map(tag => (
+                <span
+                  key={tag}
+                  className="font-medium px-3 py-1 rounded-full text-white cursor-default transition-all duration-200 relative overflow-hidden"
+                  style={{
+                    fontSize: fontSize.tag,
+                    background: `rgba(255,255,255,${settings.glassBgOpacity / 100 * 1.5})`,
+                    backdropFilter: `blur(${settings.glassBlur * 0.5}px) saturate(${settings.glassSaturate}%)`,
+                    WebkitBackdropFilter: `blur(${settings.glassBlur * 0.5}px) saturate(${settings.glassSaturate}%)`,
+                    border: `${settings.glassThickness * 0.6}px solid transparent`,
+                    borderImage: `linear-gradient(135deg,
+                      rgba(255,180,180,${settings.glassRefraction / 100 * 0.35}),
+                      rgba(180,255,180,${settings.glassRefraction / 100 * 0.25}),
+                      rgba(180,180,255,${settings.glassRefraction / 100 * 0.35})) 1`,
+                    boxShadow: `
+                      0 4px 12px rgba(0,0,0,${settings.glassShadowOpacity / 100}),
+                      inset 0 ${settings.glassThickness * 0.4}px ${settings.glassThickness * 0.8}px rgba(255,255,255,${settings.glassRefraction / 100 * 0.2}),
+                      inset 0 -${settings.glassThickness * 0.4}px ${settings.glassThickness * 0.8}px rgba(0,0,0,${settings.glassRefraction / 100 * 0.1})
+                    `,
+                  }}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>

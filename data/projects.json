@@ -1,0 +1,215 @@
+{
+  "projects": [
+    {
+      "id": "1",
+      "title": "两不疑 I",
+      "titleEn": "No Doubt In Us I",
+      "description": "由纸飞机动画制作，改编自同名人气漫画。本项目确立了独特的\"三渲二\"NPR渲染流程，在保留漫画笔触的同时实现了3D动画的流畅运镜，是国漫宫廷恋爱喜剧题材的技术与艺术标杆。\n\n豆瓣高分佳作，B站播放量破3亿。",
+      "icon": "/images/cards/lby1.jpg",
+      "heroImage": "/images/heroes/lby1.jpg",
+      "tags": ["纸飞机动画", "豆瓣高分", "NPR渲染"],
+      "stats": [
+        { "label": "播放量", "value": "3.3亿" },
+        { "label": "画风", "value": "三渲二" },
+        { "label": "评分", "value": "9.6" }
+      ],
+      "section": "Projects",
+      "bilibiliUrl": "https://www.bilibili.com/bangumi/media/md28223053",
+      "youtubeUrl": "https://www.youtube.com/results?search_query=两不疑+动画"
+    },
+    {
+      "id": "2",
+      "title": "两不疑 II",
+      "titleEn": "No Doubt In Us II",
+      "description": "延续第一季高口碑，第二季在渲染引擎上进行深度升级。重点强化宫廷夜景的光影氛围与服饰材质细腻度，剧情深入家国权谋，视觉表现力更加深沉大气。\n\nB站评分9.8，系列累计播放超5亿。",
+      "icon": "/images/cards/lby2.jpg",
+      "heroImage": "/images/heroes/lby2.jpg",
+      "tags": ["光影升级", "B站9.8分", "权谋恋爱"],
+      "stats": [
+        { "label": "播放量", "value": "2亿+" },
+        { "label": "画风", "value": "写实NPR" },
+        { "label": "评分", "value": "9.8" }
+      ],
+      "section": "Projects",
+      "bilibiliUrl": "https://www.bilibili.com/bangumi/media/md28235416",
+      "youtubeUrl": "https://www.youtube.com/results?search_query=两不疑+第二季"
+    },
+    {
+      "id": "3",
+      "title": "LOL S11全球总决赛",
+      "titleEn": "Burn It All Down - Worlds 2021",
+      "description": "英雄联盟S11全球总决赛主题曲MV，由绘梦动画(Haoliners)与Riot Games联合制作。采用高精度二维转描与CG场景合成技术，展现Faker等顶级选手的英雄化身。\n\nYouTube播放量破亿，全球电竞顶级视觉盛宴。",
+      "icon": "/images/cards/lol2021.jpg",
+      "heroImage": "/images/heroes/lol2021.jpg",
+      "tags": ["Riot Games", "YouTube破亿", "全球同步"],
+      "stats": [
+        { "label": "播放量", "value": "1亿+" },
+        { "label": "画风", "value": "2D转描" },
+        { "label": "影响", "value": "全球爆款" }
+      ],
+      "section": "Projects",
+      "bilibiliUrl": "https://www.bilibili.com/video/BV11f4y1j766",
+      "youtubeUrl": "https://www.youtube.com/watch?v=PWMzmWYoLcE"
+    },
+    {
+      "id": "4",
+      "title": "凸变英雄 X",
+      "titleEn": "To Be Hero X",
+      "description": "导演李豪凌野心之作，B站联合Aniplex出品。探索二维手绘与写实化三维场景的极致融合，在赛博朋克风格的雨夜都市中呈现独特\"实感\"美学。\n\nB站评分9.5，追番440万，入选优秀网络视听作品，全球190+国家发行。",
+      "icon": "/images/cards/tbhx.jpg",
+      "heroImage": "/images/heroes/tbhx.jpg",
+      "tags": ["B站×Aniplex", "9.5分神作", "全球发行"],
+      "stats": [
+        { "label": "播放量", "value": "3.1亿" },
+        { "label": "追番", "value": "440万" },
+        { "label": "评分", "value": "9.5" }
+      ],
+      "section": "Projects",
+      "bilibiliUrl": "https://www.bilibili.com/bangumi/media/md28339512",
+      "youtubeUrl": "https://www.youtube.com/results?search_query=To+Be+Hero+X"
+    },
+    {
+      "id": "5",
+      "title": "喵十一",
+      "titleEn": "Ruthless Blade",
+      "description": "心藏猛虎，长剑天涯，念江湖道义不如一壶浊酒。\n侠肝义胆，儿女情长，思恩怨情仇不胜一枕黄粱。\n中国动漫金龙奖第21届（2024年）：最佳短片奖金奖。\n第52届（2025年）安妮奖：最佳动画短片奖。\n入围广岛动画季、翠贝卡电影节（唯一中国动画）。\n入围第61届（2024年）奥斯卡最佳动画短片提名。",
+      "icon": "/images/cards/meow11.jpg",
+      "heroImage": "/images/heroes/meow11.jpg",
+      "tags": ["翠贝卡入围", "广岛动画季", "胶囊计划"],
+      "stats": [
+        { "label": "制作", "value": "2年" },
+        { "label": "画风", "value": "水墨武侠" },
+        { "label": "荣誉", "value": "国际入围" }
+      ],
+      "section": "Projects",
+      "bilibiliUrl": "https://www.bilibili.com/bangumi/play/ss48544",
+      "youtubeUrl": "https://www.youtube.com/results?search_query=喵十一+动画"
+    }
+  ],
+
+  "profile": [
+    {
+      "id": "p1",
+      "title": "Senior Animation Engineer",
+      "titleEn": "",
+      "description": "专注于动画渲染管线开发与视觉特效合成。在多个S级动画项目中担任技术美术负责人，致力于提升国产动画的工业化水准与视觉表现力。",
+      "icon": "/images/profile/experience.jpg",
+      "heroImage": "/images/heroes/experience.jpg",
+      "tags": ["Pipeline", "Unreal", "Blender"],
+      "stats": [
+        { "label": "Years", "value": "4+" },
+        { "label": "Projects", "value": "10+" },
+        { "label": "Location", "value": "Shanghai" }
+      ],
+      "section": "Profile"
+    },
+    {
+      "id": "p2",
+      "title": "Digital Arts Academy",
+      "titleEn": "",
+      "description": "数字媒体技术学士学位。主修计算机图形学与三维动画制作，毕业设计获得校级优秀奖。",
+      "icon": "/images/profile/education.jpg",
+      "heroImage": "/images/heroes/education.jpg",
+      "tags": ["CG", "BFA", "Top 5%"],
+      "stats": [
+        { "label": "GPA", "value": "3.8" },
+        { "label": "Degree", "value": "BFA" },
+        { "label": "Grad", "value": "2020" }
+      ],
+      "section": "Profile"
+    },
+    {
+      "id": "p3",
+      "title": "Open Source Tools",
+      "titleEn": "",
+      "description": "为 Blender 和 Three.js 社区贡献多个渲染优化插件和材质库。",
+      "icon": "/images/profile/opensource.jpg",
+      "heroImage": "/images/heroes/opensource.jpg",
+      "tags": ["Blender", "Python", "Shaders"],
+      "stats": [
+        { "label": "Plugins", "value": "5" },
+        { "label": "Stars", "value": "800+" },
+        { "label": "Users", "value": "2k+" }
+      ],
+      "section": "Profile"
+    }
+  ],
+
+  "skills": [
+    {
+      "id": "s1",
+      "title": "Real-time Rendering",
+      "titleEn": "",
+      "description": "精通 UE5 Lumen/Nanite 技术栈及 Unity HDRP 管线。擅长编写 HLSL/GLSL 自定义着色器以实现独特的美术风格。",
+      "icon": "/images/skills/rendering.jpg",
+      "heroImage": "/images/heroes/rendering.jpg",
+      "tags": ["UE5", "Unity", "Shader"],
+      "stats": [
+        { "label": "Exp", "value": "5 Years" },
+        { "label": "Level", "value": "Expert" },
+        { "label": "Shaders", "value": "100+" }
+      ],
+      "section": "Skills"
+    },
+    {
+      "id": "s2",
+      "title": "Compositing & VFX",
+      "titleEn": "",
+      "description": "熟练使用 Nuke 和 After Effects 进行后期合成、调色及特效制作。能够处理复杂的图层混合与光影匹配。",
+      "icon": "/images/skills/vfx.jpg",
+      "heroImage": "/images/heroes/vfx.jpg",
+      "tags": ["Nuke", "AE", "Particles"],
+      "stats": [
+        { "label": "Exp", "value": "4 Years" },
+        { "label": "Tool", "value": "Nuke" },
+        { "label": "Shots", "value": "500+" }
+      ],
+      "section": "Skills"
+    },
+    {
+      "id": "s3",
+      "title": "3D Pipeline Dev",
+      "titleEn": "",
+      "description": "使用 Python 开发 DCC 软件（Maya/Blender）插件，优化资产导入导出及自动化渲染流程，提升团队协作效率。",
+      "icon": "/images/skills/pipeline.jpg",
+      "heroImage": "/images/heroes/pipeline.jpg",
+      "tags": ["Python", "Maya", "API"],
+      "stats": [
+        { "label": "Exp", "value": "3 Years" },
+        { "label": "Lang", "value": "Python" },
+        { "label": "Tools", "value": "10+" }
+      ],
+      "section": "Skills"
+    },
+    {
+      "id": "s4",
+      "title": "AI Gen & Style Transfer",
+      "titleEn": "",
+      "description": "探索 Stable Diffusion 与 Midjourney 在动画前期概念设计与纹理生成中的应用，研究 AI 辅助的风格化滤镜方案。",
+      "icon": "/images/skills/ai.jpg",
+      "heroImage": "/images/heroes/ai.jpg",
+      "tags": ["SD", "LoRA", "ControlNet"],
+      "stats": [
+        { "label": "Exp", "value": "2 Years" },
+        { "label": "Focus", "value": "Concept" },
+        { "label": "Models", "value": "50+" }
+      ],
+      "section": "Skills"
+    },
+    {
+      "id": "s5",
+      "title": "Motion Graphics",
+      "titleEn": "",
+      "description": "具备优秀的动态图形设计能力，能够制作高质量的片头、UI 动效及宣传 PV。",
+      "icon": "/images/skills/motion.jpg",
+      "heroImage": "/images/heroes/motion.jpg",
+      "tags": ["C4D", "Motion", "Typography"],
+      "stats": [
+        { "label": "Exp", "value": "3 Years" },
+        { "label": "Tool", "value": "C4D" },
+        { "label": "Works", "value": "30+" }
+      ],
+      "section": "Skills"
+    }
+  ]
+}
