@@ -99,8 +99,6 @@ const FONT_OPTIONS = [
   { label: '霞鹜文楷', value: '"LXGW WenKai", sans-serif' },
   { label: 'Inter + Noto', value: 'Inter, "Noto Sans SC", sans-serif' },
   { label: '思源黑体', value: '"Noto Sans SC", sans-serif' },
-  { label: '鸿蒙字体', value: '"HarmonyOS Sans SC", sans-serif' },
-  { label: '阿里普惠体', value: '"Alibaba PuHuiTi", sans-serif' },
   { label: '系统默认', value: '-apple-system, BlinkMacSystemFont, sans-serif' },
 ];
 
