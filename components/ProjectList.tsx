@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Project } from '../types';
 import { LayoutSettings } from './DebugPanel';
 import { GlassCard } from './glass';
+import { getAssetPath } from '../utils/assetPath';
 
 interface ProjectListProps {
   projects: Project[];
@@ -62,7 +63,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, activeId, onSelect,
             style={{ width: baseCardWidth, flexShrink: 0 }}
           >
             <GlassCard
-              image={project.icon}
+              image={getAssetPath(project.icon)}
               isActive={project.id === activeId}
               onClick={() => onSelect(project)}
               settings={settings}

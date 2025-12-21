@@ -3,6 +3,7 @@ import { Project } from '../types';
 import { LayoutSettings } from './DebugPanel';
 import { ImageFrame, getFlowGradient } from './glass';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import { getAssetPath } from '../utils/assetPath';
 
 interface ShowcaseProps {
   project: Project;
@@ -296,7 +297,7 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
         {project.heroImage && (
           <img
             key={`${project.id}-main`}
-            src={project.heroImage}
+            src={getAssetPath(project.heroImage)}
             alt=""
             className="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out"
             style={{
@@ -385,7 +386,7 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
                   </>
                 )}
                 <ImageFrame
-                  src={project.icon}
+                  src={getAssetPath(project.icon)}
                   alt={project.title}
                   aspectRatio="2/3"
                   borderThickness={borderThickness}
@@ -501,7 +502,7 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
                   </>
                 )}
                 <ImageFrame
-                  src={project.icon}
+                  src={getAssetPath(project.icon)}
                   alt={project.title}
                   aspectRatio="2/3"
                   borderThickness={borderThickness}

@@ -9,6 +9,7 @@ import { useBreakpoint } from './hooks/useBreakpoint';
 import { GlassSettingsProvider, useGlassSettings } from './contexts/GlassSettingsContext';
 import { PROJECTS } from './constants';
 import { Project } from './types';
+import { getAssetPath } from './utils/assetPath';
 
 // 内部应用组件 - 使用 Context
 const AppContent: React.FC = () => {
@@ -65,7 +66,7 @@ const AppContent: React.FC = () => {
       <div className="absolute inset-0 z-0 overflow-hidden">
         {/* 基础背景图 bg.png */}
         <img
-          src="./images/bg.png"
+          src={getAssetPath('images/bg.png')}
           alt=""
           className="absolute inset-0 w-full h-full object-cover"
           style={{ opacity: 0.8 }}
@@ -75,7 +76,7 @@ const AppContent: React.FC = () => {
         {heroImage && (
           <img
             key={`global-bg-${activeProject?.id}`}
-            src={heroImage}
+            src={getAssetPath(heroImage)}
             alt=""
             className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-out"
             style={{
