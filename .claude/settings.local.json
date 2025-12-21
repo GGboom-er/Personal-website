@@ -16,7 +16,10 @@
       "Bash(ls -la \"Y:\\\\GGbommer\\\\scripts\\\\Personal-website\\\\styles\"\" 2>/dev/null || ls \"Y:/GGbommer/scripts/Personal-website/styles/\" 2>/dev/null || echo \"styles folder not found \")",
       "Bash(find:*)",
       "Bash(ls -la \"Y:\\\\GGbommer\\\\scripts\\\\Personal-website\\\\utils\"\" 2>/dev/null || echo \"Utils directory does not exist \")",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(npm install:*)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(npm uninstall:*)"
     ]
   }
 }
