@@ -65,7 +65,7 @@ const AppContent: React.FC = () => {
       <div className="absolute inset-0 z-0 overflow-hidden">
         {/* 基础背景图 bg.png */}
         <img
-          src="/images/bg.png"
+          src="./images/bg.png"
           alt=""
           className="absolute inset-0 w-full h-full object-cover"
           style={{ opacity: 0.8 }}
