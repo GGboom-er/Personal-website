@@ -10,7 +10,9 @@
       "Bash(git push:*)",
       "Bash(git pull:*)",
       "Bash(git stash:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(curl:*)",
+      "Bash(ls -la \"Y:\\\\GGbommer\\\\scripts\\\\Personal-website\\\\public\\\\images\\\\cards\"\" 2>/dev/null || ls -la \"Y:/GGbommer/scripts/Personal-website/public/images/cards/ \")"
     ]
   }
 }
