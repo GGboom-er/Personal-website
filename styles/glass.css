@@ -343,7 +343,69 @@ input[type="range"]::-moz-range-thumb {
   cursor: grab;
 }
 
-/* ========== 动画 ========== */
+/* ========== 玻璃滚动条 ========== */
+/* Webkit (Chrome, Safari, Edge) */
+.glass-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.glass-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 3px;
+}
+
+.glass-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: background 0.2s ease;
+}
+
+.glass-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.glass-scroll::-webkit-scrollbar-thumb:active {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.glass-scroll::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox */
+.glass-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.03);
+}
+
+/* 隐藏滚动条但保留滚动功能 */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ========== 流光旋转动画 ========== */
+@property --flow-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes flowRotate {
+  from { --flow-angle: 0deg; }
+  to { --flow-angle: 360deg; }
+}
+
+.flow-animate {
+  animation: flowRotate 2s linear infinite;
+}
+
+/* ========== 玻璃闪烁动画 ========== */
 @keyframes glassShimmer {
   0% {
     background-position: -200% 0;

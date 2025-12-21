@@ -45,13 +45,13 @@ const Divider: React.FC<DividerProps> = ({ onDrag, debugMode = false, settings }
 
   return (
     <div
-      className="w-full h-4 shrink-0 cursor-ns-resize relative group transition-all duration-300 z-20"
+      className="w-full h-2 shrink-0 cursor-ns-resize relative group transition-all duration-300 z-20"
       style={{
         background: isDragging
-          ? `linear-gradient(90deg, transparent 0%, rgba(255,255,255,${settings.glassBgOpacity / 100 * 2}) 20%, rgba(255,255,255,${settings.glassBgOpacity / 100 * 2}) 80%, transparent 100%)`
+          ? `linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 20%, rgba(255,255,255,0.05) 80%, transparent 100%)`
           : 'transparent',
-        backdropFilter: isDragging ? `blur(${settings.glassBlur * 0.5}px) saturate(${settings.glassSaturate}%)` : 'none',
-        WebkitBackdropFilter: isDragging ? `blur(${settings.glassBlur * 0.5}px) saturate(${settings.glassSaturate}%)` : 'none',
+        backdropFilter: isDragging ? `blur(${settings.glassBlur * 0.5}px)` : 'none',
+        WebkitBackdropFilter: isDragging ? `blur(${settings.glassBlur * 0.5}px)` : 'none',
       }}
       onMouseDown={handleMouseDown}
     >
@@ -59,39 +59,26 @@ const Divider: React.FC<DividerProps> = ({ onDrag, debugMode = false, settings }
       <div
         className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px transition-all duration-300"
         style={{
-          background: `linear-gradient(90deg, transparent 0%, rgba(255,255,255,${settings.glassBorderOpacity / 100 * 1.7}) 15%, rgba(255,255,255,${settings.glassBorderOpacity / 100 * 1.7}) 85%, transparent 100%)`,
-          boxShadow: isDragging ? `0 0 8px rgba(255,255,255,${settings.glassShadowOpacity / 100 * 2})` : 'none',
+          background: `linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 20%, rgba(255,255,255,0.2) 80%, transparent 100%)`,
+          boxShadow: isDragging ? `0 0 6px rgba(255,255,255,0.4)` : 'none',
         }}
       />
 
-      {/* 中心拖动手柄 - 液态玻璃胶囊 */}
+      {/* 中心拖动手柄 - 缩小 */}
       <div
-        className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-12 h-1.5 rounded-full transition-all duration-300"
+        className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-8 h-1 rounded-full transition-all duration-300"
         style={{
-          background: isDragging
-            ? `rgba(255,255,255,${settings.glassBgOpacity / 100 * 7.5})`
-            : `rgba(255,255,255,${settings.glassBgOpacity / 100 * 3})`,
-          backdropFilter: `blur(${settings.glassBlur * 0.5}px)`,
-          WebkitBackdropFilter: `blur(${settings.glassBlur * 0.5}px)`,
+          background: isDragging ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.12)',
           boxShadow: isDragging
-            ? `0 2px 8px rgba(255,255,255,${settings.glassShadowOpacity / 100 * 2}), inset 0 1px 0 rgba(255,255,255,${settings.glassBorderOpacity / 100 * 3})`
-            : `0 2px 4px rgba(0,0,0,${settings.glassShadowOpacity / 100}), inset 0 1px 0 rgba(255,255,255,${settings.glassBorderOpacity / 100})`,
+            ? '0 1px 6px rgba(255,255,255,0.3), inset 0 0.5px 0 rgba(255,255,255,0.4)'
+            : '0 1px 3px rgba(0,0,0,0.3), inset 0 0.5px 0 rgba(255,255,255,0.1)',
         }}
       />
 
       {/* 调试模式下显示拖动提示 */}
       {debugMode && (
-        <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
-          <span
-            className="text-white text-[10px] px-3 py-1.5 rounded-full whitespace-nowrap"
-            style={{
-              background: `rgba(15,15,35,${0.65 + settings.glassBgOpacity / 100 * 2})`,
-              backdropFilter: `blur(${settings.glassBlur * 0.75}px) saturate(${settings.glassSaturate}%)`,
-              WebkitBackdropFilter: `blur(${settings.glassBlur * 0.75}px) saturate(${settings.glassSaturate}%)`,
-              border: `1px solid rgba(255,255,255,${settings.glassBorderOpacity / 100 * 1.3})`,
-              boxShadow: `0 4px 16px rgba(0,0,0,${settings.glassShadowOpacity / 100 * 2}), inset 0 1px 0 rgba(255,255,255,${settings.glassBorderOpacity / 100 * 0.7})`,
-            }}
-          >
+        <div className="absolute left-1/2 -translate-x-1/2 -top-6 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+          <span className="text-white text-[10px] px-2 py-1 rounded-full whitespace-nowrap bg-black/60 backdrop-blur-sm border border-white/20">
             拖动调整
           </span>
         </div>

@@ -3,39 +3,19 @@ import Sidebar from './components/Sidebar';
 import Showcase from './components/Showcase';
 import ProjectList from './components/ProjectList';
 import Divider from './components/Divider';
-import DebugPanel, { LayoutSettings } from './components/DebugPanel';
+import DebugPanel from './components/DebugPanel';
+import BottomTabBar from './components/layout/BottomTabBar';
+import { useBreakpoint } from './hooks/useBreakpoint';
+import { GlassSettingsProvider, useGlassSettings } from './contexts/GlassSettingsContext';
 import { PROJECTS } from './constants';
 import { Project } from './types';
 
-// 默认布局设置
-const DEFAULT_SETTINGS: LayoutSettings = {
-  // 布局参数
-  showcaseHeight: 49.68,   // 详情区高度 (可拖动分隔线调整)
-  cardScale: 80,           // 卡片缩放
-  contentOffset: 8,        // 内容上移
-  titleSize: 28,           // 标题字号
-  descSize: 12,            // 描述字号
-  descLines: 4,            // 描述行数
-  iconScale: 130,          // 图标缩放
-  // 液态玻璃参数
-  glassBlur: 0,            // 模糊程度 (px)
-  glassSaturate: 100,      // 饱和度 (%)
-  glassBgOpacity: 0,       // 背景透明度 (%)
-  glassBorderOpacity: 15,  // 边框透明度 (%)
-  glassShadowOpacity: 50,  // 阴影透明度 (%)
-  // 图片液态效果
-  imageGlassBlur: 0,       // 图片边缘模糊 (px)
-  imageGlassBorder: 40,    // 图片边框发光 (%)
-  imageGlassShadow: 80,    // 图片阴影 (%)
-  // 玻璃厚度感
-  glassThickness: 2,       // 玻璃边缘厚度 (px)
-  glassRefraction: 30,     // 折射色彩强度 (%)
-};
-
-const App: React.FC = () => {
+// 内部应用组件 - 使用 Context
+const AppContent: React.FC = () => {
   const [activeView, setActiveView] = useState('Projects');
   const [debugVisible, setDebugVisible] = useState(false);
-  const [settings, setSettings] = useState<LayoutSettings>(DEFAULT_SETTINGS);
+  const { settings, setSettings } = useGlassSettings();
+  const { isMobile, isTablet } = useBreakpoint();
 
   // Filter projects based on the active sidebar view
   const currentProjects = useMemo(() => {
@@ -73,25 +53,69 @@ const App: React.FC = () => {
     });
   }, []);
 
+  // 当前项目的背景图
+  const heroImage = activeProject?.heroImage;
+
   return (
     <div
       className="flex h-screen min-h-[500px] text-white font-sans overflow-hidden relative"
-      style={{
-        backgroundImage: 'url(/images/bg.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
+      style={{ background: '#0a0a0c' }}
     >
+      {/* 全局背景层 - 与整体布局融合 */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        {/* 基础背景图 bg.png */}
+        <img
+          src="/images/bg.png"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ opacity: 0.8 }}
+        />
+
+        {/* 氛围背景层 - 当前项目图片高度模糊叠加 */}
+        {heroImage && (
+          <img
+            key={`global-bg-${activeProject?.id}`}
+            src={heroImage}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-out"
+            style={{
+              transform: 'scale(1.2)',
+              filter: `blur(${40 + settings.imageEdgeBlur}px) saturate(120%)`,
+              opacity: 0.35,
+              mixBlendMode: 'soft-light',
+            }}
+          />
+        )}
+
+        {/* 渐变叠加 - 统一视觉 */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `
+              radial-gradient(ellipse 150% 100% at 50% 0%, transparent 0%, rgba(10,10,12,0.5) 50%, rgba(10,10,12,0.85) 100%),
+              linear-gradient(to bottom, transparent 0%, rgba(10,10,12,0.2) 30%, rgba(10,10,12,0.5) 70%, rgba(10,10,12,0.8) 100%)
+            `,
+          }}
+        />
+
+        {/* 噪点纹理 */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.02]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+          }}
+        />
+      </div>
+
       {/* Left Sidebar */}
       <Sidebar activeView={activeView} onSelectView={setActiveView} settings={settings} />
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col h-full min-w-0 overflow-hidden">
+      <main className="flex-1 flex flex-col h-full min-w-0 overflow-hidden relative z-10">
 
         {/* Top Section: Showcase */}
         <div
-          className="w-full relative bg-black overflow-hidden shrink-0"
+          className="w-full relative overflow-hidden shrink-0"
           style={{ height: `${settings.showcaseHeight}%` }}
         >
           {activeProject ? (
@@ -111,8 +135,9 @@ const App: React.FC = () => {
             background: `linear-gradient(to bottom, rgba(255,255,255,${settings.glassBgOpacity / 100}) 0%, rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.4}) 100%)`,
             backdropFilter: `blur(${settings.glassBlur}px) saturate(${settings.glassSaturate}%)`,
             WebkitBackdropFilter: `blur(${settings.glassBlur}px) saturate(${settings.glassSaturate}%)`,
-            borderTop: `1px solid rgba(255,255,255,${settings.glassBorderOpacity / 100})`,
-            boxShadow: `inset 0 1px 0 rgba(255,255,255,${settings.glassBorderOpacity / 100 * 0.7}), 0 -8px 32px rgba(0,0,0,${settings.glassShadowOpacity / 100})`,
+            borderTop: `1px solid rgba(255,255,255,0.15)`,
+            boxShadow: `inset 0 1px 0 rgba(255,255,255,0.1), 0 -8px 32px rgba(0,0,0,0.3)`,
+            paddingBottom: isMobile ? '4rem' : 0,
           }}
         >
           <ProjectList
@@ -132,7 +157,25 @@ const App: React.FC = () => {
         visible={debugVisible}
         onToggle={() => setDebugVisible(v => !v)}
       />
+
+      {/* Mobile Bottom Tab Bar */}
+      {isMobile && (
+        <BottomTabBar
+          activeView={activeView}
+          onSelectView={setActiveView}
+          settings={settings}
+        />
+      )}
     </div>
+  );
+};
+
+// 根组件 - 提供 Context
+const App: React.FC = () => {
+  return (
+    <GlassSettingsProvider>
+      <AppContent />
+    </GlassSettingsProvider>
   );
 };
 
