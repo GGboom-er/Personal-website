@@ -10,20 +10,18 @@ interface ShowcaseProps {
   settings: LayoutSettings;
 }
 
-// 布局模式：wide（宽屏）、medium（平板）、mobile（手机）
-type LayoutMode = 'wide' | 'medium' | 'mobile';
+// 布局模式 (移除 narrow，只保留 wide 和 medium)
+type LayoutMode = 'wide' | 'medium';
 
 const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
   const { width, height, isMobile } = useBreakpoint();
   const aspectRatio = width / height;
 
-  // 三阶段布局模式
+  // 两阶段布局模式 (移除 narrow)
   const layoutMode: LayoutMode = useMemo(() => {
-    // 手机优先判断
-    if (isMobile || width < 640) return 'mobile';
     if (aspectRatio > 1.4) return 'wide';      // 宽屏：完全横向
-    return 'medium';                            // 中等：图文横向 + View下方
-  }, [aspectRatio, isMobile, width]);
+    return 'medium';                            // 中等及以下：图文横向 + View下方
+  }, [aspectRatio]);
 
   // 平滑过渡因子
   const transitionFactor = useMemo(() => {
@@ -32,20 +30,22 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
     return (aspectRatio - 0.7) / 0.9;
   }, [aspectRatio]);
 
-  // 基于容器的缩放因子 - 移动端减小
-  const baseScale = settings.iconScale / 100;
-  const scale = layoutMode === 'mobile' ? baseScale * 0.6 : baseScale;
+  // 移动端缩放因子 - 小屏幕轻微缩小
+  const mobileScale = useMemo(() => {
+    if (width >= 768) return 1;          // 平板及以上不缩放
+    if (width >= 480) return 0.9;        // 手机横屏轻微缩小
+    return 0.8;                          // 手机竖屏缩小更多
+  }, [width]);
 
-  // 图标尺寸 - 移动端显著缩小
-  const iconWidth = layoutMode === 'mobile'
-    ? Math.round(80 * baseScale * 0.7)  // 移动端更小的图标
-    : Math.round(120 * scale);
-  const iconHeight = layoutMode === 'mobile'
-    ? Math.round(120 * baseScale * 0.7)
-    : Math.round(180 * scale);
+  // 基于容器的缩放因子 - 结合移动端缩放
+  const scale = (settings.iconScale / 100) * mobileScale;
+
+  // 图标尺寸 - 固定大小，不随布局模式变化
+  const iconWidth = Math.round(120 * scale);
+  const iconHeight = Math.round(180 * scale);
 
   // 文字缩放 - 根据布局模式调整
-  const textScale = layoutMode === 'mobile' ? 0.75 : layoutMode === 'medium' ? 0.9 : 1;
+  const textScale = layoutMode === 'medium' ? 0.9 : 1;
   const fontSize = {
     title: Math.round(settings.titleSize * scale * textScale),
     titleEn: Math.round(settings.titleSize * 0.45 * scale * textScale),
@@ -59,10 +59,10 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
   // View 区域缩放 - 根据布局模式调整
   const viewScale = layoutMode === 'medium' ? 0.9 : 1;
 
-  // 间距 - View 区域使用 viewScale
+  // 间距 - View 区域使用 viewScale，移动端减小间距
   const spacing = {
     gap: Math.round(14 * scale),
-    padding: Math.round(16 * scale),
+    padding: Math.round((isMobile ? 10 : 16) * scale),
     buttonPadding: `${Math.round(8 * scale * viewScale)}px ${Math.round(14 * scale * viewScale)}px`,
     statPadding: `${Math.round(8 * scale * viewScale)}px ${Math.round(12 * scale * viewScale)}px`,
     tagPadding: `${Math.round(4 * scale * viewScale)}px ${Math.round(8 * scale * viewScale)}px`,
@@ -584,91 +584,6 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
 
             {/* Bottom: View Section */}
             <ViewSection />
-          </div>
-        )}
-
-        {/* Mobile Layout: 紧凑布局，图标小，文字优先 */}
-        {layoutMode === 'mobile' && (
-          <div
-            className="flex flex-col h-full transition-all duration-500"
-            style={{ gap: Math.round(8 * baseScale) }}
-          >
-            {/* Top: 小图标 + 标题（横向） */}
-            <div className="flex items-center" style={{ gap: Math.round(10 * baseScale) }}>
-              {/* 小图标 */}
-              <div className="relative shrink-0" style={{ width: iconWidth, height: iconHeight }}>
-                <ImageFrame
-                  src={getAssetPath(project.icon)}
-                  alt={project.title}
-                  aspectRatio="2/3"
-                  borderThickness={borderThickness * 0.7}
-                  borderGlow={settings.borderGlow * 0.5}
-                  borderRefraction={settings.borderRefraction * 0.5}
-                  imageShadow={settings.imageShadow * 0.5}
-                  imageEdgeBlur={settings.imageEdgeBlur * 0.5}
-                  distortionIntensity={0}
-                  distortionScale={0}
-                  borderRadius="0.5rem"
-                  className="w-full h-full"
-                />
-              </div>
-
-              {/* 标题区 */}
-              <div className="flex-1 min-w-0">
-                <h1
-                  className="font-bold tracking-tight leading-tight truncate"
-                  style={{
-                    fontSize: Math.round(settings.titleSize * 0.8),
-                    fontFamily: settings.fontFamily,
-                    color: settings.titleColor,
-                  }}
-                >
-                  {project.title}
-                </h1>
-                {project.titleEn && (
-                  <h2
-                    className="font-medium tracking-wide truncate opacity-70"
-                    style={{
-                      fontSize: Math.round(settings.titleSize * 0.35),
-                      fontFamily: settings.fontFamily,
-                      color: settings.titleColor,
-                    }}
-                  >
-                    {project.titleEn}
-                  </h2>
-                )}
-              </div>
-            </div>
-
-            {/* Middle: 描述文字（全宽，可滚动） */}
-            <div className="flex-1 overflow-y-auto no-scrollbar">
-              <p
-                className="leading-relaxed"
-                style={{
-                  fontSize: Math.round(settings.descSize * 0.9),
-                  lineHeight: 1.6,
-                  wordBreak: 'break-word',
-                  whiteSpace: 'pre-line',
-                  fontFamily: settings.fontFamily,
-                  color: settings.descColor,
-                }}
-              >
-                {project.description}
-              </p>
-            </div>
-
-            {/* Bottom: 简化的标签 */}
-            <div className="shrink-0 flex flex-wrap gap-1">
-              {project.tags?.slice(0, 3).map((tag, i) => (
-                <span
-                  key={i}
-                  className="px-2 py-0.5 rounded-full text-white/80 bg-white/10"
-                  style={{ fontSize: Math.round(9 * baseScale) }}
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
           </div>
         )}
       </div>
