@@ -8,7 +8,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', '"Noto Sans SC"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        sans: ['"LXGW WenKai"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
       },
       colors: {
         'app-bg': '#000000',

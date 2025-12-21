@@ -64,6 +64,7 @@ const ImageFrame: React.FC<ImageFrameProps> = ({
         <img
           src={src}
           alt={alt}
+          loading="lazy"
           className="w-full h-full object-cover transition-transform duration-500"
           style={{
             transform: `scale(${1 + distortNorm * 0.02})`,

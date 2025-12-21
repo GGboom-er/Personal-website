@@ -1,15 +1,17 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react';
 import Sidebar from './components/Sidebar';
 import Showcase from './components/Showcase';
 import ProjectList from './components/ProjectList';
 import Divider from './components/Divider';
-import DebugPanel from './components/DebugPanel';
-import BottomTabBar from './components/layout/BottomTabBar';
 import { useBreakpoint } from './hooks/useBreakpoint';
 import { GlassSettingsProvider, useGlassSettings } from './contexts/GlassSettingsContext';
 import { PROJECTS } from './constants';
 import { Project } from './types';
 import { getAssetPath } from './utils/assetPath';
+
+// 懒加载组件 - 按需加载，减少首屏体积
+const DebugPanel = lazy(() => import('./components/DebugPanel'));
+const BottomTabBar = lazy(() => import('./components/layout/BottomTabBar'));
 
 // 内部应用组件 - 使用 Context
 const AppContent: React.FC = () => {
@@ -151,21 +153,25 @@ const AppContent: React.FC = () => {
 
       </main>
 
-      {/* Debug Panel */}
-      <DebugPanel
-        settings={settings}
-        onChange={setSettings}
-        visible={debugVisible}
-        onToggle={() => setDebugVisible(v => !v)}
-      />
-
-      {/* Mobile Bottom Tab Bar */}
-      {isMobile && (
-        <BottomTabBar
-          activeView={activeView}
-          onSelectView={setActiveView}
+      {/* Debug Panel - 懒加载 */}
+      <Suspense fallback={null}>
+        <DebugPanel
           settings={settings}
+          onChange={setSettings}
+          visible={debugVisible}
+          onToggle={() => setDebugVisible(v => !v)}
         />
+      </Suspense>
+
+      {/* Mobile Bottom Tab Bar - 懒加载 */}
+      {isMobile && (
+        <Suspense fallback={null}>
+          <BottomTabBar
+            activeView={activeView}
+            onSelectView={setActiveView}
+            settings={settings}
+          />
+        </Suspense>
       )}
     </div>
   );

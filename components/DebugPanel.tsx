@@ -97,9 +97,6 @@ const SectionTitle: React.FC<{ title: string; icon: string }> = ({ title, icon }
 // 字体选项
 const FONT_OPTIONS = [
   { label: '霞鹜文楷', value: '"LXGW WenKai", sans-serif' },
-  { label: 'Inter + Noto', value: 'Inter, "Noto Sans SC", sans-serif' },
-  { label: '思源黑体', value: '"Noto Sans SC", sans-serif' },
-  { label: '系统默认', value: '-apple-system, BlinkMacSystemFont, sans-serif' },
 ];
 
 // 颜色选择组件
