@@ -196,15 +196,15 @@ const DebugPanel: React.FC<DebugPanelProps> = ({ settings, onChange, visible, on
 
       {/* Tabs */}
       <div className="flex border-b border-white/10">
-        {[
+        {([
           { id: 'layout', label: '布局', icon: 'fa-solid fa-th-large' },
           { id: 'style', label: '样式', icon: 'fa-solid fa-palette' },
           { id: 'glass', label: '玻璃', icon: 'fa-solid fa-droplet' },
           { id: 'glow', label: '发光', icon: 'fa-solid fa-sparkles' },
-        ].map((tab) => (
+        ] as const).map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
+            onClick={() => setActiveTab(tab.id)}
             className={`flex-1 py-2 text-[10px] font-medium transition-all
               ${activeTab === tab.id
                 ? 'text-white bg-white/10 border-b-2 border-blue-400'

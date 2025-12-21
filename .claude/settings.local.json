@@ -13,7 +13,10 @@
       "Bash(cat:*)",
       "Bash(curl:*)",
       "Bash(ls -la \"Y:\\\\GGbommer\\\\scripts\\\\Personal-website\\\\public\\\\images\\\\cards\"\" 2>/dev/null || ls -la \"Y:/GGbommer/scripts/Personal-website/public/images/cards/ \")",
-      "Bash(ls -la \"Y:\\\\GGbommer\\\\scripts\\\\Personal-website\\\\styles\"\" 2>/dev/null || ls \"Y:/GGbommer/scripts/Personal-website/styles/\" 2>/dev/null || echo \"styles folder not found \")"
+      "Bash(ls -la \"Y:\\\\GGbommer\\\\scripts\\\\Personal-website\\\\styles\"\" 2>/dev/null || ls \"Y:/GGbommer/scripts/Personal-website/styles/\" 2>/dev/null || echo \"styles folder not found \")",
+      "Bash(find:*)",
+      "Bash(ls -la \"Y:\\\\GGbommer\\\\scripts\\\\Personal-website\\\\utils\"\" 2>/dev/null || echo \"Utils directory does not exist \")",
+      "Bash(grep:*)"
     ]
   }
 }
