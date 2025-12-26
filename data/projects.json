@@ -4,212 +4,103 @@
       "id": "1",
       "title": "两不疑 I",
       "titleEn": "No Doubt In Us I",
-      "description": "由纸飞机动画制作，改编自同名人气漫画。本项目确立了独特的\"三渲二\"NPR渲染流程，在保留漫画笔触的同时实现了3D动画的流畅运镜，是国漫宫廷恋爱喜剧题材的技术与艺术标杆。\n\n豆瓣高分佳作，B站播放量破3亿。",
+      "description": "改编自绿野千鹤同名人气漫画，由纸飞机动画制作。采用2.5D还原漫画风格的制作手法，在保留漫画线条质感的同时实现流畅的3D动画运镜，开创国漫宫廷恋爱喜剧的技术新标杆。\n豆瓣评分7.3，系列累计播放超3.3亿，追番539万。\n------主要参与剧集中角色、道具绑定制作以及部分绑定、动画工具开发。",
       "icon": "./images/cards/lby1.jpg",
       "heroImage": "./images/heroes/lby1.jpg",
-      "tags": ["纸飞机动画", "豆瓣高分", "NPR渲染"],
+      "tags": ["纸飞机动画", "漫改佳作", "2.5D风格"],
       "stats": [
         { "label": "播放量", "value": "3.3亿" },
-        { "label": "画风", "value": "三渲二" },
-        { "label": "评分", "value": "9.6" }
+        { "label": "追番", "value": "539万" },
+        { "label": "豆瓣", "value": "7.3" }
       ],
       "section": "Projects",
-      "bilibiliUrl": "https://www.bilibili.com/bangumi/media/md28223053",
-      "youtubeUrl": "https://www.youtube.com/results?search_query=两不疑+动画"
+      "bilibiliUrl": "https://www.bilibili.com/bangumi/play/ep395848/?share_source=copy_web",
+      "youtubeUrl": "https://youtu.be/hvF1SzaAcT8?si=KAMERYl91DGkY_BJ"
     },
     {
       "id": "2",
       "title": "两不疑 II",
       "titleEn": "No Doubt In Us II",
-      "description": "延续第一季高口碑，第二季在渲染引擎上进行深度升级。重点强化宫廷夜景的光影氛围与服饰材质细腻度，剧情深入家国权谋，视觉表现力更加深沉大气。\n\nB站评分9.8，系列累计播放超5亿。",
+      "description": "由纸飞机动画承制，B站、连尚文学、漫漫APP联合出品。第二季在渲染引擎上进行深度升级，重点强化宫廷夜景的光影氛围与服饰材质细腻度，剧情深入家国权谋。\n豆瓣评分7.8，2023年Q1播放量1.3亿，系列口碑持续走高。\n------深度参与并且主要制作大部分角色、道具绑定。",
       "icon": "./images/cards/lby2.jpg",
       "heroImage": "./images/heroes/lby2.jpg",
-      "tags": ["光影升级", "B站9.8分", "权谋恋爱"],
+      "tags": ["纸飞机动画", "光影升级", "权谋恋爱"],
       "stats": [
-        { "label": "播放量", "value": "2亿+" },
-        { "label": "画风", "value": "写实NPR" },
-        { "label": "评分", "value": "9.8" }
+        { "label": "播放量", "value": "2亿" },
+        { "label": "画风", "value": "2.5D" },
+        { "label": "豆瓣", "value": "7.8" }
       ],
       "section": "Projects",
-      "bilibiliUrl": "https://www.bilibili.com/bangumi/media/md28235416",
-      "youtubeUrl": "https://www.youtube.com/results?search_query=两不疑+第二季"
+      "bilibiliUrl": "https://www.bilibili.com/bangumi/play/ep682846/?share_source=copy_web",
+      "youtubeUrl": "https://youtu.be/HLyfU1HLNg0?si=d7A8OrCUqyQqayVZ"
     },
     {
       "id": "3",
       "title": "LOL S11全球总决赛",
       "titleEn": "Burn It All Down - Worlds 2021",
-      "description": "英雄联盟S11全球总决赛主题曲MV，由绘梦动画(Haoliners)与Riot Games联合制作。采用高精度二维转描与CG场景合成技术，展现Faker等顶级选手的英雄化身。\n\nYouTube播放量破亿，全球电竞顶级视觉盛宴。",
+      "description": "英雄联盟S11全球总决赛主题曲MV，\nB站播放2000万+，YouTube播放2500万+。\n全片143个镜头，22位顶级职业选手以2D+3D双形态呈现。\n------研发骨骼驱动（约束、八方UV球驱动提升绑定表现效果。",
       "icon": "./images/cards/lol2021.jpg",
       "heroImage": "./images/heroes/lol2021.jpg",
-      "tags": ["Riot Games", "YouTube破亿", "全球同步"],
+      "tags": ["Riot×绘梦", "2d+3d", "音乐MV"],
       "stats": [
-        { "label": "播放量", "value": "1亿+" },
-        { "label": "画风", "value": "2D转描" },
-        { "label": "影响", "value": "全球爆款" }
+        { "label": "B站", "value": "2000万" },
+        { "label": "YouTube", "value": "2500万" },
+        { "label": "视效", "value": "三渲二" }
       ],
       "section": "Projects",
-      "bilibiliUrl": "https://www.bilibili.com/video/BV11f4y1j766",
-      "youtubeUrl": "https://www.youtube.com/watch?v=PWMzmWYoLcE"
+      "bilibiliUrl": "https://www.bilibili.com/video/BV17Q4y1C7rP/?share_source=copy_web",
+      "youtubeUrl": "https://youtu.be/1Z6CHioIn3s?si=O1gGJpeUxitlZ76-"
     },
     {
       "id": "4",
-      "title": "凸变英雄 X",
-      "titleEn": "To Be Hero X",
-      "description": "导演李豪凌野心之作，B站联合Aniplex出品。探索二维手绘与写实化三维场景的极致融合，在赛博朋克风格的雨夜都市中呈现独特\"实感\"美学。\n\nB站评分9.5，追番440万，入选优秀网络视听作品，全球190+国家发行。",
-      "icon": "./images/cards/tbhx.jpg",
-      "heroImage": "./images/heroes/tbhx.jpg",
-      "tags": ["B站×Aniplex", "9.5分神作", "全球发行"],
+      "title": "凸变英雄 X PV",
+      "titleEn": "To Be Hero X - Promotional Video",
+      "description": "《凸变英雄X》系列预告片，由哔梦联合纸飞机、铅元素等国内顶尖动画工作室制作。采用独特的二维手绘与三维场景融合技术，营造视觉张力。\n2022首款PV播放600万+，定档预告片播放1300万+，YouTube OP播放169万。\n------参与制作所有角色、道具绑定，初次尝试表情贴图绑定方案并构建整体制作流程。",
+      "icon": "./images/cards/tbxPV.jpg",
+      "heroImage": "./images/heroes/tbxPV.png",
+      "tags": ["哔梦制作", "画风凸变", "预告PV"],
       "stats": [
-        { "label": "播放量", "value": "3.1亿" },
-        { "label": "追番", "value": "440万" },
-        { "label": "评分", "value": "9.5" }
+        { "label": "首款PV", "value": "600万" },
+        { "label": "定档PV", "value": "1300万" },
+        { "label": "视效", "value": "三渲二" }
       ],
       "section": "Projects",
-      "bilibiliUrl": "https://www.bilibili.com/bangumi/media/md28339512",
-      "youtubeUrl": "https://www.youtube.com/results?search_query=To+Be+Hero+X"
+      "bilibiliUrl": "https://www.bilibili.com/video/BV1xx411c7mD",
+      "youtubeUrl": "https://youtu.be/DY-0ntGxoPo?si=Ipd9yL-UIwURY5HB"
     },
     {
       "id": "5",
       "title": "喵十一",
       "titleEn": "Ruthless Blade",
-      "description": "心藏猛虎，长剑天涯，念江湖道义不如一壶浊酒。\n侠肝义胆，儿女情长，思恩怨情仇不胜一枕黄粱。\n中国动漫金龙奖第21届（2024年）：最佳短片奖金奖。\n第52届（2025年）安妮奖：最佳动画短片奖。\n入围广岛动画季、翠贝卡电影节（唯一中国动画）。\n入围第61届（2024年）奥斯卡最佳动画短片提名。",
+      "description": "心藏猛虎，长剑天涯，念江湖道义不如一壶浊酒\n侠肝义胆，儿女情长，思恩怨情仇不胜一枕黄粱\n第21届金龙奖：最佳短片金奖+最佳音乐奖+最佳配音奖\n第52届安妮奖：最佳短片提名\n广岛国际动画节：唯一入围中国动画\n加拿大奇幻电影节：观众选择最佳动画短片金奖。\n------负责所有绑定制作，初次探索blender、ue渲染流程。",
       "icon": "./images/cards/meow11.jpg",
       "heroImage": "./images/heroes/meow11.jpg",
-      "tags": ["翠贝卡入围", "广岛动画季", "胶囊计划"],
+      "tags": ["金龙奖金奖", "安妮奖提名", "胶囊计划"],
       "stats": [
-        { "label": "制作", "value": "2年" },
-        { "label": "画风", "value": "水墨武侠" },
-        { "label": "荣誉", "value": "国际入围" }
+        { "label": "时长", "value": "12分钟" },
+        { "label": "制作", "value": "Maya+Blender+UE" },
+        { "label": "视效", "value": "水墨武侠三渲二" }
       ],
       "section": "Projects",
-      "bilibiliUrl": "https://www.bilibili.com/bangumi/play/ss48544",
-      "youtubeUrl": "https://www.youtube.com/results?search_query=喵十一+动画"
-    }
-  ],
-
-  "profile": [
-    {
-      "id": "p1",
-      "title": "Senior Animation Engineer",
-      "titleEn": "",
-      "description": "专注于动画渲染管线开发与视觉特效合成。在多个S级动画项目中担任技术美术负责人，致力于提升国产动画的工业化水准与视觉表现力。",
-      "icon": "./images/profile/experience.jpg",
-      "heroImage": "./images/heroes/experience.jpg",
-      "tags": ["Pipeline", "Unreal", "Blender"],
-      "stats": [
-        { "label": "Years", "value": "4+" },
-        { "label": "Projects", "value": "10+" },
-        { "label": "Location", "value": "Shanghai" }
-      ],
-      "section": "Profile"
+      "bilibiliUrl": "https://www.bilibili.com/bangumi/play/ep788062/?share_source=copy_web",
+      "youtubeUrl": "https://youtu.be/skIoRG4B2hU?si=FZ9LB5d0BxpZCre3"
     },
     {
-      "id": "p2",
-      "title": "Digital Arts Academy",
-      "titleEn": "",
-      "description": "数字媒体技术学士学位。主修计算机图形学与三维动画制作，毕业设计获得校级优秀奖。",
-      "icon": "./images/profile/education.jpg",
-      "heroImage": "./images/heroes/education.jpg",
-      "tags": ["CG", "BFA", "Top 5%"],
+      "id": "6",
+      "title": "凸变英雄 X",
+      "titleEn": "To Be Hero X",
+      "description": "首部\"首播即全球同播\"国产原创动画，8国语言版本，覆盖190+国家/地区。\n日本富士电视台接档《海贼王》黄金档播出，MAL评分8.49(近两年国产最高)，IMDB评分8.6。\n------升级ADV表情、身体绑定提升绑定变形效果，同时制定角色绑定规范并应用。\n上线表情贴图绑定提升三渲二表情表现。\n使用usd构建maya、blender、ue管线",
+      "icon": "./images/cards/tbhx.jpg",
+      "heroImage": "./images/heroes/tbhx.jpg",
+      "tags": ["B站×Aniplex", "全球同播", "泽野弘之"],
       "stats": [
-        { "label": "GPA", "value": "3.8" },
-        { "label": "Degree", "value": "BFA" },
-        { "label": "Grad", "value": "2020" }
+        { "label": "播放量", "value": "3.1亿" },
+        { "label": "追番", "value": "440万" },
+        { "label": "MAL", "value": "8.49" }
       ],
-      "section": "Profile"
-    },
-    {
-      "id": "p3",
-      "title": "Open Source Tools",
-      "titleEn": "",
-      "description": "为 Blender 和 Three.js 社区贡献多个渲染优化插件和材质库。",
-      "icon": "./images/profile/opensource.jpg",
-      "heroImage": "./images/heroes/opensource.jpg",
-      "tags": ["Blender", "Python", "Shaders"],
-      "stats": [
-        { "label": "Plugins", "value": "5" },
-        { "label": "Stars", "value": "800+" },
-        { "label": "Users", "value": "2k+" }
-      ],
-      "section": "Profile"
-    }
-  ],
-
-  "skills": [
-    {
-      "id": "s1",
-      "title": "Real-time Rendering",
-      "titleEn": "",
-      "description": "精通 UE5 Lumen/Nanite 技术栈及 Unity HDRP 管线。擅长编写 HLSL/GLSL 自定义着色器以实现独特的美术风格。",
-      "icon": "./images/skills/rendering.jpg",
-      "heroImage": "./images/heroes/rendering.jpg",
-      "tags": ["UE5", "Unity", "Shader"],
-      "stats": [
-        { "label": "Exp", "value": "5 Years" },
-        { "label": "Level", "value": "Expert" },
-        { "label": "Shaders", "value": "100+" }
-      ],
-      "section": "Skills"
-    },
-    {
-      "id": "s2",
-      "title": "Compositing & VFX",
-      "titleEn": "",
-      "description": "熟练使用 Nuke 和 After Effects 进行后期合成、调色及特效制作。能够处理复杂的图层混合与光影匹配。",
-      "icon": "./images/skills/vfx.jpg",
-      "heroImage": "./images/heroes/vfx.jpg",
-      "tags": ["Nuke", "AE", "Particles"],
-      "stats": [
-        { "label": "Exp", "value": "4 Years" },
-        { "label": "Tool", "value": "Nuke" },
-        { "label": "Shots", "value": "500+" }
-      ],
-      "section": "Skills"
-    },
-    {
-      "id": "s3",
-      "title": "3D Pipeline Dev",
-      "titleEn": "",
-      "description": "使用 Python 开发 DCC 软件（Maya/Blender）插件，优化资产导入导出及自动化渲染流程，提升团队协作效率。",
-      "icon": "./images/skills/pipeline.jpg",
-      "heroImage": "./images/heroes/pipeline.jpg",
-      "tags": ["Python", "Maya", "API"],
-      "stats": [
-        { "label": "Exp", "value": "3 Years" },
-        { "label": "Lang", "value": "Python" },
-        { "label": "Tools", "value": "10+" }
-      ],
-      "section": "Skills"
-    },
-    {
-      "id": "s4",
-      "title": "AI Gen & Style Transfer",
-      "titleEn": "",
-      "description": "探索 Stable Diffusion 与 Midjourney 在动画前期概念设计与纹理生成中的应用，研究 AI 辅助的风格化滤镜方案。",
-      "icon": "./images/skills/ai.jpg",
-      "heroImage": "./images/heroes/ai.jpg",
-      "tags": ["SD", "LoRA", "ControlNet"],
-      "stats": [
-        { "label": "Exp", "value": "2 Years" },
-        { "label": "Focus", "value": "Concept" },
-        { "label": "Models", "value": "50+" }
-      ],
-      "section": "Skills"
-    },
-    {
-      "id": "s5",
-      "title": "Motion Graphics",
-      "titleEn": "",
-      "description": "具备优秀的动态图形设计能力，能够制作高质量的片头、UI 动效及宣传 PV。",
-      "icon": "./images/skills/motion.jpg",
-      "heroImage": "./images/heroes/motion.jpg",
-      "tags": ["C4D", "Motion", "Typography"],
-      "stats": [
-        { "label": "Exp", "value": "3 Years" },
-        { "label": "Tool", "value": "C4D" },
-        { "label": "Works", "value": "30+" }
-      ],
-      "section": "Skills"
+      "section": "Projects",
+      "bilibiliUrl": "https://www.bilibili.com/bangumi/play/ep1508563/?share_source=copy_web",
+      "youtubeUrl": "https://youtu.be/b9Cse2SWJ6U?si=IzkVZZjrOyVE2KOc"
     }
   ]
 }

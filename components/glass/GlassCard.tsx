@@ -1,7 +1,15 @@
-import React, { useId } from 'react';
-import { LayoutSettings } from '../DebugPanel';
+import React, { useId, useMemo } from 'react';
+import { LayoutSettings } from '../../types';
 import GlowBorder from './GlowBorder';
 import ImageFrame from './ImageFrame';
+
+// 将 hex 颜色转换为带透明度的 rgba
+const hexToRgba = (hex: string, alpha: number): string => {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
 
 interface GlassCardProps {
   image: string;
@@ -12,7 +20,7 @@ interface GlassCardProps {
   className?: string;
 }
 
-const GlassCard: React.FC<GlassCardProps> = ({
+const GlassCard: React.FC<GlassCardProps> = React.memo(({
   image,
   title = '',
   isActive,
@@ -22,23 +30,42 @@ const GlassCard: React.FC<GlassCardProps> = ({
 }) => {
   const uniqueId = useId().replace(/:/g, '');
 
-  // 统一的圆角值
-  const borderRadius = '0.75rem';
+  // 解构设置以用于依赖追踪和计算
+  const {
+    cardBorderRadius,
+    cardImageScale: rawCardImageScale,
+    cardGlowIntensity,
+    cardGlowThickness,
+    cardGlowSpread,
+    cardGlowColor1,
+    cardGlowColor2,
+    cardGlowColor3,
+    focusFlowSpeed,
+    focusFlowColors,
+    hoverBlur,
+    hoverScale: rawHoverScale,
+    hoverOpacity: rawHoverOpacity,
+    cardPadding,
+    glassBgOpacity,
+    glassBlur,
+    glassSaturate,
+    borderThickness,
+    borderGlow,
+    borderRefraction,
+    imageShadow,
+    imageEdgeBlur,
+    distortionIntensity,
+    distortionScale
+  } = settings;
 
-  // 参数
-  const cardImageScale = settings.cardImageScale / 100;
-  const glowIntensity = settings.focusGlowIntensity;
-  const glowThickness = settings.focusGlowThickness;
-  const glowSpread = settings.focusGlowSpread;
-  const flowSpeed = settings.focusFlowSpeed;
-  const flowColors = settings.focusFlowColors;
-  const hoverBlur = settings.hoverBlur;
-  const hoverScale = settings.hoverScale / 100;
-  const hoverOpacity = settings.hoverOpacity / 100;
+  // 计算派生值
+  const borderRadius = `${cardBorderRadius}px`;
+  const cardImageScale = rawCardImageScale / 100;
+  const hoverScale = rawHoverScale / 100;
+  const hoverOpacity = rawHoverOpacity / 100;
 
-  return (
-    <>
-      <style>{`
+  // Memoize style tag content
+  const styleTag = useMemo(() => `
         #glass-card-${uniqueId} {
           --hover-scale: ${hoverScale};
           --hover-blur: ${hoverBlur}px;
@@ -81,7 +108,16 @@ const GlassCard: React.FC<GlassCardProps> = ({
         #glass-card-${uniqueId}:not(.active):hover .card-content {
           transform: scale(calc(var(--card-image-scale) * 1.02));
         }
-      `}</style>
+      `, [uniqueId, hoverScale, hoverBlur, cardImageScale]);
+
+  const rootStyle = useMemo(() => ({
+    padding: cardPadding,
+    willChange: 'transform'
+  }), [cardPadding]);
+
+  return (
+    <>
+      <style>{styleTag}</style>
 
       <div
         id={`glass-card-${uniqueId}`}
@@ -89,21 +125,21 @@ const GlassCard: React.FC<GlassCardProps> = ({
         className={`${isActive ? 'active' : ''} group relative cursor-pointer
           transition-all duration-300 ease-out active:scale-[0.98]
           outline-none focus:outline-none ${className}`}
-        style={{ padding: settings.cardPadding }}
+        style={rootStyle}
       >
         {/* 统一的内容容器 - 所有视觉层都在这里，一起缩放 */}
         <div
           className="card-content relative w-full transition-transform duration-300"
           style={{ borderRadius }}
         >
-          {/* Layer 1: 发光边框 - 仅激活时显示 */}
-          {isActive && glowIntensity > 0 && (
+          {/* Layer 1: 流光边框 - 仅激活时显示 */}
+          {isActive && cardGlowIntensity > 0 && (
             <GlowBorder
-              intensity={glowIntensity}
-              thickness={glowThickness}
-              spread={glowSpread}
-              flowSpeed={flowSpeed}
-              flowColors={flowColors}
+              intensity={cardGlowIntensity}
+              thickness={cardGlowThickness}
+              spread={cardGlowSpread}
+              flowSpeed={focusFlowSpeed}
+              flowColors={focusFlowColors}
               borderRadius={borderRadius}
             />
           )}
@@ -114,10 +150,10 @@ const GlassCard: React.FC<GlassCardProps> = ({
             style={{
               borderRadius,
               background: isActive
-                ? `rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.15})`
-                : `rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.05})`,
-              backdropFilter: `blur(${settings.glassBlur * 0.5}px) saturate(${settings.glassSaturate}%)`,
-              WebkitBackdropFilter: `blur(${settings.glassBlur * 0.5}px) saturate(${settings.glassSaturate}%)`,
+                ? `rgba(255,255,255,${glassBgOpacity / 100 * 0.15})`
+                : `rgba(255,255,255,${glassBgOpacity / 100 * 0.05})`,
+              backdropFilter: `blur(${glassBlur * 0.5}px) saturate(${glassSaturate}%)`,
+              WebkitBackdropFilter: `blur(${glassBlur * 0.5}px) saturate(${glassSaturate}%)`,
               border: isActive ? 'none' : '1px solid rgba(255,255,255,0.08)',
             }}
           />
@@ -128,27 +164,27 @@ const GlassCard: React.FC<GlassCardProps> = ({
               src={image}
               alt={title || 'card'}
               aspectRatio="2/3"
-              borderThickness={settings.borderThickness}
-              borderGlow={settings.borderGlow}
-              borderRefraction={settings.borderRefraction}
-              imageShadow={settings.imageShadow}
-              imageEdgeBlur={settings.imageEdgeBlur}
-              distortionIntensity={settings.distortionIntensity}
-              distortionScale={settings.distortionScale}
+              borderThickness={borderThickness}
+              borderGlow={borderGlow}
+              borderRefraction={borderRefraction}
+              imageShadow={imageShadow}
+              imageEdgeBlur={imageEdgeBlur}
+              distortionIntensity={distortionIntensity}
+              distortionScale={distortionScale}
               borderRadius={borderRadius}
             />
           </div>
 
           {/* Layer 4: 激活时的彩色边框发光 */}
-          {isActive && (
+          {isActive && cardGlowIntensity > 0 && (
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
                 borderRadius,
                 boxShadow: `
-                  0 0 ${glowThickness * 2}px rgba(255,150,200,${glowIntensity / 100 * 0.4}),
-                  0 0 ${glowThickness * 4}px rgba(150,200,255,${glowIntensity / 100 * 0.3}),
-                  0 0 ${glowThickness * 6}px rgba(200,255,200,${glowIntensity / 100 * 0.2})
+                  0 0 ${cardGlowThickness * 2}px ${hexToRgba(cardGlowColor1, cardGlowIntensity / 100 * 0.5)},
+                  0 0 ${cardGlowThickness * 4}px ${hexToRgba(cardGlowColor2, cardGlowIntensity / 100 * 0.4)},
+                  0 0 ${cardGlowSpread}px ${hexToRgba(cardGlowColor3, cardGlowIntensity / 100 * 0.3)}
                 `,
               }}
             />
@@ -183,6 +219,6 @@ const GlassCard: React.FC<GlassCardProps> = ({
       </div>
     </>
   );
-};
+});
 
 export default GlassCard;

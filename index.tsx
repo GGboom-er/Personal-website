@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './styles/tailwind.css';
 import App from './App';
+import './styles/tailwind.css';
+import './styles/timeline.css';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

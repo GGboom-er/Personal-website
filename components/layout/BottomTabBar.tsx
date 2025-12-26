@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutSettings } from '../DebugPanel';
+import { LayoutSettings } from '../../types';
 import { getFlowGradient } from '../glass';
 
 interface BottomTabBarProps {
@@ -27,19 +27,19 @@ const BottomTabBar: React.FC<BottomTabBarProps> = ({ activeView, onSelectView, s
   return (
     <>
       <nav
-        className="fixed bottom-0 left-0 right-0 z-40 md:hidden"
+        className="w-full shrink-0 z-40"
         style={{
-          background: `linear-gradient(to top, rgba(10,10,12,0.95) 0%, rgba(10,10,12,0.85) 100%)`,
+          background: `linear-gradient(to bottom, rgba(10,10,12,0.95) 0%, rgba(10,10,12,0.85) 100%)`,
           backdropFilter: `blur(${settings.glassBlur + 20}px) saturate(${settings.glassSaturate}%)`,
           WebkitBackdropFilter: `blur(${settings.glassBlur + 20}px) saturate(${settings.glassSaturate}%)`,
-          borderTop: `${borderThickness * 0.5}px solid rgba(255,255,255,${borderRefraction * 0.15})`,
+          borderBottom: `${borderThickness * 0.5}px solid rgba(255,255,255,${borderRefraction * 0.15})`,
           boxShadow: `
-            0 -4px 24px rgba(0,0,0,0.4),
-            inset 0 1px 0 rgba(255,255,255,${borderRefraction * 0.08})
+            0 4px 24px rgba(0,0,0,0.4),
+            inset 0 -1px 0 rgba(255,255,255,${borderRefraction * 0.08})
           `,
         }}
       >
-        <div className="flex items-center justify-around h-14 px-2 safe-area-bottom">
+        <div className="flex items-center justify-around h-12 px-2">
           {menuItems.map((item) => {
             const isActive = activeView === item.id;
 
@@ -88,9 +88,7 @@ const BottomTabBar: React.FC<BottomTabBarProps> = ({ activeView, onSelectView, s
                       : 'transparent',
                     backdropFilter: isActive ? `blur(${settings.glassBlur * 0.5}px)` : 'none',
                     WebkitBackdropFilter: isActive ? `blur(${settings.glassBlur * 0.5}px)` : 'none',
-                    border: isActive
-                      ? `${borderThickness * 0.5}px solid rgba(255,255,255,${borderRefraction * 0.2})`
-                      : '1px solid transparent',
+                    border: '1px solid transparent',
                     boxShadow: isActive
                       ? `0 2px 10px rgba(0,0,0,0.2),
                          inset 0 ${borderThickness * 0.3}px ${borderThickness * 0.6}px rgba(255,255,255,${borderRefraction * 0.12}),

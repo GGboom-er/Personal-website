@@ -1,0 +1,40 @@
+{
+  "timeline": [
+    {
+      "id": "edu",
+      "startYear": 2017,
+      "endYear": 2021,
+      "title": "吉林动画学院-动画艺术专业",
+      "subtitle": "参与学校项目《鼠年拜年》、《自然法则》",
+      "description": "《自然法则》分别获2023年第五届“社会主义核心价值观动画短片扶持创作活动”二类优秀作品奖\n深圳青年影像节最佳技术作品奖",
+      "type": "education"
+    },
+    {
+      "id": "intern",
+      "startYear": 2020,
+      "endYear": 2021,
+      "title": "北京纸飞机动画",
+      "subtitle": "实习",
+      "description": "角色、道具绑定制作，绑定、动画工具开发",
+      "type": "internship"
+    },
+    {
+      "id": "work1",
+      "startYear": 2021,
+      "endYear": 2023,
+      "title": "北京纸飞机动画",
+      "subtitle": "绑定师、绑定TD",
+      "description": "负责角色绑定制作规范，开发绑定技术、工具",
+      "type": "work"
+    },
+    {
+      "id": "work2",
+      "startYear": 2023,
+      "endYear": 2025,
+      "title": "北京纸飞机动画",
+      "subtitle": "绑定总监、制作TD",
+      "description": "负责绑定制作、技术、工具开发，maya、blender、UE软件pipeline管线开发",
+      "type": "work"
+    }
+  ]
+}

@@ -94,20 +94,3 @@ export const useBreakpoint = (): BreakpointState => {
   return state;
 };
 
-// 检查当前断点是否大于等于指定断点
-export const useBreakpointUp = (breakpoint: BreakpointKey): boolean => {
-  const { width } = useBreakpoint();
-  return width >= BREAKPOINTS[breakpoint];
-};
-
-// 检查当前断点是否小于指定断点
-export const useBreakpointDown = (breakpoint: BreakpointKey): boolean => {
-  const { width } = useBreakpoint();
-  return width < BREAKPOINTS[breakpoint];
-};
-
-// 检查当前断点是否在指定范围内
-export const useBreakpointBetween = (min: BreakpointKey, max: BreakpointKey): boolean => {
-  const { width } = useBreakpoint();
-  return width >= BREAKPOINTS[min] && width < BREAKPOINTS[max];
-};

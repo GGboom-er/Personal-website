@@ -1,24 +1,44 @@
-import React, { useState, useEffect, useMemo, useCallback, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Sidebar from './components/Sidebar';
 import Showcase from './components/Showcase';
 import ProjectList from './components/ProjectList';
-import Divider from './components/Divider';
+import Timeline from './components/Timeline';
+import SkillsGraph from './components/skills/SkillsGraph';
+import BottomTabBar from './components/layout/BottomTabBar';
 import { useBreakpoint } from './hooks/useBreakpoint';
 import { GlassSettingsProvider, useGlassSettings } from './contexts/GlassSettingsContext';
+import { DragEditorProvider } from './contexts/DragEditorContext';
 import { PROJECTS } from './constants';
 import { Project } from './types';
 import { getAssetPath } from './utils/assetPath';
 
-// 懒加载组件 - 按需加载，减少首屏体积
-const DebugPanel = lazy(() => import('./components/DebugPanel'));
-const BottomTabBar = lazy(() => import('./components/layout/BottomTabBar'));
-
-// 内部应用组件 - 使用 Context
 const AppContent: React.FC = () => {
   const [activeView, setActiveView] = useState('Projects');
-  const [debugVisible, setDebugVisible] = useState(false);
-  const { settings, setSettings } = useGlassSettings();
-  const { isMobile, isTablet } = useBreakpoint();
+  const { settings } = useGlassSettings();
+  const { isMobile } = useBreakpoint();
+
+  // 预加载所有项目图片
+  useEffect(() => {
+    const preloadImages = () => {
+      // 预加载项目图片
+      PROJECTS.forEach(project => {
+        if (project.icon) {
+          const img1 = new Image();
+          img1.src = getAssetPath(project.icon);
+        }
+        if (project.heroImage) {
+          const img2 = new Image();
+          img2.src = getAssetPath(project.heroImage);
+        }
+      });
+      // 预加载背景图片
+      ['images/bg.png', 'images/bg2.png', 'images/bg3.png'].forEach(src => {
+        const img = new Image();
+        img.src = getAssetPath(src);
+      });
+    };
+    preloadImages();
+  }, []);
 
   // Filter projects based on the active sidebar view
   const currentProjects = useMemo(() => {
@@ -34,29 +54,6 @@ const AppContent: React.FC = () => {
     }
   }, [activeView, currentProjects]);
 
-  // 键盘快捷键: Ctrl+Shift+D 切换调试面板
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.shiftKey && e.key === 'D') {
-        e.preventDefault();
-        setDebugVisible(v => !v);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  // 处理分隔线拖动 - 调整详情区和卡片区高度比例
-  const handleDividerDrag = useCallback((deltaY: number) => {
-    setSettings(prev => {
-      // 将像素差转换为百分比 (基于视口高度)
-      const deltaPercent = (deltaY / window.innerHeight) * 100;
-      const newHeight = Math.min(75, Math.max(40, prev.showcaseHeight + deltaPercent));
-      return { ...prev, showcaseHeight: newHeight };
-    });
-  }, []);
-
-  // 当前项目的背景图
   const heroImage = activeProject?.heroImage;
 
   return (
@@ -66,11 +63,11 @@ const AppContent: React.FC = () => {
     >
       {/* 全局背景层 - 与整体布局融合 */}
       <div className="absolute inset-0 z-0 overflow-hidden">
-        {/* 基础背景图 bg.png */}
+        {/* 基础背景图 - 根据视图切换 */}
         <img
-          src={getAssetPath('images/bg.png')}
+          src={getAssetPath(activeView === 'Skills' ? 'images/bg3.png' : activeView === 'Profile' ? 'images/bg2.png' : 'images/bg.png')}
           alt=""
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
           style={{ opacity: 0.8 }}
         />
 
@@ -116,63 +113,64 @@ const AppContent: React.FC = () => {
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col h-full min-w-0 overflow-hidden relative z-10">
 
-        {/* Top Section: Showcase */}
-        <div
-          className="w-full relative overflow-hidden shrink-0"
-          style={{ height: `${settings.showcaseHeight}%` }}
-        >
-          {activeProject ? (
-            <Showcase project={activeProject} settings={settings} />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-500">No Content</div>
-          )}
-        </div>
-
-        {/* Divider - 可拖动分隔线 */}
-        <Divider onDrag={handleDividerDrag} debugMode={debugVisible} settings={settings} />
-
-        {/* Bottom Section: Project List - Apple Liquid Glass */}
-        <div
-          className="overflow-hidden flex flex-col flex-1 relative z-10"
-          style={{
-            background: `linear-gradient(to bottom, rgba(255,255,255,${settings.glassBgOpacity / 100}) 0%, rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.4}) 100%)`,
-            backdropFilter: `blur(${settings.glassBlur}px) saturate(${settings.glassSaturate}%)`,
-            WebkitBackdropFilter: `blur(${settings.glassBlur}px) saturate(${settings.glassSaturate}%)`,
-            borderTop: `1px solid rgba(255,255,255,0.15)`,
-            boxShadow: `inset 0 1px 0 rgba(255,255,255,0.1), 0 -8px 32px rgba(0,0,0,0.3)`,
-            paddingBottom: isMobile ? '4rem' : 0,
-          }}
-        >
-          <ProjectList
-            projects={currentProjects}
-            activeId={activeProject?.id}
-            onSelect={setActiveProject}
-            settings={settings}
-          />
-        </div>
-
-      </main>
-
-      {/* Debug Panel - 懒加载 */}
-      <Suspense fallback={null}>
-        <DebugPanel
-          settings={settings}
-          onChange={setSettings}
-          visible={debugVisible}
-          onToggle={() => setDebugVisible(v => !v)}
-        />
-      </Suspense>
-
-      {/* Mobile Bottom Tab Bar - 懒加载 */}
-      {isMobile && (
-        <Suspense fallback={null}>
+        {/* Mobile Top Tab Bar */}
+        {isMobile && (
           <BottomTabBar
             activeView={activeView}
             onSelectView={setActiveView}
             settings={settings}
           />
-        </Suspense>
-      )}
+        )}
+
+        {/* Profile View: Timeline */}
+        {activeView === 'Profile' ? (
+          <div className="w-full h-full overflow-auto">
+            <Timeline settings={settings} />
+          </div>
+        ) : activeView === 'Skills' ? (
+          /* Skills View: 3D Topology Graph */
+          <div className="w-full h-full overflow-hidden relative z-10">
+            <SkillsGraph />
+          </div>
+        ) : (
+          <>
+            {/* Top Section: Showcase */}
+            <div
+              className="w-full relative overflow-hidden shrink-0"
+              style={{ height: `${settings.showcaseHeight}%` }}
+            >
+              {activeProject ? (
+                <Showcase project={activeProject} settings={settings} />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-gray-500">No Content</div>
+              )}
+            </div>
+
+            {/* 间隔区域 - 分隔详情与卡片 */}
+            <div className="h-3 shrink-0" />
+
+            {/* Bottom Section: Project List - Apple Liquid Glass */}
+            <div
+              className="overflow-hidden flex flex-col flex-1 relative z-10"
+              style={{
+                background: `linear-gradient(to bottom, rgba(255,255,255,${settings.glassBgOpacity / 100}) 0%, rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.4}) 100%)`,
+                backdropFilter: `blur(${settings.glassBlur}px) saturate(${settings.glassSaturate}%)`,
+                WebkitBackdropFilter: `blur(${settings.glassBlur}px) saturate(${settings.glassSaturate}%)`,
+                borderTop: `1px solid rgba(255,255,255,0.15)`,
+                boxShadow: `inset 0 1px 0 rgba(255,255,255,0.1), 0 -8px 32px rgba(0,0,0,0.3)`,
+              }}
+            >
+              <ProjectList
+                projects={currentProjects}
+                activeId={activeProject?.id}
+                onSelect={setActiveProject}
+                settings={settings}
+              />
+            </div>
+          </>
+        )}
+
+      </main>
     </div>
   );
 };
@@ -181,7 +179,9 @@ const AppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <GlassSettingsProvider>
-      <AppContent />
+      <DragEditorProvider>
+        <AppContent />
+      </DragEditorProvider>
     </GlassSettingsProvider>
   );
 };

@@ -17,9 +17,23 @@
       "Bash(find:*)",
       "Bash(ls -la \"Y:\\\\GGbommer\\\\scripts\\\\Personal-website\\\\utils\"\" 2>/dev/null || echo \"Utils directory does not exist \")",
       "Bash(grep:*)",
-      "Bash(npm install:*)",
-      "Bash(npx tailwindcss:*)",
-      "Bash(npm uninstall:*)"
+      "WebSearch",
+      "Bash(npm run dev:*)",
+      "Bash(git checkout:*)",
+      "WebFetch(domain:uicookies.com)",
+      "WebFetch(domain:freefrontend.com)",
+      "WebFetch(domain:superdevresources.com)",
+      "WebFetch(domain:codepen.io)",
+      "Bash(dir:*)",
+      "Bash(npm install)",
+      "Bash(npm run build:*)",
+      "Bash(npx tsc --noEmit)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "WebFetch(domain:movie.douban.com)",
+      "WebFetch(domain:baike.baidu.com)",
+      "WebFetch(domain:upcomer.com)",
+      "Bash(ls -la \"Y:\\\\GGbommer\\\\scripts\\\\Personal-website\\\\dist\\\\styles\"\" 2>/dev/null || dir \"Y:GGbommerscriptsPersonal-websitediststyles\"\")"
     ]
   }
 }
