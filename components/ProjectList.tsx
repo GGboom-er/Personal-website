@@ -133,6 +133,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, activeId, onSelect,
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
+    touchEndX.current = e.touches[0].clientX; // Reset to prevent stale data usage
     handleInteraction();
   }, [handleInteraction]);
 
