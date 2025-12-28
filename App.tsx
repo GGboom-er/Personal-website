@@ -20,25 +20,38 @@ const AppContent: React.FC = () => {
   // 预加载所有项目图片
   useEffect(() => {
     const preloadImages = () => {
-      // 预加载项目图片
-      PROJECTS.forEach(project => {
-        if (project.icon) {
-          const img1 = new Image();
-          img1.src = getAssetPath(project.icon);
-        }
-        if (project.heroImage) {
-          const img2 = new Image();
-          img2.src = getAssetPath(project.heroImage);
-        }
-      });
-      // 预加载背景图片
-      ['images/bg.png', 'images/bg2.png', 'images/bg3.png'].forEach(src => {
-        const img = new Image();
-        img.src = getAssetPath(src);
-      });
+      // 优先预加载当前视图的背景
+      const activeBg = activeView === 'Skills' ? 'images/bg3.png' : activeView === 'Profile' ? 'images/bg2.png' : 'images/bg.png';
+      new Image().src = getAssetPath(activeBg);
+
+      // 延迟加载其他资源，避免阻塞首屏渲染
+      setTimeout(() => {
+        // 预加载其他背景
+        ['images/bg.png', 'images/bg2.png', 'images/bg3.png']
+          .filter(src => src !== activeBg)
+          .forEach(src => {
+            const img = new Image();
+            img.src = getAssetPath(src);
+          });
+
+        // 预加载项目图片
+        PROJECTS.forEach(project => {
+          if (project.icon) {
+            const img1 = new Image();
+            img1.src = getAssetPath(project.icon);
+          }
+          // 进一步延迟 Hero Images (通常较大)
+          if (project.heroImage) {
+            setTimeout(() => {
+              const img2 = new Image();
+              img2.src = getAssetPath(project.heroImage);
+            }, 1000);
+          }
+        });
+      }, 2000); // 首屏渲染2秒后再开始预加载
     };
     preloadImages();
-  }, []);
+  }, [activeView]); // 当视图切换时也会触发检查（已有缓存则不请求）
 
   // Filter projects based on the active sidebar view
   const currentProjects = useMemo(() => {
