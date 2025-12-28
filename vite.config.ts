@@ -4,8 +4,8 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig(({ mode }) => {
     return {
-      // 部署路径 (改为根路径以适配 Vercel/Cloudflare/自定义域名)
-      base: '/',
+      // 使用相对路径，同时兼容子目录部署(GH Pages默认)和根目录部署(自定义域名)
+      base: './',
       server: {
         port: 3000,
         host: '0.0.0.0',
