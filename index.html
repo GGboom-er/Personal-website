@@ -14,30 +14,8 @@
     <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" rel="stylesheet">
     <!-- ================================================== -->
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        darkMode: 'class',
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Inter', '"Noto Sans SC"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-            },
-            colors: {
-              'app-bg': '#000000',
-              'sidebar-bg': '#1c1c1e',
-              'card-bg': '#2c2c2e',
-              'accent-blue': '#0a84ff',
-            }
-          }
-        }
-      }
-    </script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Liquid Glass Effects -->
-    <link rel="stylesheet" href="./styles/glass.css">
     <style>
       /* Hide Scrollbar but allow functionality */
       .no-scrollbar::-webkit-scrollbar {
@@ -60,16 +38,6 @@
       }
       /* glass-panel is now in /styles/glass.css with enhanced liquid glass effect */
     </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.34.0"
-  }
-}
-</script>
 </head>
   <body class="bg-app-bg text-white antialiased overflow-hidden selection:bg-accent-blue selection:text-white">
     <div id="root"></div>
