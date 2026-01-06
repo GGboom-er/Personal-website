@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect, useMemo } from 'react';
 import { LayoutSettings } from '../types';
 
 // 默认设置
@@ -88,7 +88,7 @@ export const DEFAULT_SETTINGS: LayoutSettings = {
   // === 移动端时间轴 ===
   // 卡片布局
   mobileCardOffsetX: 0,           // 卡片水平位移
-  mobileCardWidth: 130,           // 卡片宽度
+  mobileCardWidth: 175,           // 卡片宽度
   mobileCardSpread: 100,          // 卡片聚拢/扩散 (100=贴边)
   // 管道
   mobilePipeWidth: 20,            // 管道宽度
@@ -106,19 +106,43 @@ export const DEFAULT_SETTINGS: LayoutSettings = {
   timelineLinkCardOffset: 40,     // 链接卡片距离主卡片的偏移
   mobileLinkCardOffset: 30,       // 移动端链接卡片距离
 
-  // === 光锥位置调整 ===
+  // === Mobile 独立视觉参数 (默认值) ===
+  mobileLightFalloff: 58,
+  mobileLightImpact: 119,
+  mobileLightSoftness: 200,
+  mobileSilkSpeed: 6.2,
+  mobileSilkOpacity: 46,
+  mobileSilkTurbulence: 200,
+  mobileSilkStartSpread: 92,
+  mobileSilkEndSpread: 119,
+  mobileSilkDistortion: 82,
+
+  // === 光锥位置调整 (Desktop) ===
   lightConeOriginX: 0,            // 光锥起点X偏移
   lightConeOriginY: 0,            // 光锥起点Y偏移
   lightConeEndX: 0,               // 光锥终点X偏移
+  lightConeEndY: 0,               // 光锥终点Y偏移
   lightConeRotation: 0,           // 光锥旋转角度
   lightConeWidthStart: 100,       // 光锥起点宽度系数
   lightConeWidthEnd: 100,         // 光锥终点宽度系数
+
+  // === Mobile 独立坐标默认值 ===
+  mobileLightConeOriginX: 0,
+  mobileLightConeOriginY: 0,
+  mobileLightConeEndX: 0,
+  mobileLightConeEndY: 0,
+  mobileLightConeRotation: 0,
+  mobileLightConeWidthStart: 500,
+  mobileLightConeWidthEnd: 500,
 };
 
 interface GlassSettingsContextValue {
   settings: LayoutSettings;
+  nodeOverrides: Record<string, Partial<LayoutSettings>>;
   setSettings: React.Dispatch<React.SetStateAction<LayoutSettings>>;
   updateSetting: <K extends keyof LayoutSettings>(key: K, value: LayoutSettings[K]) => void;
+  updateNodeSetting: <K extends keyof LayoutSettings>(nodeId: string, key: K, value: LayoutSettings[K]) => void;
+  getNodeSettings: (nodeId: string) => LayoutSettings;
   resetSettings: () => void;
 }
 
@@ -138,6 +162,8 @@ export const GlassSettingsProvider: React.FC<GlassSettingsProviderProps> = ({
     ...initialSettings,
   });
 
+  const [nodeOverrides, setNodeOverrides] = useState<Record<string, Partial<LayoutSettings>>>({});
+
   const updateSetting = useCallback(<K extends keyof LayoutSettings>(
     key: K,
     value: LayoutSettings[K]
@@ -145,19 +171,49 @@ export const GlassSettingsProvider: React.FC<GlassSettingsProviderProps> = ({
     setSettings(prev => ({ ...prev, [key]: value }));
   }, []);
 
-  const resetSettings = useCallback(() => {
-    setSettings(DEFAULT_SETTINGS);
+  const updateNodeSetting = useCallback(<K extends keyof LayoutSettings>(
+    nodeId: string,
+    key: K,
+    value: LayoutSettings[K]
+  ) => {
+    setNodeOverrides(prev => ({
+      ...prev,
+      [nodeId]: {
+        ...prev[nodeId],
+        [key]: value
+      }
+    }));
   }, []);
 
+  const getNodeSettings = useCallback((nodeId: string) => {
+    return { ...settings, ...(nodeOverrides[nodeId] || {}) };
+  }, [settings, nodeOverrides]);
+
+  const resetSettings = useCallback(() => {
+    setSettings(DEFAULT_SETTINGS);
+    setNodeOverrides({});
+  }, []);
+
+  // 强制全局暴露接口，以便在控制台直接提取
+  useEffect(() => {
+    (window as any).__GET_CONFIG__ = () => ({
+      settings,
+      nodeOverrides
+    });
+  }, [settings, nodeOverrides]);
+
+  const value = useMemo(() => ({
+    settings,
+    nodeOverrides,
+    setSettings,
+    updateSetting,
+    updateNodeSetting,
+    getNodeSettings,
+    resetSettings,
+  }), [settings, nodeOverrides, updateSetting, updateNodeSetting, getNodeSettings, resetSettings]);
+
   return (
-    <GlassSettingsContext.Provider
-      value={{
-        settings,
-        setSettings,
-        updateSetting,
-        resetSettings,
-      }}
-    >
+    <GlassSettingsContext.Provider value={value}>
       {children}
     </GlassSettingsContext.Provider>
   );

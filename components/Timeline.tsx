@@ -2,8 +2,11 @@ import React, { useRef, useEffect, useState } from 'react';
 import { LayoutSettings, TimelineNode } from '../types';
 import { getFlowGradient } from './glass';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import { useGlassSettings } from '../contexts/GlassSettingsContext';
 import { useDragEditor, NodeLayoutConfig } from '../contexts/DragEditorContext';
 import timelineData from '../data/timeline.json';
+import UserProfileCard from './shared/UserProfileCard';
+import ContactLinks from './shared/ContactLinks';
 
 // 从 JSON 文件加载时间轴数据
 export const DEFAULT_TIMELINE_DATA: TimelineNode[] = timelineData.timeline as TimelineNode[];
@@ -26,7 +29,7 @@ const TIMELINE_CONFIG = {
   BASE_WIDTH: 900,           // 时间轴基础宽度
   BASE_HEIGHT: 500,          // 时间轴基础高度
   // 移动端垂直布局
-  MOBILE_BASE_WIDTH: 320,    // 移动端基础宽度
+  MOBILE_BASE_WIDTH: 400,    // 移动端基础宽度
   MOBILE_BASE_HEIGHT: 800,   // 移动端基础高度
   // 通用
   MIN_SCALE: 0.4,            // 最小缩放比例
@@ -71,7 +74,10 @@ const LayoutWrapper: React.FC<LayoutWrapperProps> = ({
   );
 };
 
-const Timeline: React.FC<TimelineProps> = ({ settings, data = DEFAULT_TIMELINE_DATA }) => {
+const Timeline: React.FC<TimelineProps> = ({ settings: globalSettings, data = DEFAULT_TIMELINE_DATA }) => {
+  const { getNodeSettings } = useGlassSettings();
+  const settings = globalSettings; // Keep using prop for global elements (pipe, etc.)
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const { isMobile } = useBreakpoint();
@@ -155,6 +161,7 @@ const Timeline: React.FC<TimelineProps> = ({ settings, data = DEFAULT_TIMELINE_D
   const lightConeOriginX = settings.lightConeOriginX;
   const lightConeOriginY = settings.lightConeOriginY;
   const lightConeEndX = settings.lightConeEndX;
+  const lightConeEndY = settings.lightConeEndY;
   const lightConeRotation = settings.lightConeRotation;
   const lightConeWidthStart = settings.lightConeWidthStart / 100;
   const lightConeWidthEnd = settings.lightConeWidthEnd / 100;
@@ -188,7 +195,7 @@ const Timeline: React.FC<TimelineProps> = ({ settings, data = DEFAULT_TIMELINE_D
     // 移动端粒子参数
     const mobileParticleScale = settings.mobileParticleScale / 100;
     const mobileParticleOpacity = silkOpacity * (settings.mobileParticleOpacity / 100);
-    const mobileParticleSpeed = silkSpeed * (100 / settings.mobileParticleSpeed);
+    const mobileParticleSpeed = silkSpeed * (100 / Math.max(0.1, settings.mobileParticleSpeed));
 
     // 移动端链接卡片距离
     const mobileLinkCardOffset = settings.mobileLinkCardOffset;
@@ -198,6 +205,16 @@ const Timeline: React.FC<TimelineProps> = ({ settings, data = DEFAULT_TIMELINE_D
         ref={containerRef}
         className="w-full h-full flex flex-col items-center overflow-auto relative p-4"
       >
+        {/* Header - Mobile Only Profile & Contact */}
+        <div className="fixed top-2 left-2 z-[9999] bg-red-500/80 text-white p-2 font-mono text-xs pointer-events-none">
+          TELEMETRY: StartW={settings.mobileLightConeWidthStart} EndW={settings.mobileLightConeWidthEnd} Rot={settings.mobileLightConeRotation}
+        </div>
+        <div className="w-full max-w-[340px] mb-6 z-20 shrink-0">
+          <UserProfileCard settings={settings} layout="horizontal">
+            <ContactLinks settings={settings} layout="grid" minimal={true} />
+          </UserProfileCard>
+        </div>
+
         {/* 时间轴主容器 - 垂直布局 */}
         <div
           className="relative"
@@ -438,39 +455,111 @@ const Timeline: React.FC<TimelineProps> = ({ settings, data = DEFAULT_TIMELINE_D
             const isLeft = index % 2 === 0;
             const colors = GLOW_COLORS[node.type] || GLOW_COLORS.work;
 
-            // 光锥形状计算 - 水平方向（从卡片到管道）
-            // 使用可调节的起始/结束宽度，应用宽度系数
-            const startHalfWidth = (mobileLightConeStartWidth / 2) * lightConeWidthStart; // 卡片端半宽
-            const endHalfWidth = (mobileLightConeEndWidth / 2) * lightConeWidthEnd; // 管道端半宽
+            // === 获取节点独立设置 ===
+            const contextSettings = getNodeSettings(node.id);
+            const ns = { ...contextSettings, ...(node.overrides || {}) };
 
-            // 卡片端（窄）- 应用Y偏移
-            const narrowTop = 50 - startHalfWidth + lightConeOriginY;
-            const narrowBottom = 50 + startHalfWidth + lightConeOriginY;
-            // 管道端（宽）
-            const wideTop = 50 - endHalfWidth;
-            const wideBottom = 50 + endHalfWidth;
+            // 解构参数，包括新的 Mobile 独立坐标
+            const {
+              // Mobile 独立坐标
+              mobileLightConeOriginX, mobileLightConeOriginY,
+              mobileLightConeEndX, mobileLightConeEndY,
+              mobileLightConeRotation, mobileLightConeWidthStart, mobileLightConeWidthEnd,
 
-            // 光锥 clipPath：从卡片位置（窄）扩散到时间轴（宽）- 水平方向
-            // 左侧卡片：从右边（卡片端，窄）到左边（管道端，宽）
-            // 右侧卡片：从左边（卡片端，窄）到右边（管道端，宽）
-            const clipLeft = `polygon(100% ${narrowTop}%, 100% ${narrowBottom}%, 0% ${wideBottom}%, 0% ${wideTop}%)`;
-            const clipRight = `polygon(0% ${narrowTop}%, 0% ${narrowBottom}%, 100% ${wideBottom}%, 100% ${wideTop}%)`;
+              // Mobile 独立视觉参数
+              mobileLightConeOpacity: mlcOpacity,
+              mobileLightFalloff: mlcFalloff,
+              mobileLightImpact: mlcImpact,
+              mobileLightSoftness: mlcSoftness,
+              mobileSilkSpeed: mlcSilkSpeed,
+              mobileSilkOpacity: mlcSilkOpacity,
+              mobileSilkTurbulence: mlcSilkTurbulence,
+              mobileSilkStartSpread: mlcSilkStartSpread,
+              mobileSilkEndSpread: mlcSilkEndSpread,
+              mobileSilkDistortion: mlcSilkDistortion,
 
-            // 光锥位置计算 - 从卡片内边缘开始（靠近时间轴的那一侧）
-            // 考虑卡片偏移和光锥起点调整
+              mobileLightConeBlur: mlcBlur, // 使用独立模糊控制
+
+              // Desktop Params (used as fallback or for shared colors)
+              timelineLightBlurX, timelineLightBlurY,
+
+              // Colors
+              timelineColor1: color1,
+              timelineColor2: color2,
+              timelineColor3: color3,
+              mobileCardWidth, mobileCardOffsetX, mobileCardSpread: mobileCardSpreadRaw,
+              mobilePipeWidth, mobileLinkCardOffset
+            } = ns;
+
+            // 归一化 Mobile 参数
+            const lightOpacity = (Number(mlcOpacity) / 100);
+            const lightFalloff = (Number(mlcFalloff) / 100);
+            const lightImpact = (Number(mlcImpact) / 100);
+            const lightSoftness = (Number(mlcSoftness) / 100);
+
+            const silkSpeed = Number(mlcSilkSpeed);
+            const silkOpacity = (Number(mlcSilkOpacity) / 100);
+            const silkTurbulence = (Number(mlcSilkTurbulence) / 100);
+            const silkStartSpread = (Number(mlcSilkStartSpread) / 100);
+            const silkEndSpread = (Number(mlcSilkEndSpread) / 100);
+            const silkDistortion = (Number(mlcSilkDistortion) / 100);
+
+            const mobileCardSpread = mobileCardSpreadRaw / 100;
+
+            // 移动端光锥透明度 (直接使用 mobileLightConeOpacity 作为主控制)
+            const mobileLightOpacity = lightOpacity;
+
+
+
+            // 模糊计算 (支持独立轴) - Mobile uses single blur slider for both axes
+            const blurX = Number(mlcBlur);
+            const blurY = Number(mlcBlur);
+
+            // === 坐标系统重构 (Pixel Precision) ===
+            // 基准点：容器中心 (50% height)
+            // 宽度：由系数直接控制 (1.0系数 = 1px) -> 实际上应该放大一点，比如系数100 = 50px
+            const startHalfWidth = (Number(mobileLightConeWidthStart) / 100) * 25; // Base 25px
+            const endHalfWidth = (Number(mobileLightConeWidthEnd) / 100) * 50;   // Base 50px
+
+            // 偏移量直接叠加 (Pixels)
+            // Y轴：正值向下，负值向上
+            const startOffsetY = Number(mobileLightConeOriginY);
+            const endOffsetY = Number(mobileLightConeEndY);
+
+            // 生成 Polygon 顶点 (相对于容器 top: 50%)
+            // 容器高度是 segmentHeight。我们需要用 calc() 混合 % 和 px
+            // 注意：clip-path 的坐标系是相对于光锥 div 的 (0,0) 到 (100%, 100%)
+            // 光锥 div 的高度被设置为 segmentHeight。
+            // 为了简化，我们将 div 高度设为 100% segmentHeight，并用 calc 定位内部点
+
+            // 左边 (起点/卡片端) 
+            const p1_top = `calc(50% - ${startHalfWidth}px + ${startOffsetY}px)`;
+            const p1_bottom = `calc(50% + ${startHalfWidth}px + ${startOffsetY}px)`;
+
+            // 右边 (终点/管道端)
+            const p2_top = `calc(50% - ${endHalfWidth}px + ${endOffsetY}px)`;
+            const p2_bottom = `calc(50% + ${endHalfWidth}px + ${endOffsetY}px)`;
+
+            const clipLeft = `polygon(100% ${p1_top}, 100% ${p1_bottom}, 0% ${p2_bottom}, 0% ${p2_top})`;
+            const clipRight = `polygon(0% ${p1_top}, 0% ${p1_bottom}, 100% ${p2_bottom}, 100% ${p2_top})`;
+
+            // 容器定位偏移 (X轴移动)
+            const coneOriginOffset = isLeft ? mobileLightConeOriginX : -mobileLightConeOriginX;
+            const coneEndOffset = isLeft ? mobileLightConeEndX : -mobileLightConeEndX;
+
+            // 基础定位
+            const maxCardMargin = (BASE_WIDTH / 2) - mobilePipeWidth / 2 - mobileCardWidth - 10;
+            const cardMargin = 8 + (1 - mobileCardSpread) * maxCardMargin;
             const cardInnerEdge = cardMargin + mobileCardWidth + (isLeft ? mobileCardOffsetX : -mobileCardOffsetX);
-            const pipeEdge = pipeWidth / 2 + 5; // 管道边缘距中心的距离
-            // 应用光锥起点X偏移
-            const coneOriginOffset = isLeft ? lightConeOriginX : -lightConeOriginX;
-            const coneEndOffset = isLeft ? lightConeEndX : -lightConeEndX;
+            const pipeEdge = pipeWidth / 2 + 5;
 
             return (
               <div key={node.id}>
-                {/* SVG 滤镜 - 方向性模糊 + 柔和度 */}
+                {/* SVG 滤镜 - 独立控制 XY 模糊 */}
                 <svg width="0" height="0" style={{ position: 'absolute' }}>
                   <defs>
                     <filter id={`blur-${node.id}`} x="-100%" y="-100%" width="300%" height="300%">
-                      <feGaussianBlur in="SourceGraphic" stdDeviation={`${lightBlurY} ${lightBlurX}`} />
+                      <feGaussianBlur in="SourceGraphic" stdDeviation={`${blurY} ${blurX}`} />
                     </filter>
                     <filter id={`soft-${node.id}`} x="-50%" y="-50%" width="200%" height="200%">
                       <feGaussianBlur in="SourceGraphic" stdDeviation={`${lightSoftness * 15}`} />
@@ -478,23 +567,21 @@ const Timeline: React.FC<TimelineProps> = ({ settings, data = DEFAULT_TIMELINE_D
                   </defs>
                 </svg>
 
-                {/* 聚光灯光锥 - 水平方向（从卡片内边缘到管道） */}
-                <LayoutWrapper
-                  nodeId={node.id}
-                  elementType="lightCone"
-                  isMobile={true}
+                {/* 聚光灯光锥 - 容器 */}
+                <div
                   className="absolute"
                   style={{
                     top: `calc(${pipeMargin}px + (100% - ${pipeMargin * 2}px) * ${startPos / 100})`,
                     height: `calc((100% - ${pipeMargin * 2}px) * ${segmentHeight / 100})`,
-                    // 光锥起点从卡片内边缘开始（靠近时间轴的那一侧）
+                    // X轴：起点由 originX 控制，终点由 endX 控制
                     left: isLeft ? `${cardInnerEdge + coneOriginOffset}px` : `calc(50% + ${pipeEdge + coneEndOffset}px)`,
                     right: isLeft ? `calc(50% + ${pipeEdge + coneEndOffset}px)` : `${cardInnerEdge + coneOriginOffset}px`,
-                    transform: `rotate(${lightConeRotation}deg)`,
+                    transform: `rotate(${mobileLightConeRotation}deg)`,
                     transformOrigin: isLeft ? 'right center' : 'left center',
+                    zIndex: 0,
                   }}
                 >
-                  {/* 外层柔和光晕 - 从卡片端（亮）到管道端（暗）*/}
+                  {/* 外层柔和光晕 */}
                   <div
                     className="absolute inset-0"
                     style={{
@@ -508,11 +595,11 @@ const Timeline: React.FC<TimelineProps> = ({ settings, data = DEFAULT_TIMELINE_D
                             ${colors.glow.replace('0.6', `${mobileLightOpacity * 0.2}`)} 40%,
                             transparent 80%)`,
                       clipPath: isLeft ? clipLeft : clipRight,
-                      filter: `blur(${mobileLightBlur * 1.5}px)`,
+                      filter: `url(#blur-${node.id})`, // 使用 SVG 滤镜实现非对称模糊
                     }}
                   />
 
-                  {/* 主光锥 - 方向性模糊，从卡片到管道 */}
+                  {/* 主光锥 */}
                   <div
                     className="absolute inset-0"
                     style={{
@@ -530,11 +617,11 @@ const Timeline: React.FC<TimelineProps> = ({ settings, data = DEFAULT_TIMELINE_D
                             ${colors.glow.replace('0.6', `${mobileLightOpacity * 0.15 * lightImpact}`)} ${75}%,
                             transparent 100%)`,
                       clipPath: isLeft ? clipLeft : clipRight,
-                      filter: `blur(${mobileLightBlur}px)`,
+                      filter: `url(#blur-${node.id})`,
                     }}
                   />
 
-                  {/* 光锥内核 - 清晰高亮 */}
+                  {/* 光锥内核 */}
                   <div
                     className="absolute inset-0"
                     style={{
@@ -559,17 +646,15 @@ const Timeline: React.FC<TimelineProps> = ({ settings, data = DEFAULT_TIMELINE_D
                     {/* 辐射粒子流 - 从卡片端向管道端流动 */}
                     {[...Array(15)].map((_, i) => {
                       const t = (i - 7) / 7;
-                      const turbOffset = silkTurbulence * Math.sin(i * 2.1) * 5;
+                      const turbOffset = Number(silkTurbulence) * Math.sin(i * 2.1) * 5;
 
-                      const startY = 50 + t * silkStartSpread * 25 + turbOffset;
-                      const endY = 50 + t * silkEndSpread * 50 + turbOffset * 1.5;
+                      const startY = 50 + t * Number(silkStartSpread) * 25 + turbOffset;
+                      const endY = 50 + t * Number(silkEndSpread) * 50 + turbOffset * 1.5;
                       const deltaY = endY - startY;
 
-                      // 粒子大小使用移动端缩放
-                      const height = (1.5 + silkDistortion * Math.abs(Math.sin(i * 1.3)) * 2) * mobileParticleScale;
+                      const height = (1.5 + Number(silkDistortion) * Math.abs(Math.sin(i * 1.3)) * 2) * (Number(mobileParticleScale) / 100);
                       const colorSet = i % 3;
                       const primaryColor = colorSet === 0 ? color1 : colorSet === 1 ? color2 : color3;
-                      // 渐变方向：从卡片端（亮）到管道端（暗）
                       const gradientAngle = isLeft ? (180 + (deltaY * 0.5)) : (0 - (deltaY * 0.5));
 
                       return (
@@ -578,23 +663,21 @@ const Timeline: React.FC<TimelineProps> = ({ settings, data = DEFAULT_TIMELINE_D
                           className="absolute silk-particle"
                           style={{
                             top: `${startY}%`,
-                            // 从卡片端开始（右侧对于左卡片，左侧对于右卡片）
                             [isLeft ? 'right' : 'left']: '5%',
                             height: `${height}px`,
-                            width: `${25 * mobileParticleScale}%`,
-                            opacity: mobileParticleOpacity * (0.4 + Math.abs(t) * 0.2),
+                            width: `${25 * (Number(mobileParticleScale) / 100)}%`,
+                            opacity: Number(mobileParticleOpacity) / 100 * (0.4 + Math.abs(t) * 0.2),
                             background: `linear-gradient(${gradientAngle}deg,
                               ${primaryColor} 0%,
                               ${primaryColor}80 20%,
                               ${primaryColor}40 50%,
                               ${primaryColor}10 80%,
                               transparent 100%)`,
-                            // 向管道方向流动
                             ['--dx' as string]: isLeft ? '-280%' : '280%',
                             ['--dy' as string]: `${deltaY * 0.8}%`,
-                            animationDuration: `${mobileParticleSpeed * (0.8 + i * 0.05)}s`,
+                            animationDuration: `${Number(mobileParticleSpeed) / 100 * (0.8 + i * 0.05)}s`,
                             animationDelay: `${-i * 0.12}s`,
-                            filter: `blur(${(0.3 + silkDistortion * 0.5) * mobileParticleScale}px)`,
+                            filter: `blur(${(0.3 + Number(silkDistortion) * 0.5) * (Number(mobileParticleScale) / 100)}px)`,
                             borderRadius: '50%',
                           }}
                         />
@@ -604,10 +687,10 @@ const Timeline: React.FC<TimelineProps> = ({ settings, data = DEFAULT_TIMELINE_D
                     {/* 主光束粒子 - 从卡片端向管道流动 */}
                     {[...Array(8)].map((_, i) => {
                       const t = (i - 3.5) / 3.5;
-                      const turbOffset = silkTurbulence * Math.cos(i * 1.7) * 4;
+                      const turbOffset = Number(silkTurbulence) * Math.cos(i * 1.7) * 4;
 
-                      const startY = 50 + t * silkStartSpread * 20 + turbOffset;
-                      const endY = 50 + t * silkEndSpread * 45 + turbOffset * 2;
+                      const startY = 50 + t * Number(silkStartSpread) * 20 + turbOffset;
+                      const endY = 50 + t * Number(silkEndSpread) * 45 + turbOffset * 2;
                       const deltaY = endY - startY;
 
                       const gradientAngle = isLeft ? (180 + (deltaY * 0.4)) : (0 - (deltaY * 0.4));
@@ -619,9 +702,9 @@ const Timeline: React.FC<TimelineProps> = ({ settings, data = DEFAULT_TIMELINE_D
                           style={{
                             top: `${startY}%`,
                             [isLeft ? 'right' : 'left']: '3%',
-                            height: `${(3 + silkDistortion * 3) * mobileParticleScale}px`,
-                            width: `${20 * mobileParticleScale}%`,
-                            opacity: mobileParticleOpacity * 0.5,
+                            height: `${(3 + Number(silkDistortion) * 3) * (Number(mobileParticleScale) / 100)}px`,
+                            width: `${20 * (Number(mobileParticleScale) / 100)}%`,
+                            opacity: Number(mobileParticleOpacity) / 100 * 0.5,
                             background: `linear-gradient(${gradientAngle}deg,
                               ${colors.glow.replace('0.6', '0.7')} 0%,
                               ${colors.glow.replace('0.6', '0.4')} 30%,
@@ -629,9 +712,9 @@ const Timeline: React.FC<TimelineProps> = ({ settings, data = DEFAULT_TIMELINE_D
                               transparent 100%)`,
                             ['--dx' as string]: isLeft ? '-320%' : '320%',
                             ['--dy' as string]: `${deltaY * 0.75}%`,
-                            animationDuration: `${mobileParticleSpeed * 1.2}s`,
+                            animationDuration: `${Number(mobileParticleSpeed) / 100 * 1.2}s`,
                             animationDelay: `${-i * 0.2}s`,
-                            filter: `blur(${(1.5 + silkDistortion * 1.5) * mobileParticleScale}px)`,
+                            filter: `blur(${(1.5 + Number(silkDistortion) * 1.5) * (Number(mobileParticleScale) / 100)}px)`,
                             borderRadius: '40%',
                           }}
                         />
@@ -641,11 +724,11 @@ const Timeline: React.FC<TimelineProps> = ({ settings, data = DEFAULT_TIMELINE_D
                     {/* 扭曲粒子流 - 从卡片端向管道流动 */}
                     {[...Array(10)].map((_, i) => {
                       const t = (i - 4.5) / 4.5;
-                      const turbOffset = silkTurbulence * Math.sin(i * 2.8) * 8;
-                      const distortWave = silkDistortion * Math.cos(i * 1.9) * 5;
+                      const turbOffset = Number(silkTurbulence) * Math.sin(i * 2.8) * 8;
+                      const distortWave = Number(silkDistortion) * Math.cos(i * 1.9) * 5;
 
-                      const startY = 50 + t * silkStartSpread * 22 + turbOffset;
-                      const endY = 50 + t * silkEndSpread * 48 + turbOffset + distortWave;
+                      const startY = 50 + t * Number(silkStartSpread) * 22 + turbOffset;
+                      const endY = 50 + t * Number(silkEndSpread) * 48 + turbOffset + distortWave;
                       const deltaY = endY - startY;
 
                       const colorSet = i % 3;
@@ -659,9 +742,9 @@ const Timeline: React.FC<TimelineProps> = ({ settings, data = DEFAULT_TIMELINE_D
                           style={{
                             top: `${startY}%`,
                             [isLeft ? 'right' : 'left']: '8%',
-                            height: `${(2 + silkDistortion * 1.5) * mobileParticleScale}px`,
-                            width: `${18 * mobileParticleScale}%`,
-                            opacity: mobileParticleOpacity * 0.4,
+                            height: `${(2 + Number(silkDistortion) * 1.5) * (Number(mobileParticleScale) / 100)}px`,
+                            width: `${18 * (Number(mobileParticleScale) / 100)}%`,
+                            opacity: Number(mobileParticleOpacity) / 100 * 0.4,
                             background: `linear-gradient(${gradientAngle}deg,
                               ${particleColor} 0%,
                               ${particleColor}60 25%,
@@ -669,17 +752,18 @@ const Timeline: React.FC<TimelineProps> = ({ settings, data = DEFAULT_TIMELINE_D
                               transparent 100%)`,
                             ['--dx' as string]: isLeft ? `${-300 - distortWave}%` : `${300 + distortWave}%`,
                             ['--dy' as string]: `${deltaY * 0.9}%`,
-                            ['--twist' as string]: `${silkDistortion * (i % 2 === 0 ? 15 : -15)}deg`,
-                            animationDuration: `${mobileParticleSpeed * (1 + i * 0.08)}s`,
+                            ['--twist' as string]: `${Number(silkDistortion) * (i % 2 === 0 ? 15 : -15)}deg`,
+                            animationDuration: `${Number(mobileParticleSpeed) / 100 * (1 + i * 0.08)}s`,
                             animationDelay: `${-i * 0.15}s`,
-                            filter: `blur(${(0.8 + silkDistortion * 0.8) * mobileParticleScale}px)`,
+                            filter: `blur(${(0.8 + Number(silkDistortion) * 0.8) * (Number(mobileParticleScale) / 100)}px)`,
                             borderRadius: '30%',
                           }}
                         />
                       );
                     })}
                   </div>
-                </LayoutWrapper>
+                </div>
+
 
                 {/* 主信息卡片 - 液态玻璃 + 自发光 */}
                 <LayoutWrapper
@@ -1141,28 +1225,99 @@ const Timeline: React.FC<TimelineProps> = ({ settings, data = DEFAULT_TIMELINE_D
           const isAbove = index % 2 === 0;
           const colors = GLOW_COLORS[node.type] || GLOW_COLORS.work;
 
-          // 光锥形状计算 - 应用宽度系数
-          const cardRelativePos = 50 + lightConeOriginX * 0.5; // 卡片在时间段中心，可偏移
-          const adjustedLightSpread = lightSpread * lightConeWidthStart;
-          const narrowLeft = cardRelativePos - adjustedLightSpread / 2;
-          const narrowRight = cardRelativePos + adjustedLightSpread / 2;
-          // 终点宽度
-          const wideSpread = 100 * lightConeWidthEnd;
-          const wideLeft = 50 - wideSpread / 2;
-          const wideRight = 50 + wideSpread / 2;
+          // === 获取节点独立设置 ===
+          const contextSettings = getNodeSettings(node.id);
+          // 优先级：JSON Overrides > Context Node Overrides > Global Settings
+          const ns = { ...contextSettings, ...(node.overrides || {}) };
 
-          // 光锥 clipPath：从卡片位置（窄）扩散到时间轴（宽）
+          // 解构节点特定参数
+          const {
+            lightConeOriginX, lightConeOriginY, lightConeEndX, lightConeEndY,
+            lightConeRotation, lightConeWidthStart, lightConeWidthEnd,
+            timelineLightSpread: lightSpread,
+            timelineLightBlurX: lightBlurX,
+            timelineLightBlurY: lightBlurY,
+            timelineLightSoftness: lightSoftnessRaw,
+            timelineLightOpacity: lightOpacityRaw,
+            timelineLightFalloff: lightFalloffRaw,
+            timelineLightImpact: lightImpactRaw,
+            timelineCardGlow: cardGlowRaw,
+            timelineSilkSpeed: silkSpeed,
+            timelineSilkOpacity: silkOpacityRaw,
+            timelineSilkTurbulence: silkTurbulenceRaw,
+            timelineSilkStartSpread: silkStartSpreadRaw,
+            timelineSilkEndSpread: silkEndSpreadRaw,
+            timelineSilkDistortion: silkDistortionRaw,
+            focusFlowColors: flowColors,
+            focusFlowSpeed: flowSpeed,
+            focusGlowIntensity: glowIntensityRaw,
+            focusGlowSpread: glowSpread,
+            focusGlowThickness: glowThickness,
+            glassBgOpacity, glassBlur, glassSaturate,
+            timelineLinkCardOffset: linkCardOffset,
+            // 颜色
+            timelineColor1: color1,
+            timelineColor2: color2,
+            timelineColor3: color3,
+          } = ns;
+
+          // 归一化参数
+          const lightSoftness = lightSoftnessRaw / 100;
+          const lightOpacity = lightOpacityRaw / 100;
+          const lightFalloff = lightFalloffRaw / 100;
+          const lightImpact = lightImpactRaw / 100;
+          const cardGlow = cardGlowRaw / 100;
+          const silkOpacity = silkOpacityRaw / 100;
+          const silkTurbulence = silkTurbulenceRaw / 100;
+          const silkStartSpread = silkStartSpreadRaw / 100;
+          const silkEndSpread = silkEndSpreadRaw / 100;
+          const silkDistortion = silkDistortionRaw / 100;
+          const glowIntensity = glowIntensityRaw / 100;
+
+          // === 4点坐标计算系统 ===
+
+          // 1. 基础尺寸
+          const segmentWidthPx = BASE_WIDTH * (segmentWidth / 100);
+
+          // 2. X轴偏移 (转换为百分比)
+          const startXOffsetPercent = segmentWidthPx > 0 ? (lightConeOriginX / segmentWidthPx) * 100 : 0;
+          const endXOffsetPercent = segmentWidthPx > 0 ? (lightConeEndX / segmentWidthPx) * 100 : 0;
+
+          // 3. 宽度计算
+          const cardRelativePos = 50;
+
+          // 起点宽度 (卡片端) - 强化宽度系数的影响
+          // 基础宽度(40%) * 系数 / 100
+          const adjustedLightSpread = lightSpread * (lightConeWidthStart / 100);
+          const narrowLeft = cardRelativePos - adjustedLightSpread / 2 + startXOffsetPercent;
+          const narrowRight = cardRelativePos + adjustedLightSpread / 2 + startXOffsetPercent;
+
+          // 终点宽度 (管道端) - 强化宽度系数的影响
+          // 基础宽度(100%) * 系数 / 100
+          const wideSpread = 100 * (lightConeWidthEnd / 100);
+          const wideLeft = 50 - wideSpread / 2 + endXOffsetPercent;
+          const wideRight = 50 + wideSpread / 2 + endXOffsetPercent;
+
+          // 4. Clip Path 生成
           const clipAbove = `polygon(${narrowLeft}% 0%, ${narrowRight}% 0%, ${wideRight}% 100%, ${wideLeft}% 100%)`;
           const clipBelow = `polygon(${wideLeft}% 0%, ${wideRight}% 0%, ${narrowRight}% 100%, ${narrowLeft}% 100%)`;
 
-          // 光源起点位置（可调节）- 从卡片内边缘开始
-          const baseStartY = 8 + cardHeight; // 基础位置：卡片边缘
-          const adjustedStartY = baseStartY + lightOriginY + lightConeOriginY; // 加上偏移
-          const adjustedEndOffset = lightConeEndX; // 终点偏移
+          // 5. Y轴位置计算
+          const baseCardY = 8 + cardHeight; // 基础卡片距离
+          // 使用 timelineLightOriginY 作为基础偏移
+          const adjustedStartY = baseCardY + ns.timelineLightOriginY + lightConeOriginY;
+
+          const coneStyle = isAbove ? {
+            top: `${adjustedStartY}px`,
+            bottom: `calc(50% + 5px + ${lightConeEndY}px)`,
+          } : {
+            bottom: `${adjustedStartY}px`,
+            top: `calc(50% + 5px + ${lightConeEndY}px)`,
+          };
 
           return (
             <div key={node.id}>
-              {/* SVG 滤镜 - 方向性模糊 + 柔和度 */}
+              {/* SVG 滤镜 */}
               <svg width="0" height="0" style={{ position: 'absolute' }}>
                 <defs>
                   <filter id={`blur-${node.id}`} x="-100%" y="-100%" width="300%" height="300%">
@@ -1174,19 +1329,17 @@ const Timeline: React.FC<TimelineProps> = ({ settings, data = DEFAULT_TIMELINE_D
                 </defs>
               </svg>
 
-              {/* 聚光灯光锥 - 从卡片内边缘开始 */}
-              <LayoutWrapper
-                nodeId={node.id}
-                elementType="lightCone"
-                isMobile={false}
+              {/* 聚光灯光锥 */}
+              {/* 直接使用 div 替代 LayoutWrapper 以避免默认布局干扰调试参数 */}
+              <div
                 className="absolute"
                 style={{
                   left: `calc(32px + (100% - 64px) * ${startPos / 100})`,
                   width: `calc((100% - 64px) * ${segmentWidth / 100})`,
-                  top: isAbove ? `${adjustedStartY}px` : `calc(50% + 5px + ${adjustedEndOffset}px)`,
-                  bottom: isAbove ? `calc(50% + 5px + ${adjustedEndOffset}px)` : `${adjustedStartY}px`,
+                  ...coneStyle,
                   transform: `rotate(${lightConeRotation}deg)`,
                   transformOrigin: isAbove ? 'top center' : 'bottom center',
+                  zIndex: 0,
                 }}
               >
                 {/* 外层柔和光晕 */}
@@ -1383,7 +1536,7 @@ const Timeline: React.FC<TimelineProps> = ({ settings, data = DEFAULT_TIMELINE_D
                     );
                   })}
                 </div>
-              </LayoutWrapper>
+              </div>
 
               {/* 信息卡片 - 液态玻璃 + 自发光 */}
               <LayoutWrapper

@@ -109,13 +109,35 @@ export interface LayoutSettings {
   timelineLinkCardOffset: number;   // 链接卡片距离主卡片的偏移 (0~200)
   mobileLinkCardOffset: number;     // 移动端链接卡片距离 (0~200)
 
-  // === 光锥位置调整 ===
-  lightConeOriginX: number;         // 光锥起点X偏移 (-100~100)
-  lightConeOriginY: number;         // 光锥起点Y偏移 (-100~100)
-  lightConeEndX: number;            // 光锥终点X偏移 (-100~100)
-  lightConeRotation: number;        // 光锥旋转角度 (-45~45)
-  lightConeWidthStart: number;      // 光锥起点宽度系数 (50~200)
-  lightConeWidthEnd: number;        // 光锥终点宽度系数 (50~200)
+  // === Mobile 独立视觉参数 ===
+  mobileLightFalloff: number;       // 移动端光锥衰减
+  mobileLightImpact: number;        // 移动端光锥影响度
+  mobileLightSoftness: number;      // 移动端光锥柔和度
+  mobileSilkSpeed: number;          // 移动端丝线速度
+  mobileSilkOpacity: number;        // 移动端丝线透明度
+  mobileSilkTurbulence: number;     // 移动端丝线扰乱度
+  mobileSilkStartSpread: number;    // 移动端丝线起点扩散
+  mobileSilkEndSpread: number;      // 移动端丝线终点扩散
+  mobileSilkDistortion: number;     // 移动端丝线扭曲
+
+
+  // === 光锥位置调整 (Desktop) ===
+  lightConeOriginX: number;         // 光锥起点X偏移
+  lightConeOriginY: number;         // 光锥起点Y偏移
+  lightConeEndX: number;            // 光锥终点X偏移
+  lightConeEndY: number;            // 光锥终点Y偏移
+  lightConeRotation: number;        // 光锥旋转角度
+  lightConeWidthStart: number;      // 光锥起点宽度系数
+  lightConeWidthEnd: number;        // 光锥终点宽度系数
+
+  // === 光锥位置调整 (Mobile 独立参数) ===
+  mobileLightConeOriginX: number;
+  mobileLightConeOriginY: number;
+  mobileLightConeEndX: number;
+  mobileLightConeEndY: number;
+  mobileLightConeRotation: number;
+  mobileLightConeWidthStart: number;
+  mobileLightConeWidthEnd: number;
 }
 
 // 时间轴节点数据结构
@@ -127,4 +149,5 @@ export interface TimelineNode {
   subtitle?: string;
   description?: string;           // 链接卡片显示的额外信息
   type: 'education' | 'work' | 'internship';
+  overrides?: Partial<LayoutSettings>;
 }

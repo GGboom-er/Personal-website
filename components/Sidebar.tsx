@@ -1,6 +1,8 @@
 import React from 'react';
 import { LayoutSettings } from '../types';
 import { getFlowGradient } from './glass';
+import UserProfileCard from './shared/UserProfileCard';
+import ContactLinks from './shared/ContactLinks';
 
 interface SidebarProps {
   activeView: string;
@@ -13,37 +15,6 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, onSelectView, settings })
     { icon: 'fa-regular fa-id-card', label: '个人信息', id: 'Profile' },
     { icon: 'fa-solid fa-layer-group', label: '参与作品', id: 'Projects' },
     { icon: 'fa-solid fa-chart-pie', label: '技能分析', id: 'Skills' },
-  ];
-
-  // 联系方式配置 - 在这里编辑您的联系信息
-  // url: 点击跳转的链接 (GitHub用https://github.com/用户名, Email用mailto:邮箱, Phone用tel:电话号码)
-  // value: 显示在tooltip中的值
-  // copyable: 设为true则点击时复制value到剪贴板 (适用于微信号等)
-  const contactMethods = [
-    {
-      icon: 'fa-brands fa-github',
-      label: 'GitHub',
-      value: 'GGboom-er',
-      url: 'https://github.com/GGboom-er'
-    },
-    {
-      icon: 'fa-solid fa-envelope',
-      label: 'Email',
-      value: 'ggbommer@gmail.com',
-      url: 'mailto:ggbommer@gmail.com'
-    },
-    {
-      icon: 'fa-brands fa-weixin',
-      label: 'WeChat',
-      value: 'Y_zhao15',
-      copyable: true
-    },
-    {
-      icon: 'fa-solid fa-phone',
-      label: 'Phone',
-      value: '17607210929',
-      url: 'tel:17607210929'
-    },
   ];
 
   // 边框和发光参数
@@ -67,37 +38,9 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, onSelectView, settings })
           boxShadow: `4px 0 24px rgba(0,0,0,0.15), inset 1px 0 0 rgba(255,255,255,0.08)`,
         }}
       >
-      {/* User Profile */}
+      {/* User Profile - 使用共享组件 */}
       <div className="px-2 py-3 mb-1">
-        <div
-          className="flex flex-col items-center cursor-pointer group p-2.5 rounded-xl transition-all duration-300 ease-out active:scale-[0.98] relative overflow-hidden"
-          style={{
-            background: `rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.08})`,
-            backdropFilter: `blur(${settings.glassBlur * 0.5}px)`,
-            WebkitBackdropFilter: `blur(${settings.glassBlur * 0.5}px)`,
-            border: `${borderThickness}px solid rgba(255,255,255,${borderRefraction * 0.2})`,
-            boxShadow: `
-              0 6px 24px rgba(0,0,0,0.2),
-              inset 0 ${borderThickness}px ${borderThickness * 2}px rgba(255,255,255,${borderRefraction * 0.15}),
-              inset 0 -${borderThickness}px ${borderThickness * 2}px rgba(0,0,0,${borderRefraction * 0.08})
-            `,
-          }}
-        >
-          <div
-            className="w-11 h-11 rounded-full flex items-center justify-center text-xs font-bold mb-2 transition-all duration-300 shrink-0"
-            style={{
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
-              boxShadow: `0 3px 12px rgba(102, 126, 234, 0.4), 0 0 ${settings.borderGlow / 4}px rgba(255,255,255,${settings.borderGlow / 100 * 0.4}), inset 0 1px 0 rgba(255,255,255,0.3)`,
-              border: `1.5px solid rgba(255,255,255,${settings.borderGlow / 100 * 0.4})`,
-            }}
-          >
-            ME
-          </div>
-          <div className="text-center w-full min-w-0">
-            <div className="text-[11px] font-bold text-white leading-tight">余炜铭</div>
-            <div className="text-[9px] text-white/50 leading-tight mt-0.5">动画技术</div>
-          </div>
-        </div>
+        <UserProfileCard settings={settings} />
       </div>
 
       {/* Main Menu */}
@@ -162,68 +105,9 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, onSelectView, settings })
         })}
       </nav>
 
-      {/* Contact Section */}
+      {/* Contact Section - 使用共享组件 */}
       <div className="p-2 border-t border-white/10 overflow-visible">
-        <div
-          className="grid grid-cols-2 gap-1 rounded-lg p-1 overflow-visible"
-          style={{
-            background: `rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.05})`,
-            backdropFilter: `blur(${settings.glassBlur * 0.5}px)`,
-            WebkitBackdropFilter: `blur(${settings.glassBlur * 0.5}px)`,
-            border: `1px solid rgba(255,255,255,0.1)`,
-            boxShadow: `inset 0 1px 0 rgba(255,255,255,0.05)`,
-          }}
-        >
-          {contactMethods.map((contact, index) => {
-            const handleClick = () => {
-              if (contact.copyable) {
-                navigator.clipboard.writeText(contact.value);
-              }
-            };
-
-            const buttonClass = `text-white/50 w-full h-7 flex items-center justify-center rounded-md
-              hover:text-white hover:bg-white/10
-              active:scale-[0.92]
-              transition-all duration-200 ease-out cursor-pointer`;
-
-            return (
-              <div key={index} className="group relative">
-                {contact.url ? (
-                  <a
-                    href={contact.url}
-                    target={contact.url.startsWith('http') ? '_blank' : undefined}
-                    rel={contact.url.startsWith('http') ? 'noopener noreferrer' : undefined}
-                    className={buttonClass}
-                  >
-                    <i className={`${contact.icon} text-xs`}></i>
-                  </a>
-                ) : (
-                  <button onClick={handleClick} className={buttonClass}>
-                    <i className={`${contact.icon} text-xs`}></i>
-                  </button>
-                )}
-
-                {/* Tooltip */}
-                <div
-                  className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1.5
-                    text-white text-[9px] rounded-lg
-                    opacity-0 group-hover:opacity-100
-                    scale-95 group-hover:scale-100
-                    transition-all duration-200
-                    whitespace-nowrap pointer-events-none z-50
-                    bg-black/70 backdrop-blur-xl border border-white/15"
-                  style={{
-                    boxShadow: `0 6px 24px rgba(0,0,0,0.4)`,
-                  }}
-                >
-                  <span className="font-semibold text-white/70 mr-1">{contact.label}:</span>
-                  {contact.value}
-                  {contact.copyable && <span className="text-white/40 ml-1">(点击复制)</span>}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        <ContactLinks settings={settings} />
       </div>
     </aside>
     </>
