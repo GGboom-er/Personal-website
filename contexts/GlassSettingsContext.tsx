@@ -59,54 +59,40 @@ export const DEFAULT_SETTINGS: LayoutSettings = {
   distortionIntensity: 40,
   distortionScale: 24,
 
-  // === 时间轴光效 ===
-  // 光锥形状
-  timelineLightOriginY: 14,       // 光源起点Y偏移
-  timelineLightSpread: 37,        // 光锥扩散角度
-  // 光锥模糊
-  timelineLightBlurX: 48,         // 左右边缘模糊
-  timelineLightBlurY: 42,         // 沿光线方向模糊
-  timelineLightSoftness: 200,     // 整体柔和度
-  // 光锥强度
-  timelineLightOpacity: 31,       // 整体透明度
-  timelineLightFalloff: 58,       // 衰减曲线
-  timelineLightImpact: 119,       // 对时间轴影响
-  // 卡片发光
-  timelineCardGlow: 20,           // 卡片自发光强度
-  // 流动光丝
-  timelineSilkSpeed: 6.2,         // 流动速度
-  timelineSilkOpacity: 46,        // 透明度
-  timelineSilkTurbulence: 200,    // 扰乱度
-  timelineSilkStartSpread: 92,    // 起点扩散（卡片端）
-  timelineSilkEndSpread: 119,     // 终点扩散（时间轴端）
-  timelineSilkDistortion: 82,     // 丝线扭曲强度
-  // 颜色
-  timelineColor1: '#f3e5ff',      // 淡紫色
-  timelineColor2: '#f9d2e6',      // 淡粉色
-  timelineColor3: '#9aebf9',      // 淡青色
+  // === 时间轴光效 (Restored) ===
+  timelineLightOriginY: 14,
+  timelineLightSpread: 37,
+  timelineLightBlurX: 48,
+  timelineLightBlurY: 42,
+  timelineLightSoftness: 200,
+  timelineLightOpacity: 31,
+  timelineLightFalloff: 58,
+  timelineLightImpact: 119,
+  timelineCardGlow: 20,
+  timelineSilkSpeed: 6.2,
+  timelineSilkOpacity: 46,
+  timelineSilkTurbulence: 200,
+  timelineSilkStartSpread: 92,
+  timelineSilkEndSpread: 119,
+  timelineSilkDistortion: 82,
+  timelineColor1: '#f3e5ff',
+  timelineColor2: '#f9d2e6',
+  timelineColor3: '#9aebf9',
 
   // === 移动端时间轴 ===
-  // 卡片布局
-  mobileCardOffsetX: 0,           // 卡片水平位移
-  mobileCardWidth: 175,           // 卡片宽度
-  mobileCardSpread: 100,          // 卡片聚拢/扩散 (100=贴边)
-  // 管道
-  mobilePipeWidth: 20,            // 管道宽度
-  // 光锥 - 使用桌面端参数
-  mobileLightConeOpacity: 31,     // 光锥透明度
-  mobileLightConeStartWidth: 37,  // 光锥起始宽度-卡片端 (对应 lightSpread)
-  mobileLightConeEndWidth: 100,   // 光锥结束宽度-管道端
-  mobileLightConeBlur: 100,       // 光锥模糊比例
-  // 粒子
-  mobileParticleScale: 300,       // 粒子大小倍数 (3倍)
-  mobileParticleOpacity: 46,      // 粒子透明度 (对应 silkOpacity)
-  mobileParticleSpeed: 100,       // 粒子速度
-
-  // === 链接卡片 ===
-  timelineLinkCardOffset: 40,     // 链接卡片距离主卡片的偏移
-  mobileLinkCardOffset: 30,       // 移动端链接卡片距离
-
-  // === Mobile 独立视觉参数 (默认值) ===
+  mobileCardOffsetX: 0,
+  mobileCardWidth: 175,
+  mobileCardSpread: 100,
+  mobilePipeWidth: 20,
+  mobileLightConeOpacity: 31,
+  mobileLightConeStartWidth: 37,
+  mobileLightConeEndWidth: 100,
+  mobileLightConeBlur: 100,
+  mobileParticleScale: 300,
+  mobileParticleOpacity: 46,
+  mobileParticleSpeed: 100,
+  timelineLinkCardOffset: 40,
+  mobileLinkCardOffset: 30,
   mobileLightFalloff: 58,
   mobileLightImpact: 119,
   mobileLightSoftness: 200,
@@ -117,23 +103,57 @@ export const DEFAULT_SETTINGS: LayoutSettings = {
   mobileSilkEndSpread: 119,
   mobileSilkDistortion: 82,
 
-  // === 光锥位置调整 (Desktop) ===
-  lightConeOriginX: 0,            // 光锥起点X偏移
-  lightConeOriginY: 0,            // 光锥起点Y偏移
-  lightConeEndX: 0,               // 光锥终点X偏移
-  lightConeEndY: 0,               // 光锥终点Y偏移
-  lightConeRotation: 0,           // 光锥旋转角度
-  lightConeWidthStart: 100,       // 光锥起点宽度系数
-  lightConeWidthEnd: 100,         // 光锥终点宽度系数
+  // === Volumetric Spotlight (Desktop) ===
+  spotlightOriginX: 0,
+  spotlightOriginY: 0,
+  spotlightTargetX: 0,
+  spotlightTargetY: 0,
+  spotlightWidthStart: 120,
+  spotlightWidthEnd: 40,
+  spotlightIntensity: 80,
+  spotlightCoreSharpness: 0.5,
+  spotlightCoreWidth: 50,
+  spotlightEdgeBlur: 20,
+  spotlightRotation: 0,
+  spotlightColorOverride: '',
+  timelineReflectionIntensity: 50,
+  timelineShadowOpacity: 30,
+  timelineShadowOffset: 10,
+  timelineShadowBlur: 20,
+  timelineShadowWidth: 100,
 
-  // === Mobile 独立坐标默认值 ===
-  mobileLightConeOriginX: 0,
-  mobileLightConeOriginY: 0,
-  mobileLightConeEndX: 0,
-  mobileLightConeEndY: 0,
-  mobileLightConeRotation: 0,
-  mobileLightConeWidthStart: 500,
-  mobileLightConeWidthEnd: 500,
+  // === Volumetric Spotlight (Mobile) ===
+  mobileSpotlightOriginX: 0,
+  mobileSpotlightOriginY: 0,
+  mobileSpotlightTargetX: 0,
+  mobileSpotlightTargetY: 0,
+  mobileSpotlightWidthStart: 60,
+  mobileSpotlightWidthEnd: 20,
+  mobileSpotlightIntensity: 80,
+  mobileSpotlightCoreSharpness: 0.5,
+  mobileSpotlightCoreWidth: 50,
+  mobileSpotlightEdgeBlur: 10,
+  mobileSpotlightRotation: 0,
+
+  // === 智能对齐 ===
+  autoAlign: true,
+  sourceAnchor: 'bottom',
+  showGizmos: false,
+
+  // === NEW: Timeline Visuals ===
+  timelineCardGradientStart: 8,
+  timelineCardGradientEnd: 25,
+  timelineCardBorderGlow: 30,
+
+  // === NEW: Lumina Particles ===
+  luminaParticleCount: 15,
+  luminaSpawnRate: 50,
+  luminaSpeedBase: 30,
+  luminaSpeedVar: 120,
+  luminaSpiralFreq: 50,
+  luminaSpiralAmp: 25,
+  luminaGlowSize: 50,
+  luminaRippleChance: 33,
 };
 
 interface GlassSettingsContextValue {

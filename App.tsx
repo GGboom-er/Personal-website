@@ -5,7 +5,6 @@ import ProjectList from './components/ProjectList';
 import Timeline from './components/Timeline';
 import SkillsGraph from './components/skills/SkillsGraph';
 import BottomTabBar from './components/layout/BottomTabBar';
-import DebugSettingsPanel from './components/DebugSettingsPanel';
 import { useBreakpoint } from './hooks/useBreakpoint';
 import { GlassSettingsProvider, useGlassSettings } from './contexts/GlassSettingsContext';
 import { DragEditorProvider } from './contexts/DragEditorContext';
@@ -185,11 +184,6 @@ const AppContent: React.FC = () => {
         )}
 
       </main>
-
-      {/* Debug Panel - Fixed floating at the edge */}
-      <div className="fixed top-0 right-0 h-full z-[9999] pointer-events-auto">
-        <DebugSettingsPanel />
-      </div>
     </div>
   );
 };

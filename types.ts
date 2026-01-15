@@ -61,83 +61,24 @@ export interface LayoutSettings {
   // 扭曲效果
   distortionIntensity: number;
   distortionScale: number;
+  autoAlign: boolean;             // 是否自动对齐卡片与时间轴
+  sourceAnchor: 'bottom' | 'top' | 'center'; // 光束起点锚点
+  showGizmos: boolean;            // 是否显示交互手柄
 
-  // === 时间轴光效 ===
-  // 光锥形状
-  timelineLightOriginY: number;     // 光源起点Y偏移 (-50~50)
-  timelineLightSpread: number;      // 光锥扩散角度 (5-50)
-  // 光锥模糊
-  timelineLightBlurX: number;       // 左右边缘模糊 (0-30)
-  timelineLightBlurY: number;       // 沿光线方向模糊 (0-30)
-  timelineLightSoftness: number;    // 整体柔和度 (0-100)
-  // 光锥强度
-  timelineLightOpacity: number;     // 整体透明度 (0-100)
-  timelineLightFalloff: number;     // 衰减曲线 (0-100)
-  timelineLightImpact: number;      // 对时间轴影响 (0-100)
-  // 卡片发光
-  timelineCardGlow: number;         // 卡片自发光强度 (0-100)
-  // 流动光丝
-  timelineSilkSpeed: number;        // 流动速度 (0.5-10)
-  timelineSilkOpacity: number;      // 透明度 (0-100)
-  timelineSilkTurbulence: number;   // 扰乱度 (0-100)
-  timelineSilkStartSpread: number;  // 起点扩散 (0-100) 卡片端
-  timelineSilkEndSpread: number;    // 终点扩散 (0-100) 时间轴端
-  timelineSilkDistortion: number;   // 丝线扭曲强度 (0-100)
-  // 颜色
-  timelineColor1: string;           // 主色1
-  timelineColor2: string;           // 主色2
-  timelineColor3: string;           // 主色3
+  // === NEW: Timeline Visuals ===
+  timelineCardGradientStart: number; // Alpha % (0-100)
+  timelineCardGradientEnd: number;   // Alpha % (0-100)
+  timelineCardBorderGlow: number;    // Glow intensity % (0-100)
 
-  // === 移动端时间轴 ===
-  // 卡片布局
-  mobileCardOffsetX: number;        // 卡片水平位移 (-100~100)
-  mobileCardWidth: number;          // 卡片宽度 (80~200)
-  mobileCardSpread: number;         // 卡片聚拢/扩散 (0=聚拢中心, 100=贴边)
-  // 管道
-  mobilePipeWidth: number;          // 管道宽度 (10~40)
-  // 光锥
-  mobileLightConeOpacity: number;   // 光锥透明度 (0~200)
-  mobileLightConeStartWidth: number; // 光锥起始宽度-卡片端 (10~100)
-  mobileLightConeEndWidth: number;   // 光锥结束宽度-管道端 (50~200)
-  mobileLightConeBlur: number;      // 光锥模糊 (0~200)
-  // 粒子
-  mobileParticleScale: number;      // 粒子大小倍数 (100~500)
-  mobileParticleOpacity: number;    // 粒子透明度 (0~200)
-  mobileParticleSpeed: number;      // 粒子速度 (50~200)
-
-  // === 链接卡片 ===
-  timelineLinkCardOffset: number;   // 链接卡片距离主卡片的偏移 (0~200)
-  mobileLinkCardOffset: number;     // 移动端链接卡片距离 (0~200)
-
-  // === Mobile 独立视觉参数 ===
-  mobileLightFalloff: number;       // 移动端光锥衰减
-  mobileLightImpact: number;        // 移动端光锥影响度
-  mobileLightSoftness: number;      // 移动端光锥柔和度
-  mobileSilkSpeed: number;          // 移动端丝线速度
-  mobileSilkOpacity: number;        // 移动端丝线透明度
-  mobileSilkTurbulence: number;     // 移动端丝线扰乱度
-  mobileSilkStartSpread: number;    // 移动端丝线起点扩散
-  mobileSilkEndSpread: number;      // 移动端丝线终点扩散
-  mobileSilkDistortion: number;     // 移动端丝线扭曲
-
-
-  // === 光锥位置调整 (Desktop) ===
-  lightConeOriginX: number;         // 光锥起点X偏移
-  lightConeOriginY: number;         // 光锥起点Y偏移
-  lightConeEndX: number;            // 光锥终点X偏移
-  lightConeEndY: number;            // 光锥终点Y偏移
-  lightConeRotation: number;        // 光锥旋转角度
-  lightConeWidthStart: number;      // 光锥起点宽度系数
-  lightConeWidthEnd: number;        // 光锥终点宽度系数
-
-  // === 光锥位置调整 (Mobile 独立参数) ===
-  mobileLightConeOriginX: number;
-  mobileLightConeOriginY: number;
-  mobileLightConeEndX: number;
-  mobileLightConeEndY: number;
-  mobileLightConeRotation: number;
-  mobileLightConeWidthStart: number;
-  mobileLightConeWidthEnd: number;
+  // === NEW: Lumina Particles ===
+  luminaParticleCount: number;    // Max particles (0-500)
+  luminaSpawnRate: number;        // Spawn chance % (0-100)
+  luminaSpeedBase: number;        // Base speed * 100 (0-200)
+  luminaSpeedVar: number;         // Variance multiplier * 100 (0-500)
+  luminaSpiralFreq: number;       // Frequency * 1000 (0-200)
+  luminaSpiralAmp: number;        // Max Amplitude px (0-100)
+  luminaGlowSize: number;         // Glow size multiplier * 10 (0-100)
+  luminaRippleChance: number;     // Interaction chance % (0-100)
 }
 
 // 时间轴节点数据结构
