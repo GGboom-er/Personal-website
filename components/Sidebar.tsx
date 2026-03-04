@@ -78,8 +78,9 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, onSelectView, settings })
               )}
               <button
                 onClick={() => onSelectView(item.id)}
-                className="relative w-full flex flex-col items-center justify-center gap-0.5 px-1 py-2 rounded-lg text-[9px] font-medium transition-all duration-300 ease-out active:scale-[0.96]"
+                className="relative w-full flex flex-col items-center justify-center gap-0.5 px-1 py-2 rounded-lg text-[9px] font-medium transition-all duration-300 ease-out active:scale-[0.96] outline-none"
                 style={{
+                  WebkitTapHighlightColor: 'transparent',
                   background: isActive
                     ? `rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.15})`
                     : 'transparent',

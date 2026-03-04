@@ -137,12 +137,12 @@ const AppContent: React.FC = () => {
 
         {/* Profile View: Timeline */}
         {activeView === 'Profile' ? (
-          <div className="w-full h-full overflow-auto">
+          <div className="w-full h-full overflow-hidden">
             <Timeline settings={settings} />
           </div>
         ) : activeView === 'Skills' ? (
           /* Skills View: 3D Topology Graph */
-          <div className="w-full h-full overflow-hidden relative z-10">
+          <div className="w-full h-full overflow-visible relative z-10">
             <SkillsGraph />
           </div>
         ) : (

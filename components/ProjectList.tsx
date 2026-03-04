@@ -23,11 +23,11 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, activeId, onSelect,
   const isExternalUpdateRef = useRef(false); // 标记是否为外部更新
 
   // 基于 cardScale 计算基础卡片宽度
-  const baseCardWidth = Math.round(80 * settings.cardScale / 100);
+  const baseCardWidth = Math.round(72 * settings.cardScale / 100);
   const cardGap = settings.cardGap;
 
   // 移动端卡片尺寸
-  const mobileCardWidth = 120;
+  const mobileCardWidth = 108;
   const mobileCardGap = 16;
 
   // 同步 activeId 到 currentIndex（外部更新）
@@ -213,11 +213,10 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, activeId, onSelect,
             <button
               key={project.id}
               onClick={() => handleCardClick(project, index)}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                index === currentIndex
+              className={`h-1.5 rounded-full transition-all duration-300 ${index === currentIndex
                   ? 'bg-white w-4'
                   : 'bg-white/40 hover:bg-white/60 w-1.5'
-              }`}
+                }`}
             />
           ))}
         </div>

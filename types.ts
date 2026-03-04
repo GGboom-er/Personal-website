@@ -69,6 +69,18 @@ export interface LayoutSettings {
   timelineCardGradientStart: number; // Alpha % (0-100)
   timelineCardGradientEnd: number;   // Alpha % (0-100)
   timelineCardBorderGlow: number;    // Glow intensity % (0-100)
+  timelineCardGlow: number;
+  timelineSilkSpeed: number;
+  timelineLinkCardOffset: number;
+  desktopLinkOffsetX: number;
+  desktopLinkOffsetY: number;
+
+  // === NEW: Mobile App Specific Settings ===
+  mobileCardWidth: number;
+  mobileCardOffsetX: number;
+  mobileCardSpread: number;
+  mobilePipeWidth: number;
+  mobileLinkCardOffset: number;
 
   // === NEW: Lumina Particles ===
   luminaParticleCount: number;    // Max particles (0-500)

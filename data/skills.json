@@ -1,49 +1,268 @@
 {
   "nodes": [
-    { "id": "root", "label": "", "level": 0, "color": "#ffffff", "scale": 0.1 },
-    { "id": "dcc", "label": "Maya", "level": 1, "group": 1, "color": "#00d2ff", "scale": 1.6, "image": "images/skills/maya.png" },
-    { "id": "maya", "label": "Maya绑定", "level": 2, "group": 1, "color": "#00d2ff", "image": "images/skills/rig.jpg" },
-    { "id": "blender", "label": "AdvancedSkeleton开发", "level": 2, "group": 1, "color": "#ff8c00", "image": "images/skills/advancedskeleton.png" },
-    { "id": "houdini", "label": "视频动作捕捉", "level": 2, "group": 1, "color": "#ff4500", "image": "images/skills/mocap.png" },
-    { "id": "rig", "label": "Qualoth布料解算", "level": 2, "group": 1, "color": "#a855f7", "image": "images/skills/qualoth.png" },
-    { "id": "cfx", "label": "ZIVA肌肉解算", "level": 2, "group": 1, "color": "#ec4899", "image": "images/skills/ziva.png" },
-    { "id": "anim", "label": "RBF径向基函数", "level": 2, "group": 1, "color": "#facc15", "image": "images/skills/rbf.png" },
-    { "id": "engine", "label": "UnrealEngine", "level": 1, "group": 2, "color": "#ffffff", "scale": 1.6, "image": "images/skills/ue.png" },
-    { "id": "ue", "label": "Control Rig", "level": 2, "group": 2, "color": "#ffffff", "image": "images/skills/controlrig.png" },
-    { "id": "unity", "label": "动画重定向", "level": 2, "group": 2, "color": "#000000", "image": "images/skills/ra.png" },
-    { "id": "shader", "label": "USD", "level": 2, "group": 2, "color": "#10b981", "image": "images/skills/usd.png" },
-    { "id": "vfx", "label": "MetaHuman", "level": 2, "group": 2, "color": "#f43f5e", "image": "images/skills/metahuman.png" },
-    { "id": "proc", "label": "cascadeur", "level": 2, "group": 2, "color": "#8b5cf6", "image": "images/skills/cascadeur.png" },
-    { "id": "opt", "label": "UEPython开发", "level": 2, "group": 2, "color": "#64748b", "image": "images/skills/uepython.png" },
-    { "id": "dev", "label": "AI+CG", "level": 1, "group": 3, "color": "#ff4d4d", "scale": 1.6, "image": "images/skills/tools.png" },
-    { "id": "py", "label": "BlenderPython开发", "level": 2, "group": 3, "color": "#306998", "image": "images/skills/blender.png" },
-    { "id": "cpp", "label": "UEPython开发", "level": 2, "group": 3, "color": "#00599c", "image": "images/skills/ue.png" },
-    { "id": "tool", "label": "PyhonTools", "level": 2, "group": 3, "color": "#22c55e", "image": "images/skills/python.png" },
-    { "id": "pipe", "label": "Anim工具开发", "level": 2, "group": 3, "color": "#fb923c", "image": "images/skills/animTools.png" },
-    { "id": "api", "label": "Gemini", "level": 2, "group": 3, "color": "#6366f1", "image": "images/skills/gemini.png" },
-    { "id": "git", "label": "Claude", "level": 2, "group": 3, "color": "#f97316", "image": "images/skills/claude.png" }
+    {
+      "id": "root",
+      "label": "",
+      "level": 0,
+      "color": "#ffffff",
+      "scale": 0.1
+    },
+    {
+      "id": "dcc",
+      "label": "Maya",
+      "level": 1,
+      "group": 1,
+      "color": "#00d2ff",
+      "scale": 1.6,
+      "image": "images/skills/maya.png"
+    },
+    {
+      "id": "maya",
+      "label": "Maya资产绑定",
+      "level": 2,
+      "group": 1,
+      "color": "#00d2ff",
+      "image": "images/skills/rig.jpg"
+    },
+    {
+      "id": "blender",
+      "label": "AdvancedSkeleton开发",
+      "level": 2,
+      "group": 1,
+      "color": "#ff8c00",
+      "image": "images/skills/advancedskeleton.png"
+    },
+    {
+      "id": "houdini",
+      "label": "视频动作捕捉",
+      "level": 2,
+      "group": 1,
+      "color": "#ff4500",
+      "image": "images/skills/mocap.png"
+    },
+    {
+      "id": "rig",
+      "label": "Qualoth布料解算",
+      "level": 2,
+      "group": 1,
+      "color": "#a855f7",
+      "image": "images/skills/qualoth.png"
+    },
+    {
+      "id": "cfx",
+      "label": "ZIVA肌肉解算",
+      "level": 2,
+      "group": 1,
+      "color": "#ec4899",
+      "image": "images/skills/ziva.png"
+    },
+    {
+      "id": "anim",
+      "label": "RBF次级骨骼驱动",
+      "level": 2,
+      "group": 1,
+      "color": "#facc15",
+      "image": "images/skills/rbf.png"
+    },
+    {
+      "id": "engine",
+      "label": "UnrealEngine",
+      "level": 1,
+      "group": 2,
+      "color": "#ffffff",
+      "scale": 1.6,
+      "image": "images/skills/ue.png"
+    },
+    {
+      "id": "ue",
+      "label": "Control Rig",
+      "level": 2,
+      "group": 2,
+      "color": "#ffffff",
+      "image": "images/skills/controlrig.png"
+    },
+    {
+      "id": "unity",
+      "label": "动画重定向",
+      "level": 2,
+      "group": 2,
+      "color": "#000000",
+      "image": "images/skills/ra.png"
+    },
+    {
+      "id": "shader",
+      "label": "USD",
+      "level": 2,
+      "group": 2,
+      "color": "#10b981",
+      "image": "images/skills/usd.png"
+    },
+    {
+      "id": "vfx",
+      "label": "MetaHuman",
+      "level": 2,
+      "group": 2,
+      "color": "#f43f5e",
+      "image": "images/skills/metahuman.png"
+    },
+    {
+      "id": "proc",
+      "label": "cascadeur",
+      "level": 2,
+      "group": 2,
+      "color": "#8b5cf6",
+      "image": "images/skills/cascadeur.png"
+    },
+    {
+      "id": "opt",
+      "label": "UEPython开发",
+      "level": 2,
+      "group": 2,
+      "color": "#64748b",
+      "image": "images/skills/uepython.png"
+    },
+    {
+      "id": "dev",
+      "label": "AI+CG",
+      "level": 1,
+      "group": 3,
+      "color": "#ff4d4d",
+      "scale": 1.6,
+      "image": "images/skills/tools.png"
+    },
+    {
+      "id": "py",
+      "label": "BlenderPython开发",
+      "level": 2,
+      "group": 3,
+      "color": "#306998",
+      "image": "images/skills/blender.png"
+    },
+    {
+      "id": "cpp",
+      "label": "UEPython开发",
+      "level": 2,
+      "group": 3,
+      "color": "#00599c",
+      "image": "images/skills/ue.png"
+    },
+    {
+      "id": "tool",
+      "label": "PyhonTools",
+      "level": 2,
+      "group": 3,
+      "color": "#22c55e",
+      "image": "images/skills/python.png"
+    },
+    {
+      "id": "pipe",
+      "label": "Anim工具开发",
+      "level": 2,
+      "group": 3,
+      "color": "#fb923c",
+      "image": "images/skills/animTools.png"
+    },
+    {
+      "id": "api",
+      "label": "Gemini",
+      "level": 2,
+      "group": 3,
+      "color": "#6366f1",
+      "image": "images/skills/gemini.png"
+    },
+    {
+      "id": "git",
+      "label": "Claude",
+      "level": 2,
+      "group": 3,
+      "color": "#f97316",
+      "image": "images/skills/claude.png"
+    }
   ],
   "links": [
-    { "source": "root", "target": "dcc" },
-    { "source": "root", "target": "engine" },
-    { "source": "root", "target": "dev" },
-    { "source": "dcc", "target": "maya" },
-    { "source": "dcc", "target": "blender" },
-    { "source": "dcc", "target": "houdini" },
-    { "source": "dcc", "target": "rig" },
-    { "source": "dcc", "target": "cfx" },
-    { "source": "dcc", "target": "anim" },
-    { "source": "engine", "target": "ue" },
-    { "source": "engine", "target": "unity" },
-    { "source": "engine", "target": "shader" },
-    { "source": "engine", "target": "vfx" },
-    { "source": "engine", "target": "proc" },
-    { "source": "engine", "target": "opt" },
-    { "source": "dev", "target": "py" },
-    { "source": "dev", "target": "cpp" },
-    { "source": "dev", "target": "tool" },
-    { "source": "dev", "target": "pipe" },
-    { "source": "dev", "target": "api" },
-    { "source": "dev", "target": "git" }
+    {
+      "source": "root",
+      "target": "dcc"
+    },
+    {
+      "source": "root",
+      "target": "engine"
+    },
+    {
+      "source": "root",
+      "target": "dev"
+    },
+    {
+      "source": "dcc",
+      "target": "maya"
+    },
+    {
+      "source": "dcc",
+      "target": "blender"
+    },
+    {
+      "source": "dcc",
+      "target": "houdini"
+    },
+    {
+      "source": "dcc",
+      "target": "rig"
+    },
+    {
+      "source": "dcc",
+      "target": "cfx"
+    },
+    {
+      "source": "dcc",
+      "target": "anim"
+    },
+    {
+      "source": "engine",
+      "target": "ue"
+    },
+    {
+      "source": "engine",
+      "target": "unity"
+    },
+    {
+      "source": "engine",
+      "target": "shader"
+    },
+    {
+      "source": "engine",
+      "target": "vfx"
+    },
+    {
+      "source": "engine",
+      "target": "proc"
+    },
+    {
+      "source": "engine",
+      "target": "opt"
+    },
+    {
+      "source": "dev",
+      "target": "py"
+    },
+    {
+      "source": "dev",
+      "target": "cpp"
+    },
+    {
+      "source": "dev",
+      "target": "tool"
+    },
+    {
+      "source": "dev",
+      "target": "pipe"
+    },
+    {
+      "source": "dev",
+      "target": "api"
+    },
+    {
+      "source": "dev",
+      "target": "git"
+    }
   ]
 }

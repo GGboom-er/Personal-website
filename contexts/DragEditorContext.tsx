@@ -27,28 +27,28 @@ const DEFAULT_ELEMENT_LAYOUT: ElementLayout = {
 // 移动端布局配置
 const MOBILE_LAYOUTS: Record<string, NodeLayoutConfig> = {
   work1: {
-    mainCard: { offsetX: -18, offsetY: 4, rotation: 0, scale: 0.76 },
-    linkCard: { offsetX: 129, offsetY: -68, rotation: 0, scale: 1 },
+    mainCard: { offsetX: 0, offsetY: 0, rotation: 0, scale: 0.8 },
+    linkCard: { offsetX: 0, offsetY: 0, rotation: 0, scale: 1 },
     lightCone: { offsetX: 0, offsetY: 0, rotation: 0, scale: 1 },
-    glassLine: { offsetX: 114, offsetY: -38, rotation: 0, scale: 1 },
+    glassLine: { offsetX: 0, offsetY: 0, rotation: 0, scale: 1 },
   },
   edu: {
-    mainCard: { offsetX: -96, offsetY: -39, rotation: 0, scale: 0.64 },
-    linkCard: { offsetX: 149, offsetY: -124, rotation: 0, scale: 1 },
+    mainCard: { offsetX: 0, offsetY: 0, rotation: 0, scale: 0.8 },
+    linkCard: { offsetX: 0, offsetY: 0, rotation: 0, scale: 1 },
     lightCone: { offsetX: 0, offsetY: 0, rotation: 0, scale: 1 },
-    glassLine: { offsetX: 124, offsetY: -80, rotation: 0, scale: 1 },
+    glassLine: { offsetX: 0, offsetY: 0, rotation: 0, scale: 1 },
   },
   intern: {
-    mainCard: { offsetX: 27, offsetY: 2, rotation: 0, scale: 0.77 },
-    linkCard: { offsetX: 8, offsetY: -60, rotation: 0, scale: 1 },
+    mainCard: { offsetX: 0, offsetY: 0, rotation: 0, scale: 0.8 },
+    linkCard: { offsetX: 0, offsetY: 0, rotation: 0, scale: 1 },
     lightCone: { offsetX: 0, offsetY: 0, rotation: 0, scale: 1 },
-    glassLine: { offsetX: -102, offsetY: -35, rotation: 0, scale: 1 },
+    glassLine: { offsetX: 0, offsetY: 0, rotation: 0, scale: 1 },
   },
   work2: {
-    mainCard: { offsetX: 21, offsetY: 3, rotation: 0, scale: 0.81 },
-    linkCard: { offsetX: 6, offsetY: -81, rotation: 0, scale: 1 },
+    mainCard: { offsetX: 0, offsetY: 0, rotation: 0, scale: 0.8 },
+    linkCard: { offsetX: 0, offsetY: 0, rotation: 0, scale: 1 },
     lightCone: { offsetX: 0, offsetY: 0, rotation: 0, scale: 1 },
-    glassLine: { offsetX: -119, offsetY: -44, rotation: 0, scale: 1 },
+    glassLine: { offsetX: 0, offsetY: 0, rotation: 0, scale: 1 },
   },
 };
 

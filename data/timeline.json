@@ -4,8 +4,8 @@
       "id": "edu",
       "startYear": 2017,
       "endYear": 2021,
-      "title": "吉林动画学院-动画艺术专业",
-      "subtitle": "参与学校项目《鼠年拜年》、《自然法则》",
+      "title": "吉林动画学院-动画艺术专业2017——2021",
+      "subtitle": "参与学校项目《鼠年拜年》、《自然法则》动画短片",
       "description": "《自然法则》分别获2023年第五届“社会主义核心价值观动画短片扶持创作活动”二类优秀作品奖\n深圳青年影像节最佳技术作品奖",
       "type": "education",
       "overrides": {
@@ -43,8 +43,8 @@
       "startYear": 2020,
       "endYear": 2021,
       "title": "北京纸飞机动画",
-      "subtitle": "实习",
-      "description": "角色、道具绑定制作，绑定、动画工具开发",
+      "subtitle": "实习2020——2021",
+      "description": "参与制作《两不疑Ⅰ》、《两不疑Ⅱ》，负责角色、道具绑定制作，绑定、动画工具开发。",
       "type": "internship",
       "overrides": {
         "lightConeOriginX": -83,
@@ -80,8 +80,8 @@
       "startYear": 2021,
       "endYear": 2023,
       "title": "北京纸飞机动画",
-      "subtitle": "绑定师、绑定TD",
-      "description": "负责角色绑定制作规范，开发绑定技术、工具",
+      "subtitle": "绑定师、绑定TD2021——2023",
+      "description": "参与制作《英雄联盟S11世界赛MV》、《凸变英雄X》pv，负责角色绑定、道具绑定、制作规范，开发绑定技术、工具。",
       "type": "work",
       "overrides": {
         "lightConeOriginX": 95,
@@ -114,7 +114,9 @@
         "timelineSilkDistortion": 131,
         "timelineColor1": "#ff0000",
         "timelineColor2": "#ff0084",
-        "timelineColor3": "#00d9ff"
+        "timelineColor3": "#00d9ff",
+        "desktopLinkOffsetX": 30,
+        "desktopLinkOffsetY": 0
       }
     },
     {
@@ -122,8 +124,8 @@
       "startYear": 2023,
       "endYear": 2025,
       "title": "北京纸飞机动画",
-      "subtitle": "绑定总监、制作TD",
-      "description": "负责绑定制作、技术、工具开发，maya、blender、UE软件pipeline管线开发",
+      "subtitle": "绑定总监、制作TD2023——2026",
+      "description": "参与制作《喵十一》、《凸变英雄X》剧集，负责绑定制作、技术、工具开发，配合开发maya、blender、UE软件pipeline管线",
       "type": "work",
       "overrides": {
         "lightConeOriginX": -4,

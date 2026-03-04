@@ -41,14 +41,16 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
   const scale = (settings.iconScale / 100) * baseScale;
 
   // 图标尺寸 - 固定大小，不随布局模式变化
-  const iconWidth = Math.round(120 * scale);
-  const iconHeight = Math.round(180 * scale);
+  // 图标尺寸 - 缩容高度 1/3 (从 180 降至 120)
+  // 图标尺寸 - 调整高度至 135 (约 120 的 1.125倍)
+  const iconWidth = Math.round(96 * scale);
+  const iconHeight = Math.round(135 * scale);
 
-  // 文字尺寸
+  // 文字尺寸 - 基础字号减少 2px
   const fontSize = {
-    title: Math.round(settings.titleSize * scale),
-    titleEn: Math.round(settings.titleSize * 0.45 * scale),
-    desc: Math.round(settings.descSize * scale),
+    title: Math.round((settings.titleSize - 2) * scale),
+    titleEn: Math.round((settings.titleSize - 2) * 0.45 * scale),
+    desc: Math.round((settings.descSize - 2) * scale),
   };
 
   // 间距
@@ -85,7 +87,7 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
               hover:from-[#00B5E5] hover:to-[#00A1D6]
               hover:-translate-y-0.5 active:scale-[0.97]
               transition-all duration-200 inline-flex items-center gap-1 whitespace-nowrap
-              text-[clamp(9px,2vw,12px)] px-[clamp(8px,2vw,14px)] py-[clamp(4px,1vw,8px)]"
+              text-[9px] px-3 py-1"
           >
             <i className="fa-brands fa-bilibili"></i>
             Bilibili
@@ -103,7 +105,7 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
               hover:from-[#ff2020] hover:to-[#FF0000]
               hover:-translate-y-0.5 active:scale-[0.97]
               transition-all duration-200 inline-flex items-center gap-1 whitespace-nowrap
-              text-[clamp(9px,2vw,12px)] px-[clamp(8px,2vw,14px)] py-[clamp(4px,1vw,8px)]"
+              text-[9px] px-3 py-1"
           >
             <i className="fa-brands fa-youtube"></i>
             YouTube
@@ -178,13 +180,12 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
     );
 
     return (
-      <div className="w-full flex items-center justify-center overflow-hidden">
+      <div className="w-full flex items-center justify-center">
         <div
-          className="flex items-center justify-center gap-[clamp(4px,1vw,12px)] flex-nowrap"
+          className="flex items-center justify-center gap-[clamp(4px,1vw,8px)] flex-wrap"
           style={{
             flexDirection: isVertical ? 'column' : 'row',
-            transform: 'scale(var(--view-scale, 1))',
-            transformOrigin: 'center center',
+            transformOrigin: 'center center'
           }}
         >
           <ButtonGroup />
@@ -253,8 +254,8 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
 
       {/* Content Container - 可滚动（无滚动条） */}
       <div
-        className="absolute inset-0 z-10 overflow-y-auto no-scrollbar transition-all duration-500 ease-out"
-        style={{ padding: spacing.padding }}
+        className="absolute inset-0 z-10 overflow-y-auto no-scrollbar transition-all duration-500 ease-out flex flex-col"
+        style={{ padding: spacing.padding, paddingBottom: Math.round(spacing.padding / 2) }}
       >
         {/* Landscape Layout: [Icon + Text] | [View] 横向 */}
         {layoutMode === 'landscape' && (
@@ -372,110 +373,95 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
           </div>
         )}
 
-        {/* Portrait Layout: 竖屏布局 - 图片上方、文字下方、View底部 */}
+        {/* Portrait Layout: 竖屏布局 - [海报] -> [文字] -> [功能区贴底] */}
         {layoutMode === 'portrait' && (
           <div
-            className="flex flex-col h-full"
-            style={{ gap: Math.round(10 * scale) }}
+            className="flex flex-col h-full overflow-hidden"
+            style={{ gap: Math.round(3 * scale) }}
           >
-            {/* Top: Icon - 左对齐 */}
-            <div
-              className="relative shrink-0"
-              style={{
-                width: iconWidth,
-                height: iconHeight,
-              }}
-            >
-              {glowIntensity > 0 && (
-                <>
-                  <div
-                    className="absolute rounded-xl pointer-events-none flow-animate"
-                    style={{
-                      inset: -glowSpread / 2,
-                      background: getFlowGradient(flowColors, glowIntensity * 0.6),
-                      filter: `blur(${glowSpread}px)`,
-                      opacity: glowIntensity * 0.8,
-                      animationDuration: `${flowSpeed}s`,
-                    }}
-                  />
-                  <div
-                    className="absolute inset-0 rounded-xl pointer-events-none overflow-hidden flow-animate"
-                    style={{
-                      padding: glowThickness,
-                      background: getFlowGradient(flowColors, 1),
-                      WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                      WebkitMaskComposite: 'xor',
-                      maskComposite: 'exclude',
-                      animationDuration: `${flowSpeed}s`,
-                    }}
-                  />
-                </>
-              )}
-              <ImageFrame
-                src={getAssetPath(project.icon)}
-                alt={project.title}
-                aspectRatio="2/3"
-                borderThickness={borderThickness}
-                borderGlow={settings.borderGlow}
-                borderRefraction={settings.borderRefraction}
-                imageShadow={settings.imageShadow}
-                imageEdgeBlur={settings.imageEdgeBlur}
-                distortionIntensity={settings.distortionIntensity}
-                distortionScale={settings.distortionScale}
-                borderRadius="0.5rem"
-                className="w-full h-full"
-              />
+            {/* 1. Top Section: Icon - 紧凑显示 */}
+            <div className="flex-shrink-0 flex justify-start">
+              <div
+                className="relative"
+                style={{
+                  width: iconWidth,
+                  height: iconHeight,
+                }}
+              >
+                {glowIntensity > 0 && (
+                  <>
+                    <div
+                      className="absolute rounded-xl pointer-events-none flow-animate"
+                      style={{
+                        inset: -glowSpread / 2,
+                        background: getFlowGradient(flowColors, glowIntensity * 0.6),
+                        filter: `blur(${glowSpread}px)`,
+                        opacity: glowIntensity * 0.8,
+                        animationDuration: `${flowSpeed}s`,
+                      }}
+                    />
+                    <div
+                      className="absolute inset-0 rounded-xl pointer-events-none overflow-hidden flow-animate"
+                      style={{
+                        padding: glowThickness,
+                        background: getFlowGradient(flowColors, 1),
+                        WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                        WebkitMaskComposite: 'xor',
+                        maskComposite: 'exclude',
+                        animationDuration: `${flowSpeed}s`,
+                      }}
+                    />
+                  </>
+                )}
+                <ImageFrame
+                  src={getAssetPath(project.icon)}
+                  alt={project.title}
+                  aspectRatio="4/5"
+                  borderThickness={borderThickness}
+                  borderGlow={settings.borderGlow}
+                  borderRefraction={settings.borderRefraction}
+                  imageShadow={settings.imageShadow}
+                  imageEdgeBlur={settings.imageEdgeBlur}
+                  distortionIntensity={settings.distortionIntensity}
+                  distortionScale={settings.distortionScale}
+                  borderRadius="0.5rem"
+                  className="w-full h-full"
+                />
+              </div>
             </div>
 
-            {/* Middle: Text - 左对齐，在图片下方 */}
-            <div className="flex flex-col flex-1 min-h-0">
+            {/* 2. Middle Section: Text - 文字核心区 (保证最低显示高度) */}
+            <div className="flex-1 min-h-[80px] flex flex-col overflow-y-auto no-scrollbar py-0.5">
               <h1
-                className="font-bold tracking-tight leading-tight"
+                className="font-bold tracking-tight leading-tight shrink-0"
                 style={{
                   fontSize: fontSize.title,
                   fontFamily: settings.fontFamily,
                   color: settings.titleColor,
-                  textShadow: `
-                    0 1px 0 rgba(255,255,255,${settings.textHighlight / 100 * 0.4}),
-                    0 2px 4px rgba(0,0,0,${settings.textShadow / 100 * 0.6})
-                  `,
+                  textShadow: `0 2px 4px rgba(0,0,0,0.5)`,
                 }}
               >
                 {project.title}
               </h1>
-              {project.titleEn && (
-                <h2
-                  className="font-medium tracking-wide"
-                  style={{
-                    fontSize: fontSize.titleEn,
-                    marginTop: Math.round(2 * scale),
-                    fontFamily: settings.fontFamily,
-                    color: settings.titleColor,
-                    opacity: 0.7,
-                  }}
-                >
-                  {project.titleEn}
-                </h2>
-              )}
               <p
-                className="leading-relaxed mt-2"
+                className="leading-relaxed mt-1"
                 style={{
                   fontSize: fontSize.desc,
-                  lineHeight: 1.5,
-                  wordBreak: 'break-word',
-                  whiteSpace: 'pre-line',
-                  fontFamily: settings.fontFamily,
+                  lineHeight: 1.4,
                   color: settings.descColor,
-                  maxWidth: '35em',
+                  fontFamily: settings.fontFamily,
+                  opacity: 0.9,
                 }}
               >
                 {project.description}
               </p>
             </div>
 
-            {/* Bottom: View Section - 水平居中 */}
-            <div className="shrink-0">
-              <ViewSection />
+            {/* 3. Bottom Section: ViewSection (Video/Stats/Tags) - 紧凑贴底无上边距 */}
+            <div className="shrink-0 mt-auto border-t border-white/5 pt-1">
+              <div style={{ transformOrigin: 'bottom center' }}>
+                <ViewSection />
+              </div>
             </div>
           </div>
         )}

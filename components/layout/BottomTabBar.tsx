@@ -29,12 +29,12 @@ const BottomTabBar: React.FC<BottomTabBarProps> = ({ activeView, onSelectView, s
       <nav
         className="w-full shrink-0 z-40"
         style={{
-          background: `linear-gradient(to bottom, rgba(10,10,12,0.95) 0%, rgba(10,10,12,0.85) 100%)`,
+          background: `linear-gradient(to bottom, rgba(10,10,12,0.12) 0%, rgba(10,10,12,0.08) 100%)`,
           backdropFilter: `blur(${settings.glassBlur + 20}px) saturate(${settings.glassSaturate}%)`,
           WebkitBackdropFilter: `blur(${settings.glassBlur + 20}px) saturate(${settings.glassSaturate}%)`,
           borderBottom: `${borderThickness * 0.5}px solid rgba(255,255,255,${borderRefraction * 0.15})`,
           boxShadow: `
-            0 4px 24px rgba(0,0,0,0.4),
+            0 4px 24px rgba(0,0,0,0.25),
             inset 0 -1px 0 rgba(255,255,255,${borderRefraction * 0.08})
           `,
         }}
@@ -47,7 +47,8 @@ const BottomTabBar: React.FC<BottomTabBarProps> = ({ activeView, onSelectView, s
               <button
                 key={item.id}
                 onClick={() => onSelectView(item.id)}
-                className="relative flex flex-col items-center justify-center flex-1 h-full transition-all duration-300 active:scale-95"
+                className="relative flex flex-col items-center justify-center flex-1 h-full transition-all duration-300 active:scale-95 outline-none"
+                style={{ WebkitTapHighlightColor: 'transparent' }}
               >
                 {/* 激活时的发光边框层 - 与 Sidebar 保持一致 */}
                 {isActive && glowIntensity > 0 && (
