@@ -1,7 +1,7 @@
 import React, { createContext, useContext, ReactNode } from 'react';
 
 // 每个元素的布局数据
-export interface ElementLayout {
+interface ElementLayout {
   offsetX: number;
   offsetY: number;
   rotation: number;

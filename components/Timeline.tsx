@@ -9,8 +9,7 @@ import UserProfileCard from './shared/UserProfileCard';
 import ContactLinks from './shared/ContactLinks';
 import LuminaHull from './lumina/LuminaHull';
 import hullData from '../data/hulls.json';
-
-export const DEFAULT_TIMELINE_DATA: TimelineNode[] = timelineData.timeline as TimelineNode[];
+const DEFAULT_TIMELINE_DATA: TimelineNode[] = timelineData.timeline as TimelineNode[];
 
 interface TimelineProps {
   settings: LayoutSettings;

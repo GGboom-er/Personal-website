@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 
 // 断点配置
-export const BREAKPOINTS = {
+const BREAKPOINTS = {
   xs: 0,      // 手机竖屏
   sm: 480,    // 手机横屏
   md: 768,    // 平板
@@ -10,7 +10,7 @@ export const BREAKPOINTS = {
   '2xl': 1920 // 超宽屏
 } as const;
 
-export type BreakpointKey = keyof typeof BREAKPOINTS;
+type BreakpointKey = keyof typeof BREAKPOINTS;
 
 interface BreakpointState {
   breakpoint: BreakpointKey;

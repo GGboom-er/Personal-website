@@ -13,9 +13,9 @@
 
 ---
 ## 新阶段任务 (Phase 2): 深度精简与文本 UI 调试台
-- [ ] 6. **代码与组件深度清理**:
+- [x] 6. **代码与组件深度清理**:
   - [x] 6.1 清理项目中未被使用的遗留组件 (如 UserProfileCard 等)。
-  - [ ] 6.2 在 `glass.css` 清理废弃动画与样式。
+  - [x] 6.2 在 `glass.css` 清理废弃动画与样式。
 - [x] 7. **直观拖拽排版调试系统 (Drag-and-Drop Text Debugger) 实现**:
   - [x] 7.1 扩展 `DragEditorContext` 的支持范围和使其变为响应式 (Reactive State)。
   - [x] 7.2 完成全局编辑模式开关 (Edit Mode Toggle)，并实现一个通用的可拖拽 Wrapper (`DraggableText`)。
