@@ -37,7 +37,7 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({ settings, className =
         }}
       >
         <img
-          src={getAssetPath('images/A.jpg')}
+          src={getAssetPath('images/A.webp')}
           alt="ME"
           className="w-full h-full object-cover"
         />

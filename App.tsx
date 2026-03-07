@@ -21,13 +21,13 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     const preloadImages = () => {
       // 优先预加载当前视图的背景
-      const activeBg = activeView === 'Skills' ? 'images/bg3.png' : activeView === 'Profile' ? 'images/bg2.png' : 'images/bg.png';
+      const activeBg = activeView === 'Skills' ? 'images/bg3.webp' : activeView === 'Profile' ? 'images/bg2.webp' : 'images/bg.webp';
       new Image().src = getAssetPath(activeBg);
 
       // 延迟加载其他资源，避免阻塞首屏渲染
       setTimeout(() => {
         // 预加载其他背景
-        ['images/bg.png', 'images/bg2.png', 'images/bg3.png']
+        ['images/bg.webp', 'images/bg2.webp', 'images/bg3.webp']
           .filter(src => src !== activeBg)
           .forEach(src => {
             const img = new Image();
@@ -78,7 +78,7 @@ const AppContent: React.FC = () => {
       <div className="absolute inset-0 z-0 overflow-hidden">
         {/* 基础背景图 - 根据视图切换 */}
         <img
-          src={getAssetPath(activeView === 'Skills' ? 'images/bg3.png' : activeView === 'Profile' ? 'images/bg2.png' : 'images/bg.png')}
+          src={getAssetPath(activeView === 'Skills' ? 'images/bg3.webp' : activeView === 'Profile' ? 'images/bg2.webp' : 'images/bg.webp')}
           alt=""
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
           style={{ opacity: 0.8 }}

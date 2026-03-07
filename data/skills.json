@@ -14,7 +14,7 @@
       "group": 1,
       "color": "#00d2ff",
       "scale": 1.6,
-      "image": "images/skills/maya.png"
+      "image": "images/skills/maya.webp"
     },
     {
       "id": "maya",
@@ -22,7 +22,7 @@
       "level": 2,
       "group": 1,
       "color": "#00d2ff",
-      "image": "images/skills/rig.jpg"
+      "image": "images/skills/rig.webp"
     },
     {
       "id": "blender",
@@ -30,7 +30,7 @@
       "level": 2,
       "group": 1,
       "color": "#ff8c00",
-      "image": "images/skills/advancedskeleton.png"
+      "image": "images/skills/advancedskeleton.webp"
     },
     {
       "id": "houdini",
@@ -38,7 +38,7 @@
       "level": 2,
       "group": 1,
       "color": "#ff4500",
-      "image": "images/skills/mocap.png"
+      "image": "images/skills/mocap.webp"
     },
     {
       "id": "rig",
@@ -46,7 +46,7 @@
       "level": 2,
       "group": 1,
       "color": "#a855f7",
-      "image": "images/skills/qualoth.png"
+      "image": "images/skills/qualoth.webp"
     },
     {
       "id": "cfx",
@@ -54,7 +54,7 @@
       "level": 2,
       "group": 1,
       "color": "#ec4899",
-      "image": "images/skills/ziva.png"
+      "image": "images/skills/ziva.webp"
     },
     {
       "id": "anim",
@@ -62,7 +62,7 @@
       "level": 2,
       "group": 1,
       "color": "#facc15",
-      "image": "images/skills/rbf.png"
+      "image": "images/skills/rbf.webp"
     },
     {
       "id": "engine",
@@ -71,7 +71,7 @@
       "group": 2,
       "color": "#ffffff",
       "scale": 1.6,
-      "image": "images/skills/ue.png"
+      "image": "images/skills/ue.webp"
     },
     {
       "id": "ue",
@@ -79,7 +79,7 @@
       "level": 2,
       "group": 2,
       "color": "#ffffff",
-      "image": "images/skills/controlrig.png"
+      "image": "images/skills/controlrig.webp"
     },
     {
       "id": "unity",
@@ -87,7 +87,7 @@
       "level": 2,
       "group": 2,
       "color": "#000000",
-      "image": "images/skills/ra.png"
+      "image": "images/skills/ra.webp"
     },
     {
       "id": "shader",
@@ -95,7 +95,7 @@
       "level": 2,
       "group": 2,
       "color": "#10b981",
-      "image": "images/skills/usd.png"
+      "image": "images/skills/usd.webp"
     },
     {
       "id": "vfx",
@@ -103,7 +103,7 @@
       "level": 2,
       "group": 2,
       "color": "#f43f5e",
-      "image": "images/skills/metahuman.png"
+      "image": "images/skills/metahuman.webp"
     },
     {
       "id": "proc",
@@ -111,7 +111,7 @@
       "level": 2,
       "group": 2,
       "color": "#8b5cf6",
-      "image": "images/skills/cascadeur.png"
+      "image": "images/skills/cascadeur.webp"
     },
     {
       "id": "opt",
@@ -119,7 +119,7 @@
       "level": 2,
       "group": 2,
       "color": "#64748b",
-      "image": "images/skills/uepython.png"
+      "image": "images/skills/uepython.webp"
     },
     {
       "id": "dev",
@@ -128,7 +128,7 @@
       "group": 3,
       "color": "#ff4d4d",
       "scale": 1.6,
-      "image": "images/skills/tools.png"
+      "image": "images/skills/tools.webp"
     },
     {
       "id": "py",
@@ -136,7 +136,7 @@
       "level": 2,
       "group": 3,
       "color": "#306998",
-      "image": "images/skills/blender.png"
+      "image": "images/skills/blender.webp"
     },
     {
       "id": "cpp",
@@ -144,7 +144,7 @@
       "level": 2,
       "group": 3,
       "color": "#00599c",
-      "image": "images/skills/ue.png"
+      "image": "images/skills/ue.webp"
     },
     {
       "id": "tool",
@@ -152,7 +152,7 @@
       "level": 2,
       "group": 3,
       "color": "#22c55e",
-      "image": "images/skills/python.png"
+      "image": "images/skills/python.webp"
     },
     {
       "id": "pipe",
@@ -160,7 +160,7 @@
       "level": 2,
       "group": 3,
       "color": "#fb923c",
-      "image": "images/skills/animTools.png"
+      "image": "images/skills/animTools.webp"
     },
     {
       "id": "api",
@@ -168,7 +168,7 @@
       "level": 2,
       "group": 3,
       "color": "#6366f1",
-      "image": "images/skills/gemini.png"
+      "image": "images/skills/gemini.webp"
     },
     {
       "id": "git",
@@ -176,7 +176,7 @@
       "level": 2,
       "group": 3,
       "color": "#f97316",
-      "image": "images/skills/claude.png"
+      "image": "images/skills/claude.webp"
     }
   ],
   "links": [
