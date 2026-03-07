@@ -1,5 +1,30 @@
 import React, { useId } from 'react';
 
+// 流光基础颜色
+const FLOW_COLORS = [
+  [255, 100, 150], // 粉红
+  [150, 100, 255], // 紫色
+  [100, 200, 255], // 青蓝
+  [100, 255, 180], // 青绿
+  [255, 220, 100], // 金黄
+  [255, 150, 100], // 橙色
+];
+
+// 辅助函数：生成流光渐变色
+export const getFlowGradient = (colors: number, intensity: number, angleVar = '--flow-angle') => {
+  const colorStops = [];
+
+  for (let i = 0; i <= colors; i++) {
+    const color = FLOW_COLORS[i % FLOW_COLORS.length];
+    const percent = (i / colors) * 100;
+    colorStops.push(`rgba(${color.join(',')},${intensity}) ${percent}%`);
+  }
+  // 闭环
+  colorStops.push(`rgba(${FLOW_COLORS[0].join(',')},${intensity}) 100%`);
+
+  return `conic-gradient(from var(${angleVar}, 0deg), ${colorStops.join(', ')})`;
+};
+
 interface ImageFrameProps {
   src: string;
   alt: string;

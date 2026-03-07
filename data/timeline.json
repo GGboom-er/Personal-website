@@ -4,8 +4,8 @@
       "id": "edu",
       "startYear": 2017,
       "endYear": 2021,
-      "title": "吉林动画学院-动画艺术专业2017——2021",
-      "subtitle": "参与学校项目《鼠年拜年》、《自然法则》动画短片",
+      "title": "吉林动画学院-动画艺术专业",
+      "subtitle": "2017——2021\n参与学校项目《鼠年拜年》、《自然法则》动画短片",
       "description": "《自然法则》分别获2023年第五届“社会主义核心价值观动画短片扶持创作活动”二类优秀作品奖\n深圳青年影像节最佳技术作品奖",
       "type": "education",
       "overrides": {
@@ -122,7 +122,7 @@
     {
       "id": "work2",
       "startYear": 2023,
-      "endYear": 2025,
+      "endYear": 2026,
       "title": "北京纸飞机动画",
       "subtitle": "绑定总监、制作TD2023——2026",
       "description": "参与制作《喵十一》、《凸变英雄X》剧集，负责绑定制作、技术、工具开发，配合开发maya、blender、UE软件pipeline管线",

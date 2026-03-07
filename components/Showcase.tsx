@@ -55,8 +55,8 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
 
   // 间距
   const spacing = {
-    gap: Math.round(14 * scale),
-    padding: Math.round(12 * scale),
+    gap: Math.round(18 * scale),
+    padding: Math.round(16 * scale),
   };
 
   // 边框和发光参数
@@ -87,7 +87,7 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
               hover:from-[#00B5E5] hover:to-[#00A1D6]
               hover:-translate-y-0.5 active:scale-[0.97]
               transition-all duration-200 inline-flex items-center gap-1 whitespace-nowrap
-              text-[9px] px-3 py-1"
+              text-[11px] px-4 py-1.5"
           >
             <i className="fa-brands fa-bilibili"></i>
             Bilibili
@@ -105,7 +105,7 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
               hover:from-[#ff2020] hover:to-[#FF0000]
               hover:-translate-y-0.5 active:scale-[0.97]
               transition-all duration-200 inline-flex items-center gap-1 whitespace-nowrap
-              text-[9px] px-3 py-1"
+              text-[11px] px-4 py-1.5"
           >
             <i className="fa-brands fa-youtube"></i>
             YouTube
@@ -143,13 +143,13 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
         {project.stats.map((stat, idx) => (
           <div
             key={idx}
-            className="text-center border-r border-white/20 last:border-0 pr-[clamp(4px,1.5vw,10px)] last:pr-0"
+            className="text-center border-r border-white/20 last:border-0 pr-[clamp(5px,1.8vw,12px)] last:pr-0"
           >
             <div className="text-white/60 uppercase font-semibold tracking-wider whitespace-nowrap
-              text-[clamp(7px,1.5vw,10px)] mb-0.5">
+              text-[clamp(8px,1.8vw,12px)] mb-0.5">
               {stat.label}
             </div>
-            <div className="text-white font-bold whitespace-nowrap text-[clamp(10px,2vw,14px)]">
+            <div className="text-white font-bold whitespace-nowrap text-[clamp(12px,2.4vw,17px)]">
               {stat.value}
             </div>
           </div>
@@ -164,7 +164,7 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
           <span
             key={tag}
             className="font-medium rounded-full text-white cursor-default whitespace-nowrap
-              text-[clamp(7px,1.5vw,10px)] px-[clamp(5px,1vw,9px)] py-[clamp(2px,0.5vw,4px)]"
+              text-[clamp(8px,1.8vw,12px)] px-[clamp(6px,1.2vw,11px)] py-[clamp(2px,0.6vw,5px)]"
             style={{
               background: `rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.12})`,
               backdropFilter: `blur(${settings.glassBlur * 0.5 + 5}px)`,
@@ -180,12 +180,12 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
     );
 
     return (
-      <div className="w-full flex items-center justify-center">
+      <div className="w-full flex items-center justify-start overflow-visible">
         <div
-          className="flex items-center justify-center gap-[clamp(4px,1vw,8px)] flex-wrap"
+          className="flex items-center justify-start gap-3 flex-row flex-nowrap"
           style={{
-            flexDirection: isVertical ? 'column' : 'row',
-            transformOrigin: 'center center'
+            transform: `scale(${Math.min(scale * 0.5, 1.2)})`,
+            transformOrigin: 'left center',
           }}
         >
           <ButtonGroup />
@@ -213,33 +213,33 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
           />
         )}
 
-        {/* 暗角/晕影效果 */}
+        {/* 暗角/晕影效果 - 亮度降低20% */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: `radial-gradient(ellipse 130% 100% at 50% 50%, transparent 20%, rgba(10,10,12,0.3) 60%, rgba(10,10,12,0.7) 100%)`,
+            background: `radial-gradient(ellipse 130% 100% at 50% 50%, rgba(10,10,12,0.2) 20%, rgba(10,10,12,0.5) 60%, rgba(10,10,12,0.85) 100%)`,
           }}
         />
 
-        {/* 边缘渐变融合 - 与全局背景和卡片区域融合 */}
+        {/* 边缘渐变融合 - 加深暗部 */}
         <div
           className="absolute inset-0 transition-opacity duration-700"
           style={{
-            background: 'linear-gradient(to top, rgba(10,10,12,0.98) 0%, rgba(10,10,12,0.6) 15%, transparent 40%)',
+            background: 'linear-gradient(to top, rgba(10,10,12,0.98) 0%, rgba(10,10,12,0.8) 15%, rgba(10,10,12,0.2) 40%, transparent 60%)',
           }}
         />
         <div
           className="absolute inset-0 transition-opacity duration-700"
           style={{
-            background: 'linear-gradient(to bottom, rgba(10,10,12,0.5) 0%, transparent 30%)',
-            opacity: (1 - transitionFactor) * 0.5 + 0.3,
+            background: 'linear-gradient(to bottom, rgba(10,10,12,0.6) 0%, rgba(10,10,12,0.2) 30%, transparent 50%)',
+            opacity: (1 - transitionFactor) * 0.6 + 0.4,
           }}
         />
         <div
           className="absolute inset-0 transition-opacity duration-700"
           style={{
-            background: 'linear-gradient(to right, rgba(10,10,12,0.7) 0%, transparent 25%)',
-            opacity: transitionFactor * 0.6 + 0.2,
+            background: 'linear-gradient(to right, rgba(10,10,12,0.85) 0%, rgba(10,10,12,0.3) 25%, transparent 50%)',
+            opacity: transitionFactor * 0.7 + 0.3,
           }}
         />
 
@@ -258,13 +258,14 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
         style={{ padding: spacing.padding, paddingBottom: Math.round(spacing.padding / 2) }}
       >
         {/* Landscape Layout: [Icon + Text] | [View] 横向 */}
+        {/* Landscape Layout: [Icon + Text] Over [View] */}
         {layoutMode === 'landscape' && (
           <div
-            className="h-full flex items-start justify-between transition-all duration-500"
-            style={{ gap: spacing.gap, paddingTop: settings.contentOffset * 5 }}
+            className="h-full flex flex-col transition-all duration-500"
+            style={{ paddingTop: settings.contentOffset * 5 }}
           >
-            {/* Left: Icon + Text */}
-            <div className="flex items-start flex-1 min-w-0" style={{ gap: spacing.gap }}>
+            {/* Top Section: Icon + Text */}
+            <div className="flex items-start min-w-0" style={{ gap: spacing.gap }}>
               {/* Icon */}
               <div className="relative shrink-0" style={{ width: iconWidth, height: iconHeight }}>
                 {glowIntensity > 0 && (
@@ -352,7 +353,8 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
                     lineHeight: 1.6,
                     wordBreak: 'break-word',
                     whiteSpace: 'pre-line',
-                    maxWidth: '22em',
+                    maxWidth: '50em',
+                    minWidth: '200px',
                     fontFamily: settings.fontFamily,
                     color: settings.descColor,
                     textShadow: `
@@ -366,23 +368,24 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
               </div>
             </div>
 
-            {/* Right: View Section */}
-            <div className="shrink-0 self-start">
+            {/* Bottom Section: Info Panel - Pushed to bottom and aligned left */}
+            <div className="mt-auto flex justify-start">
               <ViewSection />
             </div>
           </div>
         )}
 
-        {/* Portrait Layout: 竖屏布局 - [海报] -> [文字] -> [功能区贴底] */}
+        {/* Portrait Layout: 竖屏布局 - [海报+文字横排] -> [功能区贴底] */}
         {layoutMode === 'portrait' && (
           <div
             className="flex flex-col h-full overflow-hidden"
             style={{ gap: Math.round(3 * scale) }}
           >
-            {/* 1. Top Section: Icon - 紧凑显示 */}
-            <div className="flex-shrink-0 flex justify-start">
+            {/* 1. Top Section: Icon + Text 横向排列 */}
+            <div className="flex items-start flex-1 min-h-0 overflow-hidden" style={{ gap: spacing.gap }}>
+              {/* Icon */}
               <div
-                className="relative"
+                className="relative shrink-0"
                 style={{
                   width: iconWidth,
                   height: iconHeight,
@@ -428,37 +431,39 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
                   className="w-full h-full"
                 />
               </div>
-            </div>
 
-            {/* 2. Middle Section: Text - 文字核心区 (保证最低显示高度) */}
-            <div className="flex-1 min-h-[80px] flex flex-col overflow-y-auto no-scrollbar py-0.5">
-              <h1
-                className="font-bold tracking-tight leading-tight shrink-0"
-                style={{
-                  fontSize: fontSize.title,
-                  fontFamily: settings.fontFamily,
-                  color: settings.titleColor,
-                  textShadow: `0 2px 4px rgba(0,0,0,0.5)`,
-                }}
-              >
-                {project.title}
-              </h1>
-              <p
-                className="leading-relaxed mt-1"
-                style={{
-                  fontSize: fontSize.desc,
-                  lineHeight: 1.4,
-                  color: settings.descColor,
-                  fontFamily: settings.fontFamily,
-                  opacity: 0.9,
-                }}
-              >
-                {project.description}
-              </p>
+              {/* Text - 右侧文字区域 */}
+              <div className="flex-1 min-w-0 flex flex-col overflow-y-auto no-scrollbar">
+                <h1
+                  className="font-bold tracking-tight leading-tight shrink-0"
+                  style={{
+                    fontSize: fontSize.title,
+                    fontFamily: settings.fontFamily,
+                    color: settings.titleColor,
+                    textShadow: `0 2px 4px rgba(0,0,0,0.5)`,
+                  }}
+                >
+                  {project.title}
+                </h1>
+                <p
+                  className="leading-relaxed mt-1"
+                  style={{
+                    fontSize: fontSize.desc,
+                    lineHeight: 1.4,
+                    wordBreak: 'break-word',
+                    whiteSpace: 'pre-line',
+                    color: settings.descColor,
+                    fontFamily: settings.fontFamily,
+                    opacity: 0.9,
+                  }}
+                >
+                  {project.description}
+                </p>
+              </div>
             </div>
 
             {/* 3. Bottom Section: ViewSection (Video/Stats/Tags) - 紧凑贴底无上边距 */}
-            <div className="shrink-0 mt-auto border-t border-white/5 pt-1">
+            <div className="shrink-0 mt-auto border-t border-white/5">
               <div style={{ transformOrigin: 'bottom center' }}>
                 <ViewSection />
               </div>

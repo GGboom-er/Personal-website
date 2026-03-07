@@ -1,9 +1,0 @@
-Unused devDependencies
-* autoprefixer
-* postcss
-* tailwindcss
-* typescript
-Missing dependencies
-* three: .\components\effects\LiquidGlassMaterial.ts
-* @react-three/drei: .\components\effects\LiquidGlassMaterial.ts
-* @react-three/fiber: .\components\effects\LiquidGlassMaterial.ts

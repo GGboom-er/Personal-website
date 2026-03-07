@@ -30,30 +30,30 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({ settings, className =
     >
       {/* 头像区域 */}
       <div
-        className={`${isHorizontal ? 'w-24 h-24' : 'w-14 h-14'} rounded-full flex items-center justify-center transition-all duration-300 shrink-0 overflow-hidden`}
+        className={`${isHorizontal ? 'w-20 h-20' : 'w-14 h-14'} rounded-full flex items-center justify-center transition-all duration-300 shrink-0 overflow-hidden`}
         style={{
           boxShadow: `0 4px 16px rgba(0,0,0,0.3), 0 0 ${settings.borderGlow / 4}px rgba(255,255,255,${settings.borderGlow / 100 * 0.4})`,
           border: `2px solid rgba(255,255,255,${settings.borderGlow / 100 * 0.4})`,
         }}
       >
-        <img 
-          src={getAssetPath('images/A.jpg')} 
-          alt="ME" 
+        <img
+          src={getAssetPath('images/A.jpg')}
+          alt="ME"
           className="w-full h-full object-cover"
         />
       </div>
 
       {/* 内容区域 */}
-      <div className={`flex-1 min-w-0 ${isHorizontal ? 'flex flex-row items-center justify-between gap-4' : ''}`}>
+      <div className={`flex-1 min-w-0 ${isHorizontal ? 'flex flex-col justify-center gap-2' : ''}`}>
         {/* 姓名与职位 */}
         <div className="flex flex-col justify-center min-w-0">
           <div className="text-[17px] font-bold text-white leading-tight whitespace-nowrap">余炜铭</div>
-          <div className="text-[12px] text-white/50 leading-tight mt-1.5 whitespace-nowrap">Rigger & TD</div>
+          <div className="text-[12px] text-white/50 leading-tight mt-1 whitespace-nowrap">Rigger & TD</div>
         </div>
 
-        {/* 联系方式 (children) - 横向模式下放在右侧 */}
+        {/* 联系方式 (children) */}
         {children && (
-          <div className={`${isHorizontal ? 'shrink-0' : 'mt-3 pt-3 border-t border-white/5 w-full'}`}>
+          <div className={`${isHorizontal ? 'w-full mt-1' : 'mt-3 pt-3 border-t border-white/5 w-full'}`}>
             {children}
           </div>
         )}

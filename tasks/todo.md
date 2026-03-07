@@ -20,3 +20,5 @@
   - [x] 7.1 扩展 `DragEditorContext` 的支持范围和使其变为响应式 (Reactive State)。
   - [x] 7.2 完成全局编辑模式开关 (Edit Mode Toggle)，并实现一个通用的可拖拽 Wrapper (`DraggableText`)。
   - [x] 7.3 `Timeline.tsx` 的四类文本挂载 `DraggableText`，结合 `onMouseDown/Move/Up` 实现动态拖拽和滚轮放缩缩放，并提供快捷导出能力。
+- [x] 8. **修复配置导出功能**:
+  - [x] 8.1 修改 `HullEditorContext.tsx` 的 `exportConfig` 方法，使用 `navigator.clipboard.writeText` 将配置直接复制到剪贴板。

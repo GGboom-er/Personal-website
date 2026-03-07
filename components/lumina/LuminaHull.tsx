@@ -46,9 +46,11 @@ const LuminaHullComponent: React.FC<LuminaHullProps> = ({ id, config, color }) =
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const { settings } = useGlassSettings();
 
-    // Use ref to access latest settings inside animation loop without restarting effect
+    // Use ref to access latest settings/config inside animation loop without restarting effect
     const settingsRef = useRef(settings);
     useEffect(() => { settingsRef.current = settings; }, [settings]);
+    const configRef = useRef(config);
+    useEffect(() => { configRef.current = config; }, [config]);
 
     // 1. Base Path
     const pathString = useMemo(() => {
@@ -76,7 +78,6 @@ const LuminaHullComponent: React.FC<LuminaHullProps> = ({ id, config, color }) =
         canvas.width = 900;
         canvas.height = 500;
 
-        const polyPoints = [config.p1, config.p2, config.p3, config.p4];
         const SHAPES = ['circle', 'diamond', 'triangle', 'rect', 'x'] as const;
 
         class CyberRipple {
@@ -175,12 +176,13 @@ const LuminaHullComponent: React.FC<LuminaHullProps> = ({ id, config, color }) =
                 const t = Math.random();
                 const d = Math.random() * 0.15;
 
-                const sx = config.p1.x + (config.p2.x - config.p1.x) * t;
-                const sy = config.p1.y + (config.p2.y - config.p1.y) * t;
+                const c = configRef.current;
+                const sx = c.p1.x + (c.p2.x - c.p1.x) * t;
+                const sy = c.p1.y + (c.p2.y - c.p1.y) * t;
 
                 const drift = (Math.random() - 0.5) * 0.5;
-                const finalTx = config.p4.x + (config.p3.x - config.p4.x) * (t + drift);
-                const finalTy = config.p4.y + (config.p3.y - config.p4.y) * (t + drift);
+                const finalTx = c.p4.x + (c.p3.x - c.p4.x) * (t + drift);
+                const finalTy = c.p4.y + (c.p3.y - c.p4.y) * (t + drift);
 
                 this.startX = sx + (finalTx - sx) * d;
                 this.startY = sy + (finalTy - sy) * d;
@@ -267,6 +269,8 @@ const LuminaHullComponent: React.FC<LuminaHullProps> = ({ id, config, color }) =
                 if (this.life < 30) this.alpha = baseAlpha * (this.life / 30);
                 else if (this.distToTarget < 15) this.alpha = (this.distToTarget / 15);
                 else {
+                    const c = configRef.current;
+                    const polyPoints = [c.p1, c.p2, c.p3, c.p4];
                     const inside = isPointInPoly({ x: this.x, y: this.y }, polyPoints);
                     if (!inside && this.distToTarget > 30) this.dissolving = true;
                     else this.alpha = baseAlpha;
@@ -399,12 +403,19 @@ const LuminaHullComponent: React.FC<LuminaHullProps> = ({ id, config, color }) =
 
         render();
         return () => cancelAnimationFrame(animationFrameId);
-    }, [config, color]); // Removed settings from dep array to avoid reset
+    }, [color]); // Only restart if color changes
 
     return (
         <>
             <svg className="absolute inset-0 w-full h-full overflow-visible pointer-events-none z-0">
                 <defs>
+                    <linearGradient id={`light-source-${id}`} x1={`${config.p1.x + (config.p2.x - config.p1.x) / 2}`} y1={`${config.p1.y + (config.p2.y - config.p1.y) / 2}`} x2={`${config.p4.x + (config.p3.x - config.p4.x) / 2}`} y2={`${config.p4.y + (config.p3.y - config.p4.y) / 2}`} gradientUnits="userSpaceOnUse">
+                        {/* P1, P2 are sources: +20% brightness (via white stop), -20% opacity (0.42 * 0.8 = ~0.34, but using 0.6 white start for source effect) */}
+                        <stop offset="0%" stopColor="#fff" stopOpacity="0.6" />
+                        <stop offset="15%" stopColor={color} stopOpacity="0.45" />
+                        <stop offset="100%" stopColor={color} stopOpacity="0" />
+                    </linearGradient>
+
                     <linearGradient id={`grad-blur-${id}`} x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stopColor="white" stopOpacity="0" />
                         <stop offset="25%" stopColor="white" stopOpacity="0.6" />
@@ -423,11 +434,11 @@ const LuminaHullComponent: React.FC<LuminaHullProps> = ({ id, config, color }) =
                     </mask>
                 </defs>
 
-                {/* 2. Main Body */}
+                {/* 2. Main Body with Light Source Gradient */}
                 <path
                     d={pathString}
-                    fill={color}
-                    fillOpacity={0.42}
+                    fill={`url(#light-source-${id})`}
+                    fillOpacity={1}
                     mask={`url(#mask-${id})`}
                     filter={`url(#liquid-${id})`}
                     style={{ mixBlendMode: 'screen', filter: 'blur(12px)' }}

@@ -40,7 +40,7 @@ const ContactLinks: React.FC<ContactLinksProps> = ({ settings, className = '', l
         const content = (
           <>
             <i className={`${contact.icon} ${minimal ? 'text-[10px]' : 'text-xs'}`}></i>
-            {minimal && <span className="text-[8px] opacity-60 truncate max-w-[60px]">{contact.value}</span>}
+            {minimal && <span className="text-[8px] opacity-60 truncate max-w-[110px]">{contact.value}</span>}
           </>
         );
 
@@ -60,7 +60,7 @@ const ContactLinks: React.FC<ContactLinksProps> = ({ settings, className = '', l
                 {content}
               </button>
             )}
-            
+
             {/* Tooltip (only show if not minimal, or maybe always? keeping it for now) */}
             {!minimal && (
               <div
