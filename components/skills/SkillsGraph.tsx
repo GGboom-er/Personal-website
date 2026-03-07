@@ -174,10 +174,10 @@ const SatelliteWithRod: React.FC<{
         <div className="absolute top-0 left-1/2" style={{ transform: 'translateX(-50%) translateY(-50%)', width: `${size}px`, height: `${size}px` }}>
           <GlassBubble size={size} color={node.color} settings={settings} uniqueId={uid} />
           <div className="absolute highlight-counter-rotate" style={{ ...cs, ['--highlight-initial-angle' as string]: `${-angle}deg` }}>
-            <FixedHighlight size={size} color={node.color} />
+            <SafeImage src={node.image} size={size} padding={size * 0.2} />
           </div>
           <div className="absolute highlight-counter-rotate" style={{ ...cs, ['--highlight-initial-angle' as string]: `${-angle}deg` }}>
-            <SafeImage src={node.image} size={size} padding={size * 0.2} />
+            <FixedHighlight size={size} color={node.color} />
           </div>
           <div className="absolute text-counter-rotate" style={{ ...cs, ['--initial-angle' as string]: `${-angle}deg` }}>
             <div className="text-wobble relative w-full h-full" style={{ animationDuration: `${floatDuration * 1.5}s`, animationDelay: `${floatDelay}s` }}>
@@ -232,10 +232,10 @@ const SkillGroup: React.FC<{
           <div className="center-float relative" style={{ width: `${centerSize}px`, height: `${centerSize}px`, animationDuration: `${floatDur * 1.2}s` }}>
             <GlassBubble size={centerSize} color={centerNode.color} settings={settings} isCenter uniqueId={`center-${groupIndex}`} />
             <div className="absolute highlight-counter-rotate" style={{ ...cs, ['--highlight-initial-angle' as string]: '0deg' }}>
-              <FixedHighlight size={centerSize} color={centerNode.color} />
+              <SafeImage src={centerNode.image} size={centerSize} padding={centerSize * 0.18} />
             </div>
             <div className="absolute highlight-counter-rotate" style={{ ...cs, ['--highlight-initial-angle' as string]: '0deg' }}>
-              <SafeImage src={centerNode.image} size={centerSize} padding={centerSize * 0.18} />
+              <FixedHighlight size={centerSize} color={centerNode.color} />
             </div>
             <div className="absolute text-counter-rotate" style={{ ...cs, ['--initial-angle' as string]: '0deg' }}>
               <div className="text-wobble relative w-full h-full" style={{ animationDuration: `${floatDur * 1.5}s` }}>

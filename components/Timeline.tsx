@@ -164,7 +164,7 @@ const TimelineContent: React.FC<TimelineProps> = ({ settings: globalSettings, da
                         </div>
                         <h3 className="text-xs font-bold text-white/95 leading-tight" style={{ fontFamily: settings.fontFamily }}>{node.title}</h3>
                         {node.subtitle && <div className="text-[10px] text-white/60 mt-0.5" style={{ fontFamily: settings.fontFamily }}>{node.subtitle}</div>}
-                        {node.description && <div className="mt-1.5 pt-1.5 border-t border-white/5 text-[9px] text-white/50 leading-relaxed italic" style={{ fontFamily: settings.fontFamily }}>{node.description}</div>}
+                        {node.description && <div className="mt-1.5 pt-1.5 border-t border-white/5 text-[9px] text-white/50 leading-relaxed italic whitespace-pre-wrap" style={{ fontFamily: settings.fontFamily }}>{node.description}</div>}
                       </div>
                     </div>
                   </LayoutWrapper>
@@ -222,7 +222,7 @@ const TimelineContent: React.FC<TimelineProps> = ({ settings: globalSettings, da
                       </div>
                       <h3 className="text-sm font-bold text-white/95 leading-tight" style={{ fontFamily: settings.fontFamily, textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>{node.title}</h3>
                       {node.subtitle && <div className="text-xs text-white/60 mt-0.5" style={{ fontFamily: settings.fontFamily }}>{node.subtitle}</div>}
-                      {node.description && <div className="mt-1.5 pt-1.5 border-t border-white/5 text-[10px] text-white/50 leading-relaxed italic" style={{ fontFamily: settings.fontFamily }}>{node.description}</div>}
+                      {node.description && <div className="mt-1.5 pt-1.5 border-t border-white/5 text-[10px] text-white/50 leading-relaxed italic whitespace-pre-wrap" style={{ fontFamily: settings.fontFamily }}>{node.description}</div>}
                     </div>
                   </div>
                 </div>

@@ -33,7 +33,13 @@
       "WebFetch(domain:movie.douban.com)",
       "WebFetch(domain:baike.baidu.com)",
       "WebFetch(domain:upcomer.com)",
-      "Bash(ls -la \"Y:\\\\GGbommer\\\\scripts\\\\Personal-website\\\\dist\\\\styles\"\" 2>/dev/null || dir \"Y:GGbommerscriptsPersonal-websitediststyles\"\")"
+      "Bash(ls -la \"Y:\\\\GGbommer\\\\scripts\\\\Personal-website\\\\dist\\\\styles\"\" 2>/dev/null || dir \"Y:GGbommerscriptsPersonal-websitediststyles\"\")",
+      "Bash(node:*)",
+      "Bash(npx vite:*)"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "figma"
+  ]
 }
