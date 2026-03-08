@@ -29,7 +29,7 @@ const BottomTabBar: React.FC<BottomTabBarProps> = ({ activeView, onSelectView, s
       <nav
         className="w-full shrink-0 z-40"
         style={{
-          background: `linear-gradient(to bottom, rgba(10,10,12,0.12) 0%, rgba(10,10,12,0.08) 100%)`,
+          background: `linear-gradient(to bottom, rgba(10,10,12,0.85) 0%, rgba(10,10,12,0.75) 100%)`,
           backdropFilter: `blur(${settings.glassBlur + 20}px) saturate(${settings.glassSaturate}%)`,
           WebkitBackdropFilter: `blur(${settings.glassBlur + 20}px) saturate(${settings.glassSaturate}%)`,
           borderBottom: `${borderThickness * 0.5}px solid rgba(255,255,255,${borderRefraction * 0.15})`,

@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, Suspense, lazy } from 'react';
 import Sidebar from './components/Sidebar';
 import Showcase from './components/Showcase';
 import ProjectList from './components/ProjectList';
 import Timeline from './components/Timeline';
-import SkillsGraph from './components/skills/SkillsGraph';
 import BottomTabBar from './components/layout/BottomTabBar';
 import { useBreakpoint } from './hooks/useBreakpoint';
 import { GlassSettingsProvider, useGlassSettings } from './contexts/GlassSettingsContext';
@@ -11,6 +10,8 @@ import { DragEditorProvider } from './contexts/DragEditorContext';
 import { PROJECTS } from './constants';
 import { Project } from './types';
 import { getAssetPath } from './utils/assetPath';
+
+const SkillsGraph = lazy(() => import('./components/skills/SkillsGraph'));
 
 const AppContent: React.FC = () => {
   const [activeView, setActiveView] = useState('Projects');
@@ -24,6 +25,18 @@ const AppContent: React.FC = () => {
       const activeBg = activeView === 'Skills' ? 'images/bg3.webp' : activeView === 'Profile' ? 'images/bg2.webp' : 'images/bg.webp';
       new Image().src = getAssetPath(activeBg);
 
+      if (activeView === 'Skills') {
+        // Skills 视图：立即预加载技能图片（组件同步挂载，不能延迟）
+        import('./data/skills.json').then(mod => {
+          (mod.default.nodes as Array<{ image?: string }>).forEach(n => {
+            if (n.image) {
+              const img = new Image();
+              img.src = getAssetPath(n.image);
+            }
+          });
+        });
+      }
+
       // 延迟加载其他资源，避免阻塞首屏渲染
       setTimeout(() => {
         // 预加载其他背景
@@ -34,17 +47,7 @@ const AppContent: React.FC = () => {
             img.src = getAssetPath(src);
           });
 
-        if (activeView === 'Skills') {
-          // Skills 视图：预加载技能图片
-          import('./data/skills.json').then(mod => {
-            (mod.default.nodes as Array<{ image?: string }>).forEach(n => {
-              if (n.image) {
-                const img = new Image();
-                img.src = getAssetPath(n.image);
-              }
-            });
-          });
-        } else {
+        if (activeView !== 'Skills') {
           // 预加载项目图片
           PROJECTS.forEach(project => {
             if (project.icon) {
@@ -154,8 +157,10 @@ const AppContent: React.FC = () => {
           </div>
         ) : activeView === 'Skills' ? (
           /* Skills View: 3D Topology Graph */
-          <div className="w-full h-full overflow-visible relative z-10">
-            <SkillsGraph />
+          <div className={`w-full h-full relative z-10 ${isMobile ? 'overflow-hidden' : 'overflow-visible'}`}>
+            <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-white/40">加载中...</div>}>
+              <SkillsGraph />
+            </Suspense>
           </div>
         ) : (
           <>

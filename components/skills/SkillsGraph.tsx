@@ -5,6 +5,36 @@ import { getFlowGradient } from '../glass';
 import { getAssetPath } from '../../utils/assetPath';
 import skillsData from '../../data/skills.json';
 
+// ── 静态 CSS 动画规则（提取到组件外部，避免每次渲染重新注入） ──
+const SKILLS_KEYFRAMES = `
+@keyframes skill-group-rotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.skill-group-rotate{animation:skill-group-rotate linear infinite}
+
+@keyframes text-counter-rotate{from{transform:rotate(var(--initial-angle,0deg))}to{transform:rotate(calc(var(--initial-angle,0deg) - 360deg))}}
+.text-counter-rotate{animation:text-counter-rotate linear infinite}
+
+@keyframes highlight-counter-rotate{from{transform:rotate(var(--highlight-initial-angle,0deg))}to{transform:rotate(calc(var(--highlight-initial-angle,0deg) - 360deg))}}
+.highlight-counter-rotate{animation:highlight-counter-rotate linear infinite}
+
+@keyframes text-wobble{0%,100%{transform:rotate(0deg) translateY(0px)}20%{transform:rotate(4deg) translateY(-1px)}40%{transform:rotate(-3deg) translateY(1px)}60%{transform:rotate(5deg) translateY(-1px)}80%{transform:rotate(-4deg) translateY(0px)}}
+.text-wobble{animation:text-wobble ease-in-out infinite}
+
+@keyframes satellite-float{0%,100%{transform:translateX(-50%) translateY(0px)}50%{transform:translateX(-50%) translateY(-8px)}}
+.satellite-float{animation:satellite-float ease-in-out infinite}
+
+@keyframes center-float{0%,100%{transform:translateY(0px)}50%{transform:translateY(-4px)}}
+.center-float{animation:center-float ease-in-out infinite}
+
+@keyframes rod-glow-pulse{0%,100%{opacity:.5}50%{opacity:.9}}
+.rod-glow{animation:rod-glow-pulse 2s ease-in-out infinite}
+
+@keyframes edge-distort-pulse{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.02);opacity:1}}
+.edge-distort{animation:edge-distort-pulse 4s ease-in-out infinite}
+
+@keyframes bubble-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.bubble-breathe{animation:bubble-breathe 5s ease-in-out infinite}
+`;
+
 interface SkillNode {
   id: string;
   label: string;
@@ -24,7 +54,7 @@ const SafeImage: React.FC<{ src?: string; size: number; padding: number }> = ({ 
   if (!src || !visible) return null;
   return (
     <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ padding: `${padding}px` }}>
-      <img src={getAssetPath(src)} alt="" loading="lazy"
+      <img src={getAssetPath(src)} alt=""
         className="w-full h-full object-contain opacity-90"
         style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' }}
         onError={() => setVisible(false)} />
@@ -354,34 +384,7 @@ const SkillsGraph: React.FC = () => {
   // 中间位置放视觉权重更高的 UE（groups[1]）
   return (
     <div ref={containerRef} className="w-full h-full relative overflow-visible">
-      <style>{`
-        @keyframes skill-group-rotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-        .skill-group-rotate{animation:skill-group-rotate linear infinite}
-
-        @keyframes text-counter-rotate{from{transform:rotate(var(--initial-angle,0deg))}to{transform:rotate(calc(var(--initial-angle,0deg) - 360deg))}}
-        .text-counter-rotate{animation:text-counter-rotate linear infinite}
-
-        @keyframes highlight-counter-rotate{from{transform:rotate(var(--highlight-initial-angle,0deg))}to{transform:rotate(calc(var(--highlight-initial-angle,0deg) - 360deg))}}
-        .highlight-counter-rotate{animation:highlight-counter-rotate linear infinite}
-
-        @keyframes text-wobble{0%,100%{transform:rotate(0deg) translateY(0px)}20%{transform:rotate(4deg) translateY(-1px)}40%{transform:rotate(-3deg) translateY(1px)}60%{transform:rotate(5deg) translateY(-1px)}80%{transform:rotate(-4deg) translateY(0px)}}
-        .text-wobble{animation:text-wobble ease-in-out infinite}
-
-        @keyframes satellite-float{0%,100%{transform:translateX(-50%) translateY(0px)}50%{transform:translateX(-50%) translateY(-8px)}}
-        .satellite-float{animation:satellite-float ease-in-out infinite}
-
-        @keyframes center-float{0%,100%{transform:translateY(0px)}50%{transform:translateY(-4px)}}
-        .center-float{animation:center-float ease-in-out infinite}
-
-        @keyframes rod-glow-pulse{0%,100%{opacity:.5}50%{opacity:.9}}
-        .rod-glow{animation:rod-glow-pulse 2s ease-in-out infinite}
-
-        @keyframes edge-distort-pulse{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.02);opacity:1}}
-        .edge-distort{animation:edge-distort-pulse 4s ease-in-out infinite}
-
-        @keyframes bubble-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-        .bubble-breathe{animation:bubble-breathe 5s ease-in-out infinite}
-      `}</style>
+      <style>{SKILLS_KEYFRAMES}</style>
 
       {width > 0 && height > 0 && (
         <>
