@@ -12,6 +12,123 @@ interface ShowcaseProps {
 // 布局模式：landscape(横屏)、portrait(竖屏)
 type LayoutMode = 'landscape' | 'portrait';
 
+// ── 模块级子组件（避免每次渲染重建） ──
+
+interface ButtonGroupProps {
+  project: Project;
+}
+const ButtonGroup: React.FC<ButtonGroupProps> = ({ project }) => (
+  <div className="flex flex-shrink-0 justify-center items-center gap-1">
+    {project.bilibiliUrl && (
+      <a
+        href={project.bilibiliUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="bg-gradient-to-br from-[#00A1D6]/90 to-[#0088cc]/90
+          backdrop-blur-xl text-white font-bold rounded-full
+          border border-[#00A1D6]/50
+          shadow-[0_4px_16px_rgba(0,161,214,0.4),inset_0_1px_0_rgba(255,255,255,0.2)]
+          hover:from-[#00B5E5] hover:to-[#00A1D6]
+          hover:-translate-y-0.5 active:scale-[0.97]
+          transition-all duration-200 inline-flex items-center gap-1 whitespace-nowrap
+          text-[11px] px-4 py-1.5"
+      >
+        <i className="fa-brands fa-bilibili"></i>
+        Bilibili
+      </a>
+    )}
+    {project.youtubeUrl && (
+      <a
+        href={project.youtubeUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="bg-gradient-to-br from-[#FF0000]/90 to-[#cc0000]/90
+          backdrop-blur-xl text-white font-bold rounded-full
+          border border-[#FF0000]/50
+          shadow-[0_4px_16px_rgba(255,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.2)]
+          hover:from-[#ff2020] hover:to-[#FF0000]
+          hover:-translate-y-0.5 active:scale-[0.97]
+          transition-all duration-200 inline-flex items-center gap-1 whitespace-nowrap
+          text-[11px] px-4 py-1.5"
+      >
+        <i className="fa-brands fa-youtube"></i>
+        YouTube
+      </a>
+    )}
+    {!project.bilibiliUrl && !project.youtubeUrl && (
+      <button
+        className="bg-gradient-to-br from-white/90 to-white/80
+          backdrop-blur-xl text-black font-bold rounded-full
+          border border-white/50
+          shadow-[0_4px_16px_rgba(255,255,255,0.2),inset_0_1px_0_rgba(255,255,255,0.5)]
+          hover:-translate-y-0.5 active:scale-[0.97]
+          transition-all duration-200
+          text-[clamp(9px,2vw,12px)] px-[clamp(8px,2vw,14px)] py-[clamp(4px,1vw,8px)]"
+      >
+        VIEW
+      </button>
+    )}
+  </div>
+);
+
+interface StatsGroupProps {
+  stats: Project['stats'];
+  settings: LayoutSettings;
+}
+const StatsGroup: React.FC<StatsGroupProps> = ({ stats, settings }) => (
+  <div
+    className="flex rounded-xl relative overflow-hidden flex-shrink-0
+      gap-[clamp(4px,1.5vw,10px)] px-[clamp(6px,1.5vw,12px)] py-[clamp(4px,1vw,8px)]"
+    style={{
+      background: `rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.1})`,
+      backdropFilter: `blur(${settings.glassBlur + 10}px) saturate(${settings.glassSaturate}%)`,
+      WebkitBackdropFilter: `blur(${settings.glassBlur + 10}px) saturate(${settings.glassSaturate}%)`,
+      border: `1px solid rgba(255,255,255,0.15)`,
+      boxShadow: `0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)`,
+    }}
+  >
+    {stats.map((stat, idx) => (
+      <div
+        key={idx}
+        className="text-center border-r border-white/20 last:border-0 pr-[clamp(5px,1.8vw,12px)] last:pr-0"
+      >
+        <div className="text-white/60 uppercase font-semibold tracking-wider whitespace-nowrap
+          text-[clamp(8px,1.8vw,12px)] mb-0.5">
+          {stat.label}
+        </div>
+        <div className="text-white font-bold whitespace-nowrap text-[clamp(12px,2.4vw,17px)]">
+          {stat.value}
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+interface TagsGroupProps {
+  tags: Project['tags'];
+  settings: LayoutSettings;
+}
+const TagsGroup: React.FC<TagsGroupProps> = ({ tags, settings }) => (
+  <div className="flex justify-center items-center flex-shrink-0 gap-1 flex-nowrap">
+    {tags.map(tag => (
+      <span
+        key={tag}
+        className="font-medium rounded-full text-white cursor-default whitespace-nowrap
+          text-[clamp(8px,1.8vw,12px)] px-[clamp(6px,1.2vw,11px)] py-[clamp(2px,0.6vw,5px)]"
+        style={{
+          background: `rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.12})`,
+          backdropFilter: `blur(${settings.glassBlur * 0.5 + 5}px)`,
+          WebkitBackdropFilter: `blur(${settings.glassBlur * 0.5 + 5}px)`,
+          border: `1px solid rgba(255,255,255,0.12)`,
+          boxShadow: `0 2px 8px rgba(0,0,0,0.2)`,
+        }}
+      >
+        {tag}
+      </span>
+    ))}
+  </div>
+);
+
 const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
   const { width, height } = useBreakpoint();
   const aspectRatio = width / height;
@@ -70,127 +187,18 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
   // View 区域内容 - 三组控件：按钮组、统计组、标签组
   // 使用 CSS clamp() 自适应，无 JS 缩放计算
   const ViewSection = () => {
-    const isVertical = layoutMode === 'landscape';
-
-    // 按钮组
-    const ButtonGroup = () => (
-      <div className="flex flex-shrink-0 justify-center items-center gap-1">
-        {project.bilibiliUrl && (
-          <a
-            href={project.bilibiliUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-gradient-to-br from-[#00A1D6]/90 to-[#0088cc]/90
-              backdrop-blur-xl text-white font-bold rounded-full
-              border border-[#00A1D6]/50
-              shadow-[0_4px_16px_rgba(0,161,214,0.4),inset_0_1px_0_rgba(255,255,255,0.2)]
-              hover:from-[#00B5E5] hover:to-[#00A1D6]
-              hover:-translate-y-0.5 active:scale-[0.97]
-              transition-all duration-200 inline-flex items-center gap-1 whitespace-nowrap
-              text-[11px] px-4 py-1.5"
-          >
-            <i className="fa-brands fa-bilibili"></i>
-            Bilibili
-          </a>
-        )}
-        {project.youtubeUrl && (
-          <a
-            href={project.youtubeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-gradient-to-br from-[#FF0000]/90 to-[#cc0000]/90
-              backdrop-blur-xl text-white font-bold rounded-full
-              border border-[#FF0000]/50
-              shadow-[0_4px_16px_rgba(255,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.2)]
-              hover:from-[#ff2020] hover:to-[#FF0000]
-              hover:-translate-y-0.5 active:scale-[0.97]
-              transition-all duration-200 inline-flex items-center gap-1 whitespace-nowrap
-              text-[11px] px-4 py-1.5"
-          >
-            <i className="fa-brands fa-youtube"></i>
-            YouTube
-          </a>
-        )}
-        {!project.bilibiliUrl && !project.youtubeUrl && (
-          <button
-            className="bg-gradient-to-br from-white/90 to-white/80
-              backdrop-blur-xl text-black font-bold rounded-full
-              border border-white/50
-              shadow-[0_4px_16px_rgba(255,255,255,0.2),inset_0_1px_0_rgba(255,255,255,0.5)]
-              hover:-translate-y-0.5 active:scale-[0.97]
-              transition-all duration-200
-              text-[clamp(9px,2vw,12px)] px-[clamp(8px,2vw,14px)] py-[clamp(4px,1vw,8px)]"
-          >
-            VIEW
-          </button>
-        )}
-      </div>
-    );
-
-    // 统计组
-    const StatsGroup = () => (
-      <div
-        className="flex rounded-xl relative overflow-hidden flex-shrink-0
-          gap-[clamp(4px,1.5vw,10px)] px-[clamp(6px,1.5vw,12px)] py-[clamp(4px,1vw,8px)]"
-        style={{
-          background: `rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.1})`,
-          backdropFilter: `blur(${settings.glassBlur + 10}px) saturate(${settings.glassSaturate}%)`,
-          WebkitBackdropFilter: `blur(${settings.glassBlur + 10}px) saturate(${settings.glassSaturate}%)`,
-          border: `1px solid rgba(255,255,255,0.15)`,
-          boxShadow: `0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)`,
-        }}
-      >
-        {project.stats.map((stat, idx) => (
-          <div
-            key={idx}
-            className="text-center border-r border-white/20 last:border-0 pr-[clamp(5px,1.8vw,12px)] last:pr-0"
-          >
-            <div className="text-white/60 uppercase font-semibold tracking-wider whitespace-nowrap
-              text-[clamp(8px,1.8vw,12px)] mb-0.5">
-              {stat.label}
-            </div>
-            <div className="text-white font-bold whitespace-nowrap text-[clamp(12px,2.4vw,17px)]">
-              {stat.value}
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-
-    // 标签组
-    const TagsGroup = () => (
-      <div className="flex justify-center items-center flex-shrink-0 gap-1 flex-nowrap">
-        {project.tags.map(tag => (
-          <span
-            key={tag}
-            className="font-medium rounded-full text-white cursor-default whitespace-nowrap
-              text-[clamp(8px,1.8vw,12px)] px-[clamp(6px,1.2vw,11px)] py-[clamp(2px,0.6vw,5px)]"
-            style={{
-              background: `rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.12})`,
-              backdropFilter: `blur(${settings.glassBlur * 0.5 + 5}px)`,
-              WebkitBackdropFilter: `blur(${settings.glassBlur * 0.5 + 5}px)`,
-              border: `1px solid rgba(255,255,255,0.12)`,
-              boxShadow: `0 2px 8px rgba(0,0,0,0.2)`,
-            }}
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
-    );
-
     return (
-      <div className="w-full flex items-center justify-start overflow-visible">
+      <div className="w-full flex items-center justify-center overflow-visible">
         <div
-          className="flex items-center justify-start gap-3 flex-row flex-nowrap"
+          className="flex items-center justify-center gap-3 flex-row flex-nowrap"
           style={{
             transform: `scale(${Math.min(scale * 0.5, 1.2)})`,
-            transformOrigin: 'left center',
+            transformOrigin: 'center center',
           }}
         >
-          <ButtonGroup />
-          <StatsGroup />
-          <TagsGroup />
+          <ButtonGroup project={project} />
+          <StatsGroup stats={project.stats} settings={settings} />
+          <TagsGroup tags={project.tags} settings={settings} />
         </div>
       </div>
     );

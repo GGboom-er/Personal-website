@@ -27,9 +27,9 @@ const BottomTabBar: React.FC<BottomTabBarProps> = ({ activeView, onSelectView, s
   return (
     <>
       <nav
-        className="w-full shrink-0 z-40"
+        className="w-full shrink-0 z-40 md:hidden"
         style={{
-          background: `linear-gradient(to bottom, rgba(10,10,12,0.85) 0%, rgba(10,10,12,0.75) 100%)`,
+          background: `linear-gradient(135deg, rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.08}) 0%, rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.04}) 100%)`,
           backdropFilter: `blur(${settings.glassBlur + 20}px) saturate(${settings.glassSaturate}%)`,
           WebkitBackdropFilter: `blur(${settings.glassBlur + 20}px) saturate(${settings.glassSaturate}%)`,
           borderBottom: `${borderThickness * 0.5}px solid rgba(255,255,255,${borderRefraction * 0.15})`,
@@ -44,31 +44,22 @@ const BottomTabBar: React.FC<BottomTabBarProps> = ({ activeView, onSelectView, s
             const isActive = activeView === item.id;
 
             return (
-              <button
-                key={item.id}
-                onClick={() => onSelectView(item.id)}
-                className="relative flex flex-col items-center justify-center flex-1 h-full transition-all duration-300 active:scale-95 outline-none"
-                style={{ WebkitTapHighlightColor: 'transparent' }}
-              >
-                {/* 激活时的发光边框层 - 与 Sidebar 保持一致 */}
+              <div key={item.id} className="relative flex-1 mx-1">
+                {/* 激活时的发光边框层 - 与 Sidebar 完全一致 */}
                 {isActive && glowIntensity > 0 && (
                   <>
-                    {/* 外发光 - 匹配按钮边界 */}
                     <div
-                      className="absolute rounded-xl pointer-events-none flow-animate"
+                      className="absolute inset-0 rounded-lg pointer-events-none flow-animate"
                       style={{
-                        inset: '4px 8px',
                         background: getFlowGradient(flowColors, glowIntensity * 0.5),
                         filter: `blur(${glowSpread / 3}px)`,
                         opacity: glowIntensity * 0.6,
                         animationDuration: `${flowSpeed}s`,
                       }}
                     />
-                    {/* 流光边框 - 匹配按钮边界 */}
                     <div
-                      className="absolute rounded-xl pointer-events-none overflow-hidden flow-animate"
+                      className="absolute inset-0 rounded-lg pointer-events-none overflow-hidden flow-animate"
                       style={{
-                        inset: '4px 8px',
                         padding: glowThickness * 0.4,
                         background: getFlowGradient(flowColors, 0.7),
                         WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
@@ -79,43 +70,32 @@ const BottomTabBar: React.FC<BottomTabBarProps> = ({ activeView, onSelectView, s
                     />
                   </>
                 )}
-
-                {/* 按钮内容 */}
-                <div
-                  className="relative flex flex-col items-center justify-center px-4 py-1.5 rounded-xl transition-all duration-300"
+                <button
+                  onClick={() => onSelectView(item.id)}
+                  className="relative w-full flex flex-col items-center justify-center gap-0.5 px-1 py-2 rounded-lg text-[9px] font-medium transition-all duration-300 ease-out active:scale-[0.96] outline-none"
                   style={{
+                    WebkitTapHighlightColor: 'transparent',
                     background: isActive
-                      ? `rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.12})`
+                      ? `rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.15})`
                       : 'transparent',
                     backdropFilter: isActive ? `blur(${settings.glassBlur * 0.5}px)` : 'none',
                     WebkitBackdropFilter: isActive ? `blur(${settings.glassBlur * 0.5}px)` : 'none',
-                    border: '1px solid transparent',
+                    border: isActive
+                      ? `${borderThickness * 0.7}px solid rgba(255,255,255,${borderRefraction * 0.25})`
+                      : '1px solid transparent',
                     boxShadow: isActive
-                      ? `0 2px 10px rgba(0,0,0,0.2),
-                         inset 0 ${borderThickness * 0.3}px ${borderThickness * 0.6}px rgba(255,255,255,${borderRefraction * 0.12}),
-                         0 0 ${glowIntensity * 10}px rgba(150,200,255,${glowIntensity * 0.35})`
+                      ? `0 3px 12px rgba(0,0,0,0.15),
+                         inset 0 ${borderThickness * 0.5}px ${borderThickness}px rgba(255,255,255,${borderRefraction * 0.15}),
+                         inset 0 -${borderThickness * 0.5}px ${borderThickness}px rgba(0,0,0,${borderRefraction * 0.08}),
+                         0 0 ${glowIntensity * 12}px rgba(150,200,255,${glowIntensity * 0.4})`
                       : 'none',
+                    color: isActive ? '#fff' : 'rgba(255,255,255,0.5)',
                   }}
                 >
-                  <i
-                    className={`${item.icon} text-base transition-all duration-300`}
-                    style={{
-                      color: isActive ? '#fff' : 'rgba(255,255,255,0.5)',
-                      textShadow: isActive
-                        ? `0 0 ${glowIntensity * 8}px rgba(150,200,255,${glowIntensity * 0.5})`
-                        : 'none',
-                    }}
-                  />
-                  <span
-                    className="text-[9px] font-medium mt-0.5 transition-all duration-300"
-                    style={{
-                      color: isActive ? '#fff' : 'rgba(255,255,255,0.5)',
-                    }}
-                  >
-                    {item.label}
-                  </span>
-                </div>
-              </button>
+                  <i className={`${item.icon} text-sm`} />
+                  <span className="text-center leading-tight whitespace-nowrap">{item.label}</span>
+                </button>
+              </div>
             );
           })}
         </div>

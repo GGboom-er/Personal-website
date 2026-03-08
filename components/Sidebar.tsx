@@ -29,7 +29,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, onSelectView, settings })
   return (
     <>
       <aside
-        className="w-24 h-full flex flex-col hidden md:flex relative z-30 overflow-visible"
+        className="w-20 lg:w-24 h-full flex flex-col hidden md:flex relative z-30 overflow-visible"
         style={{
           background: `linear-gradient(135deg, rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.08}) 0%, rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.04}) 100%)`,
           backdropFilter: `blur(${settings.glassBlur}px) saturate(${settings.glassSaturate}%)`,
@@ -39,12 +39,12 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, onSelectView, settings })
         }}
       >
       {/* User Profile - 使用共享组件 */}
-      <div className="px-2 py-3 mb-1">
+      <div className="px-2 py-3 mb-1 shrink-0">
         <UserProfileCard settings={settings} />
       </div>
 
       {/* Main Menu */}
-      <nav className="flex-1 px-1.5 space-y-1">
+      <nav className="flex-1 px-1.5 space-y-1 flex flex-col justify-center">
         {menuItems.map((item) => {
           const isActive = activeView === item.id;
           return (
@@ -107,7 +107,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, onSelectView, settings })
       </nav>
 
       {/* Contact Section - 使用共享组件 */}
-      <div className="p-2 border-t border-white/10 overflow-visible">
+      <div className="p-2 border-t border-white/10 overflow-visible shrink-0">
         <ContactLinks settings={settings} />
       </div>
     </aside>

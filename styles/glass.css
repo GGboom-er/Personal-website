@@ -83,3 +83,60 @@
 .flow-animate {
   animation: flowRotate 2s linear infinite;
 }
+
+/* ========== GlassCard 共享规则（通过 CSS 变量实现 per-instance 差异） ========== */
+.glass-card-v2 {
+  --hover-scale: 1;
+  --hover-blur: 0px;
+  --card-image-scale: 1;
+}
+.glass-card-v2:not(.active) {
+  transform: scale(1);
+  z-index: 1;
+}
+.glass-card-v2.active {
+  transform: scale(1.02);
+  z-index: 10;
+}
+.glass-card-v2:not(.active):hover {
+  transform: scale(var(--hover-scale));
+  z-index: 5;
+}
+.glass-card-v2 .hover-overlay {
+  opacity: 0;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+}
+.glass-card-v2:hover .hover-overlay {
+  opacity: 1;
+  backdrop-filter: blur(var(--hover-blur));
+  -webkit-backdrop-filter: blur(var(--hover-blur));
+}
+.glass-card-v2 .hover-btn {
+  transform: scale(0.9);
+  opacity: 0;
+}
+.glass-card-v2:hover .hover-btn {
+  transform: scale(1);
+  opacity: 1;
+}
+.glass-card-v2 .card-content {
+  transform: scale(var(--card-image-scale));
+  transform-origin: center center;
+}
+.glass-card-v2:not(.active):hover .card-content {
+  transform: scale(calc(var(--card-image-scale) * 1.02));
+}
+
+/* ========== Timeline card-flow 动画 ========== */
+@keyframes card-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ========== ImageFrame 共享 shimmer 动画 ========== */
+@keyframes glassShimmer {
+  0%, 100% { opacity: var(--shimmer-min); }
+  50% { opacity: var(--shimmer-max); }
+}

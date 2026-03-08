@@ -1,4 +1,4 @@
-import React, { useId, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { LayoutSettings } from '../../types';
 import ImageFrame from './ImageFrame';
 
@@ -27,8 +27,6 @@ const GlassCard: React.FC<GlassCardProps> = React.memo(({
   settings,
   className = '',
 }) => {
-  const uniqueId = useId().replace(/:/g, '');
-
   // 解构设置以用于依赖追踪和计算
   const {
     cardBorderRadius,
@@ -63,65 +61,19 @@ const GlassCard: React.FC<GlassCardProps> = React.memo(({
   const hoverScale = rawHoverScale / 100;
   const hoverOpacity = rawHoverOpacity / 100;
 
-  // Memoize style tag content
-  const styleTag = useMemo(() => `
-        #glass-card-${uniqueId} {
-          --hover-scale: ${hoverScale};
-          --hover-blur: ${hoverBlur}px;
-          --card-image-scale: ${cardImageScale};
-        }
-        #glass-card-${uniqueId}:not(.active) {
-          transform: scale(1);
-          z-index: 1;
-        }
-        #glass-card-${uniqueId}.active {
-          transform: scale(1.02);
-          z-index: 10;
-        }
-        #glass-card-${uniqueId}:not(.active):hover {
-          transform: scale(var(--hover-scale));
-          z-index: 5;
-        }
-        #glass-card-${uniqueId} .hover-overlay {
-          opacity: 0;
-          backdrop-filter: blur(0px);
-          -webkit-backdrop-filter: blur(0px);
-        }
-        #glass-card-${uniqueId}:hover .hover-overlay {
-          opacity: 1;
-          backdrop-filter: blur(var(--hover-blur));
-          -webkit-backdrop-filter: blur(var(--hover-blur));
-        }
-        #glass-card-${uniqueId} .hover-btn {
-          transform: scale(0.9);
-          opacity: 0;
-        }
-        #glass-card-${uniqueId}:hover .hover-btn {
-          transform: scale(1);
-          opacity: 1;
-        }
-        #glass-card-${uniqueId} .card-content {
-          transform: scale(var(--card-image-scale));
-          transform-origin: center center;
-        }
-        #glass-card-${uniqueId}:not(.active):hover .card-content {
-          transform: scale(calc(var(--card-image-scale) * 1.02));
-        }
-      `, [uniqueId, hoverScale, hoverBlur, cardImageScale]);
-
+  // 通过 CSS 变量传递 per-instance 值，共享 glass.css 中的 .glass-card-v2 规则
   const rootStyle = useMemo(() => ({
     padding: cardPadding,
-    willChange: 'transform'
-  }), [cardPadding]);
+    willChange: 'transform',
+    '--hover-scale': hoverScale,
+    '--hover-blur': `${hoverBlur}px`,
+    '--card-image-scale': cardImageScale,
+  } as React.CSSProperties), [cardPadding, hoverScale, hoverBlur, cardImageScale]);
 
   return (
-    <>
-      <style>{styleTag}</style>
-
       <div
-        id={`glass-card-${uniqueId}`}
         onClick={onClick}
-        className={`${isActive ? 'active' : ''} group relative cursor-pointer
+        className={`glass-card-v2 ${isActive ? 'active' : ''} group relative cursor-pointer
           transition-all duration-300 ease-out active:scale-[0.98]
           outline-none focus:outline-none ${className}`}
         style={rootStyle}
@@ -206,7 +158,6 @@ const GlassCard: React.FC<GlassCardProps> = React.memo(({
           )}
         </div>
       </div>
-    </>
   );
 });
 

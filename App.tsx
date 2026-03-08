@@ -20,6 +20,8 @@ const AppContent: React.FC = () => {
 
   // 预加载图片资源
   useEffect(() => {
+    const timers: ReturnType<typeof setTimeout>[] = [];
+
     const preloadImages = () => {
       // 优先预加载当前视图的背景
       const activeBg = activeView === 'Skills' ? 'images/bg3.webp' : activeView === 'Profile' ? 'images/bg2.webp' : 'images/bg.webp';
@@ -38,7 +40,7 @@ const AppContent: React.FC = () => {
       }
 
       // 延迟加载其他资源，避免阻塞首屏渲染
-      setTimeout(() => {
+      timers.push(setTimeout(() => {
         // 预加载其他背景
         ['images/bg.webp', 'images/bg2.webp', 'images/bg3.webp']
           .filter(src => src !== activeBg)
@@ -56,16 +58,20 @@ const AppContent: React.FC = () => {
             }
             // 移动端跳过 hero image 预加载（节省带宽给当前视图）
             if (project.heroImage && !isMobile) {
-              setTimeout(() => {
+              timers.push(setTimeout(() => {
                 const img2 = new Image();
                 img2.src = getAssetPath(project.heroImage);
-              }, 1000);
+              }, 1000));
             }
           });
         }
-      }, 2000);
+      }, 2000));
     };
     preloadImages();
+
+    return () => {
+      timers.forEach(t => clearTimeout(t));
+    };
   }, [activeView, isMobile]);
 
   // Filter projects based on the active sidebar view
@@ -141,14 +147,12 @@ const AppContent: React.FC = () => {
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col h-full min-w-0 overflow-hidden relative z-10">
 
-        {/* Mobile Top Tab Bar */}
-        {isMobile && (
-          <BottomTabBar
-            activeView={activeView}
-            onSelectView={setActiveView}
-            settings={settings}
-          />
-        )}
+        {/* Mobile Top Tab Bar - CSS 控制显隐，与 Sidebar 的 hidden md:flex 同源 */}
+        <BottomTabBar
+          activeView={activeView}
+          onSelectView={setActiveView}
+          settings={settings}
+        />
 
         {/* Profile View: Timeline */}
         {activeView === 'Profile' ? (

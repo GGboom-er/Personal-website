@@ -1,4 +1,4 @@
-import React, { useId } from 'react';
+import React from 'react';
 
 // 流光基础颜色
 const FLOW_COLORS = [
@@ -54,8 +54,6 @@ const ImageFrame: React.FC<ImageFrameProps> = ({
   className = '',
   borderRadius = '0.75rem',
 }) => {
-  const uniqueId = useId().replace(/:/g, '');
-
   const glowNorm = borderGlow / 100;
   const refractNorm = borderRefraction / 100;
   const shadowNorm = imageShadow / 100;
@@ -64,22 +62,16 @@ const ImageFrame: React.FC<ImageFrameProps> = ({
   // 计算折射色彩偏移
   const chromaticOffset = refractNorm * 2;
 
+  // 通过 CSS 变量驱动共享 @keyframes glassShimmer（定义在 glass.css）
+  const shimmerStyle: React.CSSProperties = {
+    '--shimmer-min': refractNorm * 0.3,
+    '--shimmer-max': refractNorm * 0.5,
+    animation: 'glassShimmer 3s ease-in-out infinite',
+  } as React.CSSProperties;
+
   return (
-    <>
-      {/* 动态 CSS 滤镜 */}
-      <style>{`
-        @keyframes glassShimmer-${uniqueId} {
-          0%, 100% { opacity: ${refractNorm * 0.3}; }
-          50% { opacity: ${refractNorm * 0.5}; }
-        }
-
-        .image-frame-${uniqueId} .chromatic-layer {
-          animation: glassShimmer-${uniqueId} 3s ease-in-out infinite;
-        }
-      `}</style>
-
       <div
-        className={`image-frame-${uniqueId} relative overflow-hidden ${className}`}
+        className={`relative overflow-hidden ${className}`}
         style={{
           aspectRatio,
           borderRadius,
@@ -100,8 +92,9 @@ const ImageFrame: React.FC<ImageFrameProps> = ({
           <>
             {/* 红色通道偏移 */}
             <div
-              className="chromatic-layer absolute inset-0 pointer-events-none mix-blend-screen"
+              className="absolute inset-0 pointer-events-none mix-blend-screen"
               style={{
+                ...shimmerStyle,
                 background: `linear-gradient(${45 + distortNorm * 30}deg,
                   rgba(255,100,100,${refractNorm * 0.15}) 0%,
                   transparent 30%,
@@ -112,8 +105,9 @@ const ImageFrame: React.FC<ImageFrameProps> = ({
             />
             {/* 蓝色通道偏移 */}
             <div
-              className="chromatic-layer absolute inset-0 pointer-events-none mix-blend-screen"
+              className="absolute inset-0 pointer-events-none mix-blend-screen"
               style={{
+                ...shimmerStyle,
                 background: `linear-gradient(${-45 - distortNorm * 30}deg,
                   rgba(100,100,255,${refractNorm * 0.15}) 0%,
                   transparent 30%,
@@ -235,7 +229,6 @@ const ImageFrame: React.FC<ImageFrameProps> = ({
           }}
         />
       </div>
-    </>
   );
 };
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 // 断点配置
 const BREAKPOINTS = {
@@ -58,24 +58,30 @@ export const useBreakpoint = (): BreakpointState => {
     };
   });
 
-  const handleResize = useCallback(() => {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    const breakpoint = getBreakpoint(width);
+  const rafRef = useRef(0);
 
-    setState({
-      breakpoint,
-      width,
-      height,
-      isMobile: breakpoint === 'xs' || breakpoint === 'sm',
-      isTablet: breakpoint === 'md',
-      isDesktop: breakpoint === 'lg' || breakpoint === 'xl' || breakpoint === '2xl',
-      isXs: breakpoint === 'xs',
-      isSm: breakpoint === 'sm',
-      isMd: breakpoint === 'md',
-      isLg: breakpoint === 'lg',
-      isXl: breakpoint === 'xl',
-      is2xl: breakpoint === '2xl',
+  const handleResize = useCallback(() => {
+    if (rafRef.current) return; // 已有待执行帧，跳过
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = 0;
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const breakpoint = getBreakpoint(width);
+
+      setState({
+        breakpoint,
+        width,
+        height,
+        isMobile: breakpoint === 'xs' || breakpoint === 'sm',
+        isTablet: breakpoint === 'md',
+        isDesktop: breakpoint === 'lg' || breakpoint === 'xl' || breakpoint === '2xl',
+        isXs: breakpoint === 'xs',
+        isSm: breakpoint === 'sm',
+        isMd: breakpoint === 'md',
+        isLg: breakpoint === 'lg',
+        isXl: breakpoint === 'xl',
+        is2xl: breakpoint === '2xl',
+      });
     });
   }, []);
 
@@ -83,11 +89,11 @@ export const useBreakpoint = (): BreakpointState => {
     // 初始化时更新一次
     handleResize();
 
-    // 监听窗口大小变化
     window.addEventListener('resize', handleResize);
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(rafRef.current);
     };
   }, [handleResize]);
 

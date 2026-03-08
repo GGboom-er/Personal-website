@@ -43,3 +43,12 @@
 - [触发条件] 移动端技能页 GPU 过载发烫 -> [根因] 每个 GlassBubble 含 3 层 backdrop-filter + SVG feTurbulence + 多个叠加动画 -> [正确方案] 移动端合并为 1 层 backdrop-filter，移除 SVG 滤镜和低贡献动画（bubble-breathe/edge-distort/rod-glow/text-wobble），保留旋转和流光。
 - [触发条件] 切换到技能页卡顿30秒 -> [根因] 内联 `<style>` 每次渲染重新注入CSS动画规则 + 组件同步挂载200+DOM -> [正确方案] 提取 `<style>` 为模块级静态常量 + `React.lazy` 延迟加载。
 - [触发条件] 导航栏透出底层流光动画 -> [根因] BottomTabBar 背景 opacity 仅 0.12 + Skills 容器 `overflow-visible` -> [正确方案] 提高背景 opacity 至 0.85，移动端 Skills 容器改 `overflow-hidden`。
+
+## 构建与加载优化
+- [触发条件] 每个 GlassCard/ImageFrame 实例注入独立 `<style>` 标签导致 CSSOM 重算 -> [根因] per-instance `@keyframes` 和 `:hover` 规则用动态 `<style>` 实现 -> [正确方案] 将规则提取为共享 CSS class（glass.css），通过 inline style 的 CSS 变量传递 per-instance 差异值。
+- [触发条件] 粒子系统 `splice(i,1)` 在循环中频繁调用导致卡顿 -> [根因] splice 是 O(n) 操作，每次移除都移动后续元素 -> [正确方案] 反向遍历 + swap-and-pop（`arr[i]=arr[len-1]; arr.pop()`），O(1) 移除。
+- [触发条件] Vite 使用 `cssMinify: 'lightningcss'` 报错找不到包 -> [根因] lightningcss 是可选依赖，需显式安装 -> [正确方案] `npm install -D lightningcss`。
+
+## 组件定义与渲染性能
+- [触发条件] 渲染函数内定义子组件导致不必要的卸载/挂载 -> [根因] 每次父渲染创建新函数引用，React 视为不同组件类型 -> [正确方案] 提取为模块级组件，通过 props 传入数据。
+- [触发条件] resize 事件每像素触发 setState 导致卡顿 -> [根因] 多个组件各自监听 resize，同帧内多次 setState -> [正确方案] 在 handleResize 中用 `requestAnimationFrame` 节流，保证每帧最多更新一次。

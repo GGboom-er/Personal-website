@@ -363,7 +363,9 @@ const LuminaHullComponent: React.FC<LuminaHullProps> = ({ id, config, color }) =
                     if (p.distToTarget < 8 && Math.random() < (s.luminaRippleChance / 100)) {
                         flashes.push(new CyberRipple(p.x, p.y, color));
                     }
-                    particles.splice(i, 1);
+                    // swap-and-pop 替代 splice
+                    particles[i] = particles[particles.length - 1];
+                    particles.pop();
                 } else {
                     p.draw(ctx);
                 }
@@ -372,7 +374,8 @@ const LuminaHullComponent: React.FC<LuminaHullProps> = ({ id, config, color }) =
             for (let i = flashes.length - 1; i >= 0; i--) {
                 const f = flashes[i];
                 if (!f.update()) {
-                    flashes.splice(i, 1);
+                    flashes[i] = flashes[flashes.length - 1];
+                    flashes.pop();
                 } else {
                     f.draw(ctx);
                 }
@@ -382,8 +385,8 @@ const LuminaHullComponent: React.FC<LuminaHullProps> = ({ id, config, color }) =
         };
 
         // PRE-WARM PARTICLES
-        // Simulate 200 frames to fill the hull immediately
-        for (let i = 0; i < 200; i++) {
+        // Simulate 60 frames to fill the hull immediately (reduced from 200 — visually sufficient, 70% less blocking)
+        for (let i = 0; i < 60; i++) {
             // Emission logic (simplified for pre-warm)
             if (particles.length < settingsRef.current.luminaParticleCount) {
                 if (Math.random() < (settingsRef.current.luminaSpawnRate / 100)) {
@@ -393,11 +396,14 @@ const LuminaHullComponent: React.FC<LuminaHullProps> = ({ id, config, color }) =
                     particles.push(p);
                 }
             }
-            // Update logic
+            // Update logic — 反向遍历 + swap-and-pop 替代 splice，避免数组重分配
             for (let j = particles.length - 1; j >= 0; j--) {
                 const p = particles[j];
                 const alive = p.update();
-                if (!alive) particles.splice(j, 1);
+                if (!alive) {
+                    particles[j] = particles[particles.length - 1];
+                    particles.pop();
+                }
             }
         }
 

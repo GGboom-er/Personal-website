@@ -22,3 +22,20 @@
   - [x] 7.3 `Timeline.tsx` 的四类文本挂载 `DraggableText`，结合 `onMouseDown/Move/Up` 实现动态拖拽和滚轮放缩缩放，并提供快捷导出能力。
 - [x] 8. **修复配置导出功能**:
   - [x] 8.1 修改 `HullEditorContext.tsx` 的 `exportConfig` 方法，使用 `navigator.clipboard.writeText` 将配置直接复制到剪贴板。
+
+---
+## Phase 3: 网页性能优化
+- [x] 9. **Font Awesome 异步加载**: `index.html` 中 FA CSS 改为 `media="print" onload` 去阻塞首屏渲染。
+- [x] 10. **Vite 构建优化**: `vite.config.ts` 添加 vendor chunk 分离、gzip 预压缩、lightningcss CSS 压缩。
+- [x] 11. **背景图预加载**: `index.html` 添加 `prefetch` bg2/bg3.webp；`App.tsx` 清理 setTimeout 泄漏。
+- [x] 12. **消除 per-instance style 注入**: `GlassCard.tsx`/`ImageFrame.tsx` 改用共享 CSS class + CSS 变量，消除 12 个动态 `<style>` 标签。
+- [x] 13. **LuminaHull 预热优化**: 预热帧数 200→60，`splice` 改为 swap-and-pop 避免数组重分配。
+
+---
+## Phase 4: 侧边栏自适应 + 布局修复 + 性能防抖 + 清理
+- [x] 14. **侧边栏自适应**: `Sidebar.tsx` 宽度 `w-20 lg:w-24`，nav `justify-center` 三段式布局
+- [x] 15. **Showcase ViewSection 溢出修复**: `transformOrigin` 改为 `center center`，外层 `justify-center`
+- [x] 16. **Timeline 内联 style 消除**: `@keyframes card-flow` 移入 `glass.css`，删除两处内联 `<style>`
+- [x] 17. **useBreakpoint 防抖**: `handleResize` 加 `requestAnimationFrame` 节流
+- [x] 18. **Showcase 内部组件提取**: `ButtonGroup`/`StatsGroup`/`TagsGroup` 提取为模块级组件
+- [x] 19. **清理根目录杂项**: 删除 `49a3ff0c*.jpg` 和 `Snipaste_*.png`
