@@ -52,14 +52,13 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, onSelectView, settings })
               {/* 激活时的发光边框层 - 与按钮边界完全匹配 */}
               {isActive && glowIntensity > 0 && (
                 <>
-                  {/* 外发光 - 匹配按钮边界 */}
+                  {/* 外发光 - 静态渐变即可，旋转在模糊后无视觉差异 */}
                   <div
-                    className="absolute inset-0 rounded-lg pointer-events-none flow-animate"
+                    className="absolute inset-0 rounded-lg pointer-events-none"
                     style={{
-                      background: getFlowGradient(flowColors, glowIntensity * 0.5),
+                      background: `linear-gradient(135deg, rgba(255,150,200,${glowIntensity * 0.3}), rgba(150,200,255,${glowIntensity * 0.3}), rgba(200,255,200,${glowIntensity * 0.3}))`,
                       filter: `blur(${glowSpread / 3}px)`,
                       opacity: glowIntensity * 0.6,
-                      animationDuration: `${flowSpeed}s`,
                     }}
                   />
                   {/* 流光边框 - 匹配按钮边界 */}

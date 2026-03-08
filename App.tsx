@@ -156,12 +156,12 @@ const AppContent: React.FC = () => {
 
         {/* Profile View: Timeline */}
         {activeView === 'Profile' ? (
-          <div className="w-full h-full overflow-hidden">
+          <div className="w-full flex-1 min-h-0 overflow-hidden">
             <Timeline settings={settings} />
           </div>
         ) : activeView === 'Skills' ? (
           /* Skills View: 3D Topology Graph */
-          <div className={`w-full h-full relative z-10 ${isMobile ? 'overflow-hidden' : 'overflow-visible'}`}>
+          <div className={`w-full flex-1 min-h-0 relative z-10 ${isMobile ? 'overflow-hidden' : 'overflow-visible'}`}>
             <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-white/40">加载中...</div>}>
               <SkillsGraph />
             </Suspense>
@@ -185,7 +185,7 @@ const AppContent: React.FC = () => {
 
             {/* Bottom Section: Project List - Apple Liquid Glass */}
             <div
-              className="overflow-hidden flex flex-col flex-1 relative z-10"
+              className="overflow-hidden flex flex-col flex-1 min-h-[100px] relative z-10"
               style={{
                 background: `linear-gradient(to bottom, rgba(255,255,255,${settings.glassBgOpacity / 100}) 0%, rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.4}) 100%)`,
                 backdropFilter: `blur(${settings.glassBlur}px) saturate(${settings.glassSaturate}%)`,

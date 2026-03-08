@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react';
 import { Project, LayoutSettings } from '../types';
 import { ImageFrame, getFlowGradient } from './glass';
 import { useBreakpoint } from '../hooks/useBreakpoint';
@@ -149,9 +149,9 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
   const baseScale = useMemo(() => {
     // 基于视口较小边计算，确保内容适配
     const minDimension = Math.min(width, height);
-    if (minDimension >= 800) return 1;
-    if (minDimension >= 500) return 0.9;
-    return 0.84;
+    if (minDimension >= 800) return 1.2;
+    if (minDimension >= 500) return 1.08;
+    return 1.0;
   }, [width, height]);
 
   // 基于容器的缩放因子
@@ -185,14 +185,41 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
   const flowColors = settings.focusFlowColors;
 
   // View 区域内容 - 三组控件：按钮组、统计组、标签组
-  // 使用 CSS clamp() 自适应，无 JS 缩放计算
+  // 始终单行，基于容器宽度自适应缩放
   const ViewSection = () => {
+    const wrapperRef = useRef<HTMLDivElement>(null);
+    const innerRef = useRef<HTMLDivElement>(null);
+    const [viewScale, setViewScale] = useState(1);
+
+    const recalc = useCallback(() => {
+      const wrapper = wrapperRef.current;
+      const inner = innerRef.current;
+      if (!wrapper || !inner) return;
+      // 先重置为 1 测量真实宽度
+      inner.style.transform = 'scale(1)';
+      const contentW = inner.scrollWidth;
+      const containerW = wrapper.clientWidth;
+      const fit = containerW > 0 && contentW > 0
+        ? Math.min(containerW / contentW, 1.2)
+        : 1;
+      setViewScale(fit);
+      inner.style.transform = `scale(${fit})`;
+    }, []);
+
+    useEffect(() => {
+      recalc();
+      const ro = new ResizeObserver(recalc);
+      if (wrapperRef.current) ro.observe(wrapperRef.current);
+      return () => ro.disconnect();
+    }, [recalc, project.id]);
+
     return (
-      <div className="w-full flex items-center justify-center overflow-visible">
+      <div ref={wrapperRef} className="w-full flex items-center justify-center overflow-hidden">
         <div
-          className="flex items-center justify-center gap-3 flex-row flex-nowrap"
+          ref={innerRef}
+          className="flex items-center justify-center gap-3 flex-nowrap whitespace-nowrap"
           style={{
-            transform: `scale(${Math.min(scale * 0.5, 1.2)})`,
+            transform: `scale(${viewScale})`,
             transformOrigin: 'center center',
           }}
         >
@@ -383,14 +410,14 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
           </div>
         )}
 
-        {/* Portrait Layout: 竖屏布局 - [海报+文字横排] -> [功能区贴底] */}
+        {/* Portrait Layout: 竖屏布局 - [海报+标题横排] -> [描述文字] -> [功能区贴底] */}
         {layoutMode === 'portrait' && (
           <div
             className="flex flex-col h-full overflow-hidden"
-            style={{ gap: Math.round(3 * scale) }}
+            style={{ gap: Math.round(4 * scale) }}
           >
-            {/* 1. Top Section: Icon + Text 横向排列 */}
-            <div className="flex items-start flex-1 min-h-0 overflow-hidden" style={{ gap: spacing.gap }}>
+            {/* 1. Top: Icon + Title 横排 */}
+            <div className="flex items-start shrink-0" style={{ gap: spacing.gap }}>
               {/* Icon */}
               <div
                 className="relative shrink-0"
@@ -440,10 +467,10 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
                 />
               </div>
 
-              {/* Text - 右侧文字区域 */}
-              <div className="flex-1 min-w-0 flex flex-col overflow-y-auto no-scrollbar">
+              {/* Title + English Title */}
+              <div className="flex-1 min-w-0 flex flex-col justify-center">
                 <h1
-                  className="font-bold tracking-tight leading-tight shrink-0"
+                  className="font-bold tracking-tight leading-tight"
                   style={{
                     fontSize: fontSize.title,
                     fontFamily: settings.fontFamily,
@@ -453,25 +480,44 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
                 >
                   {project.title}
                 </h1>
-                <p
-                  className="leading-relaxed mt-1"
-                  style={{
-                    fontSize: fontSize.desc,
-                    lineHeight: 1.4,
-                    wordBreak: 'break-word',
-                    whiteSpace: 'pre-wrap',
-                    color: settings.descColor,
-                    fontFamily: settings.fontFamily,
-                    opacity: 0.9,
-                  }}
-                >
-                  {project.description}
-                </p>
+                {project.titleEn && (
+                  <h2
+                    className="font-medium tracking-wide"
+                    style={{
+                      fontSize: fontSize.titleEn,
+                      marginTop: Math.round(2 * scale),
+                      fontFamily: settings.fontFamily,
+                      color: settings.titleColor,
+                      opacity: 0.7,
+                      textShadow: `0 1px 3px rgba(0,0,0,0.4)`,
+                    }}
+                  >
+                    {project.titleEn}
+                  </h2>
+                )}
               </div>
             </div>
 
-            {/* 3. Bottom Section: ViewSection (Video/Stats/Tags) - 紧凑贴底无上边距 */}
-            <div className="shrink-0 mt-auto border-t border-white/5">
+            {/* 2. Middle: Description 独占整行宽度，可滚动 */}
+            <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar">
+              <p
+                className="leading-relaxed"
+                style={{
+                  fontSize: fontSize.desc,
+                  lineHeight: 1.4,
+                  wordBreak: 'break-word',
+                  whiteSpace: 'pre-wrap',
+                  color: settings.descColor,
+                  fontFamily: settings.fontFamily,
+                  opacity: 0.9,
+                }}
+              >
+                {project.description}
+              </p>
+            </div>
+
+            {/* 3. Bottom: ViewSection 贴底 */}
+            <div className="shrink-0 border-t border-white/5">
               <div style={{ transformOrigin: 'bottom center' }}>
                 <ViewSection />
               </div>

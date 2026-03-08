@@ -45,22 +45,21 @@ const BottomTabBar: React.FC<BottomTabBarProps> = ({ activeView, onSelectView, s
 
             return (
               <div key={item.id} className="relative flex-1 mx-1">
-                {/* 激活时的发光边框层 - 与 Sidebar 完全一致 */}
+                {/* 激活时的发光边框层 - 使用 linear-gradient 替代 conic-gradient 避免矩形色块 */}
                 {isActive && glowIntensity > 0 && (
                   <>
                     <div
-                      className="absolute inset-0 rounded-lg pointer-events-none flow-animate"
+                      className="absolute inset-0 rounded-lg pointer-events-none"
                       style={{
-                        background: getFlowGradient(flowColors, glowIntensity * 0.5),
+                        background: `linear-gradient(90deg, rgba(255,150,200,${glowIntensity * 0.3}), rgba(150,200,255,${glowIntensity * 0.3}), rgba(200,255,200,${glowIntensity * 0.3}))`,
                         filter: `blur(${glowSpread / 3}px)`,
                         opacity: glowIntensity * 0.6,
-                        animationDuration: `${flowSpeed}s`,
                       }}
                     />
                     <div
                       className="absolute inset-0 rounded-lg pointer-events-none overflow-hidden flow-animate"
                       style={{
-                        padding: glowThickness * 0.4,
+                        padding: Math.max(1, glowThickness * 0.3),
                         background: getFlowGradient(flowColors, 0.7),
                         WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
                         WebkitMaskComposite: 'xor',

@@ -27,7 +27,7 @@ const ProjectList: React.FC<ProjectListProps> = ({ projects, activeId, onSelect,
   const cardGap = settings.cardGap;
 
   // 移动端卡片尺寸
-  const mobileCardWidth = 108;
+  const mobileCardWidth = 130;
   const mobileCardGap = 16;
 
   // 同步 activeId 到 currentIndex（外部更新）
