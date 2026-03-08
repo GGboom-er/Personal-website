@@ -27,7 +27,7 @@ const BottomTabBar: React.FC<BottomTabBarProps> = ({ activeView, onSelectView, s
   return (
     <>
       <nav
-        className="w-full shrink-0 z-40 md:hidden"
+        className="w-full shrink-0 z-40"
         style={{
           background: `linear-gradient(135deg, rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.08}) 0%, rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.04}) 100%)`,
           backdropFilter: `blur(${settings.glassBlur + 20}px) saturate(${settings.glassSaturate}%)`,
@@ -45,30 +45,6 @@ const BottomTabBar: React.FC<BottomTabBarProps> = ({ activeView, onSelectView, s
 
             return (
               <div key={item.id} className="relative flex-1 mx-1">
-                {/* 激活时的发光边框层 - 使用 linear-gradient 替代 conic-gradient 避免矩形色块 */}
-                {isActive && glowIntensity > 0 && (
-                  <>
-                    <div
-                      className="absolute inset-0 rounded-lg pointer-events-none"
-                      style={{
-                        background: `linear-gradient(90deg, rgba(255,150,200,${glowIntensity * 0.3}), rgba(150,200,255,${glowIntensity * 0.3}), rgba(200,255,200,${glowIntensity * 0.3}))`,
-                        filter: `blur(${glowSpread / 3}px)`,
-                        opacity: glowIntensity * 0.6,
-                      }}
-                    />
-                    <div
-                      className="absolute inset-0 rounded-lg pointer-events-none overflow-hidden flow-animate"
-                      style={{
-                        padding: Math.max(1, glowThickness * 0.3),
-                        background: getFlowGradient(flowColors, 0.7),
-                        WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                        WebkitMaskComposite: 'xor',
-                        maskComposite: 'exclude',
-                        animationDuration: `${flowSpeed}s`,
-                      }}
-                    />
-                  </>
-                )}
                 <button
                   onClick={() => onSelectView(item.id)}
                   className="relative w-full flex flex-col items-center justify-center gap-0.5 px-1 py-2 rounded-lg text-[9px] font-medium transition-all duration-300 ease-out active:scale-[0.96] outline-none"
@@ -77,8 +53,6 @@ const BottomTabBar: React.FC<BottomTabBarProps> = ({ activeView, onSelectView, s
                     background: isActive
                       ? `rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.15})`
                       : 'transparent',
-                    backdropFilter: isActive ? `blur(${settings.glassBlur * 0.5}px)` : 'none',
-                    WebkitBackdropFilter: isActive ? `blur(${settings.glassBlur * 0.5}px)` : 'none',
                     border: isActive
                       ? `${borderThickness * 0.7}px solid rgba(255,255,255,${borderRefraction * 0.25})`
                       : '1px solid transparent',
@@ -91,8 +65,32 @@ const BottomTabBar: React.FC<BottomTabBarProps> = ({ activeView, onSelectView, s
                     color: isActive ? '#fff' : 'rgba(255,255,255,0.5)',
                   }}
                 >
-                  <i className={`${item.icon} text-sm`} />
-                  <span className="text-center leading-tight whitespace-nowrap">{item.label}</span>
+                  {/* 激活时的发光边框层 - 放在按钮内部确保与按钮边界精确匹配 */}
+                  {isActive && glowIntensity > 0 && (
+                    <>
+                      <div
+                        className="absolute inset-0 rounded-lg pointer-events-none"
+                        style={{
+                          background: `linear-gradient(90deg, rgba(255,150,200,${glowIntensity * 0.3}), rgba(150,200,255,${glowIntensity * 0.3}), rgba(200,255,200,${glowIntensity * 0.3}))`,
+                          filter: `blur(${glowSpread / 3}px)`,
+                          opacity: glowIntensity * 0.6,
+                        }}
+                      />
+                      <div
+                        className="absolute inset-0 rounded-lg pointer-events-none overflow-hidden flow-animate"
+                        style={{
+                          padding: Math.max(1, glowThickness * 0.3),
+                          background: getFlowGradient(flowColors, 0.7),
+                          WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                          WebkitMaskComposite: 'xor',
+                          maskComposite: 'exclude',
+                          animationDuration: `${flowSpeed}s`,
+                        }}
+                      />
+                    </>
+                  )}
+                  <i className={`${item.icon} text-sm relative z-10`} />
+                  <span className="text-center leading-tight whitespace-nowrap relative z-10">{item.label}</span>
                 </button>
               </div>
             );

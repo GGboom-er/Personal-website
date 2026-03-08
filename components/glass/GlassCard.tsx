@@ -91,10 +91,8 @@ const GlassCard: React.FC<GlassCardProps> = React.memo(({
             style={{
               borderRadius,
               background: isActive
-                ? `rgba(255,255,255,${glassBgOpacity / 100 * 0.15})`
-                : `rgba(255,255,255,${glassBgOpacity / 100 * 0.05})`,
-              backdropFilter: `blur(${glassBlur * 0.5}px) saturate(${glassSaturate}%)`,
-              WebkitBackdropFilter: `blur(${glassBlur * 0.5}px) saturate(${glassSaturate}%)`,
+                ? `linear-gradient(135deg, rgba(255,255,255,${glassBgOpacity / 100 * 0.18}) 0%, rgba(255,255,255,${glassBgOpacity / 100 * 0.08}) 100%)`
+                : `linear-gradient(135deg, rgba(255,255,255,${glassBgOpacity / 100 * 0.07}) 0%, rgba(255,255,255,${glassBgOpacity / 100 * 0.02}) 100%)`,
               border: isActive ? 'none' : '1px solid rgba(255,255,255,0.08)',
             }}
           />
@@ -145,9 +143,7 @@ const GlassCard: React.FC<GlassCardProps> = React.memo(({
                 className="hover-btn text-white text-[10px] font-semibold px-4 py-2 rounded-full
                   cursor-pointer transition-all duration-300 ease-out active:scale-[0.95]"
                 style={{
-                  background: 'rgba(255,255,255,0.15)',
-                  backdropFilter: 'blur(4px)',
-                  WebkitBackdropFilter: 'blur(4px)',
+                  background: 'rgba(255,255,255,0.18)',
                   border: '1px solid rgba(255,255,255,0.25)',
                   boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
                 }}

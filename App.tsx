@@ -1,78 +1,62 @@
-import React, { useState, useEffect, useMemo, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, Suspense } from 'react';
 import Sidebar from './components/Sidebar';
 import Showcase from './components/Showcase';
 import ProjectList from './components/ProjectList';
-import Timeline from './components/Timeline';
 import BottomTabBar from './components/layout/BottomTabBar';
+
+// 代码分割：Timeline(~800行) 和 SkillsGraph(~600行) 首屏不需要，拆为独立 chunk
+const Timeline = React.lazy(() => import('./components/Timeline'));
+const SkillsGraph = React.lazy(() => import('./components/skills/SkillsGraph'));
 import { useBreakpoint } from './hooks/useBreakpoint';
 import { GlassSettingsProvider, useGlassSettings } from './contexts/GlassSettingsContext';
 import { DragEditorProvider } from './contexts/DragEditorContext';
 import { PROJECTS } from './constants';
 import { Project } from './types';
 import { getAssetPath } from './utils/assetPath';
-
-const SkillsGraph = lazy(() => import('./components/skills/SkillsGraph'));
+import { preloadAllImages } from './utils/preloadImages';
 
 const AppContent: React.FC = () => {
   const [activeView, setActiveView] = useState('Projects');
   const { settings } = useGlassSettings();
   const { isMobile } = useBreakpoint();
 
-  // 预加载图片资源
+  // 首帧完成标记：延迟渲染重型效果（hero blur、非活跃背景）到首帧之后
+  const [firstPaintDone, setFirstPaintDone] = useState(false);
   useEffect(() => {
-    const timers: ReturnType<typeof setTimeout>[] = [];
+    // 双 rAF 确保浏览器已完成首次绘制
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setFirstPaintDone(true);
+      });
+    });
+  }, []);
 
-    const preloadImages = () => {
-      // 优先预加载当前视图的背景
-      const activeBg = activeView === 'Skills' ? 'images/bg3.webp' : activeView === 'Profile' ? 'images/bg2.webp' : 'images/bg.webp';
-      new Image().src = getAssetPath(activeBg);
+  // 延迟挂载：仅在首次访问时挂载视图，之后常驻 DOM
+  const [mountedViews, setMountedViews] = useState(() => new Set(['Projects']));
+  useEffect(() => {
+    setMountedViews(prev => {
+      if (prev.has(activeView)) return prev;
+      const next = new Set(prev);
+      next.add(activeView);
+      return next;
+    });
+  }, [activeView]);
 
-      if (activeView === 'Skills') {
-        // Skills 视图：立即预加载技能图片（组件同步挂载，不能延迟）
-        import('./data/skills.json').then(mod => {
-          (mod.default.nodes as Array<{ image?: string }>).forEach(n => {
-            if (n.image) {
-              const img = new Image();
-              img.src = getAssetPath(n.image);
-            }
-          });
-        });
-      }
+  // 首屏后预加载所有图片资源
+  useEffect(() => {
+    preloadAllImages(activeView);
+  }, [activeView]);
 
-      // 延迟加载其他资源，避免阻塞首屏渲染
-      timers.push(setTimeout(() => {
-        // 预加载其他背景
-        ['images/bg.webp', 'images/bg2.webp', 'images/bg3.webp']
-          .filter(src => src !== activeBg)
-          .forEach(src => {
-            const img = new Image();
-            img.src = getAssetPath(src);
-          });
-
-        if (activeView !== 'Skills') {
-          // 预加载项目图片
-          PROJECTS.forEach(project => {
-            if (project.icon) {
-              const img1 = new Image();
-              img1.src = getAssetPath(project.icon);
-            }
-            // 移动端跳过 hero image 预加载（节省带宽给当前视图）
-            if (project.heroImage && !isMobile) {
-              timers.push(setTimeout(() => {
-                const img2 = new Image();
-                img2.src = getAssetPath(project.heroImage);
-              }, 1000));
-            }
-          });
-        }
-      }, 2000));
-    };
-    preloadImages();
-
-    return () => {
-      timers.forEach(t => clearTimeout(t));
-    };
-  }, [activeView, isMobile]);
+  // 移除 HTML 初始占位 — 延迟到首帧绘制后，避免白闪
+  useEffect(() => {
+    if (!firstPaintDone) return;
+    const splash = document.getElementById('initial-splash');
+    if (splash) {
+      splash.style.transition = 'opacity 0.3s';
+      splash.style.opacity = '0';
+      setTimeout(() => splash.remove(), 300);
+    }
+  }, [firstPaintDone]);
 
   // Filter projects based on the active sidebar view
   const currentProjects = useMemo(() => {
@@ -93,30 +77,49 @@ const AppContent: React.FC = () => {
   return (
     <div
       className="flex min-h-[500px] text-white font-sans overflow-hidden relative"
-      style={{ height: '100dvh', background: '#0a0a0c' }}
+      style={{ height: '100%', background: '#0a0a0c' }}
     >
       {/* 全局背景层 - 与整体布局融合 */}
       <div className="absolute inset-0 z-0 overflow-hidden">
-        {/* 基础背景图 - 根据视图切换 */}
+        {/* 首屏背景 — LCP 关键路径，立即渲染 */}
         <img
-          src={getAssetPath(activeView === 'Skills' ? 'images/bg3.webp' : activeView === 'Profile' ? 'images/bg2.webp' : 'images/bg.webp')}
+          src={getAssetPath('images/bg.webp')}
           alt=""
+          fetchPriority="high"
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
-          style={{ opacity: 0.8 }}
+          style={{ opacity: activeView === 'Projects' ? 0.8 : 0, willChange: 'opacity' }}
         />
+        {/* 非首屏背景 — 延迟到首帧后渲染，避免解码阻塞 LCP */}
+        {firstPaintDone && ([
+          { src: 'images/bg2.webp', view: 'Profile' },
+          { src: 'images/bg3.webp', view: 'Skills' },
+        ] as const).map(({ src, view }) => (
+          <img
+            key={src}
+            src={getAssetPath(src)}
+            alt=""
+            decoding="async"
+            loading="lazy"
+            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
+            style={{ opacity: activeView === view ? 0.8 : 0, willChange: 'opacity' }}
+          />
+        ))}
 
-        {/* 氛围背景层 - 当前项目图片高度模糊叠加 */}
-        {heroImage && (
+        {/* 氛围背景层 — 延迟到首帧后，filter:blur(40px) 极重 */}
+        {firstPaintDone && heroImage && (
           <img
             key={`global-bg-${activeProject?.id}`}
             src={getAssetPath(heroImage)}
             alt=""
+            decoding="async"
             className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-out"
             style={{
               transform: isMobile ? 'none' : 'scale(1.2)',
               filter: `blur(${isMobile ? 20 : 40 + settings.imageEdgeBlur}px) saturate(120%)`,
               opacity: 0.35,
               mixBlendMode: 'soft-light',
+              contain: 'strict',
+              willChange: 'transform',
             }}
           />
         )}
@@ -141,34 +144,50 @@ const AppContent: React.FC = () => {
         />
       </div>
 
-      {/* Left Sidebar */}
-      <Sidebar activeView={activeView} onSelectView={setActiveView} settings={settings} />
+      {/* 桌面端：Sidebar 作为 flex-row 的左侧栏 */}
+      {!isMobile && (
+        <Sidebar activeView={activeView} onSelectView={setActiveView} settings={settings} />
+      )}
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col h-full min-w-0 overflow-hidden relative z-10">
 
-        {/* Mobile Top Tab Bar - CSS 控制显隐，与 Sidebar 的 hidden md:flex 同源 */}
-        <BottomTabBar
-          activeView={activeView}
-          onSelectView={setActiveView}
-          settings={settings}
-        />
+        {/* 移动端：BottomTabBar 在 main 内部顶部，保持原有列布局 */}
+        {isMobile && (
+          <BottomTabBar activeView={activeView} onSelectView={setActiveView} settings={settings} />
+        )}
 
-        {/* Profile View: Timeline */}
-        {activeView === 'Profile' ? (
-          <div className="w-full flex-1 min-h-0 overflow-hidden">
-            <Timeline settings={settings} />
-          </div>
-        ) : activeView === 'Skills' ? (
-          /* Skills View: 3D Topology Graph */
-          <div className={`w-full flex-1 min-h-0 relative z-10 ${isMobile ? 'overflow-hidden' : 'overflow-visible'}`}>
-            <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-white/40">加载中...</div>}>
-              <SkillsGraph />
-            </Suspense>
-          </div>
-        ) : (
-          <>
-            {/* Top Section: Showcase */}
+        {/* 视图容器 - 延迟挂载 + display 切换 */}
+        <div className="flex-1 min-h-0 relative">
+          {/* Profile View: Timeline */}
+          {mountedViews.has('Profile') && (
+            <div
+              className="absolute inset-0 overflow-auto no-scrollbar"
+              style={{ display: activeView === 'Profile' ? undefined : 'none', contain: 'strict' }}
+            >
+              <Suspense fallback={null}>
+                <Timeline settings={settings} />
+              </Suspense>
+            </div>
+          )}
+
+          {/* Skills View: 3D Topology Graph */}
+          {mountedViews.has('Skills') && (
+            <div
+              className={`absolute inset-0 ${isMobile ? 'overflow-hidden' : 'overflow-visible'}`}
+              style={{ display: activeView === 'Skills' ? undefined : 'none', contain: 'layout style' }}
+            >
+              <Suspense fallback={null}>
+                <SkillsGraph />
+              </Suspense>
+            </div>
+          )}
+
+          {/* Projects View: Showcase + ProjectList */}
+          <div
+            className="absolute inset-0 flex flex-col"
+            style={{ display: activeView !== 'Profile' && activeView !== 'Skills' ? undefined : 'none' }}
+          >
             <div
               className="w-full relative overflow-hidden shrink-0"
               style={{ height: `${settings.showcaseHeight}%` }}
@@ -201,8 +220,8 @@ const AppContent: React.FC = () => {
                 settings={settings}
               />
             </div>
-          </>
-        )}
+          </div>
+        </div>
 
       </main>
     </div>

@@ -123,11 +123,11 @@ const TimelineContent: React.FC<TimelineProps> = ({ settings: globalSettings, da
     const mobileCardOffsetX = settings.mobileCardOffsetX;
     const pipeWidth = settings.mobilePipeWidth;
     const pipeMargin = 24;
-    const mobileVirtualHeight = Math.max((containerH / (scale || 1)) * 0.9, 800);
+    const mobileVirtualHeight = Math.max((containerH / (scale || 1)) * 0.95, 800);
 
     return (
-      <div ref={containerRef} className="w-full h-full flex flex-col items-center justify-start relative px-3 pt-0 pb-3 overflow-hidden">
-        <div className="relative" style={{ width: `${BASE_WIDTH}px`, height: `${mobileVirtualHeight}px`, transform: `scale(${scale})`, transformOrigin: 'top center', paddingBottom: '60px' }}>
+      <div ref={containerRef} className="w-full h-full flex flex-col items-center justify-start relative px-3 pt-0 pb-0 overflow-auto no-scrollbar">
+        <div className="relative" style={{ width: `${BASE_WIDTH}px`, height: `${mobileVirtualHeight}px`, transform: `scale(${scale})`, transformOrigin: 'top center', paddingBottom: '80px', marginBottom: '20px' }}>
           <div className="w-full max-w-sm mb-1 z-20 shrink-0 mx-auto px-4">
             <UserProfileCard settings={settings} layout="horizontal">
               <ContactLinks settings={settings} layout="grid" minimal={true} />

@@ -4,16 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>我的作品集 | Showcase</title>
+    <link rel="icon" href="data:,">
 
-    <!-- ========== 加载所有字体（支持实时切换） ========== -->
+    <!-- ========== 字体异步加载（不阻塞首屏渲染） ========== -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Inter + Noto Sans SC -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- LXGW WenKai 霞鹜文楷 -->
-    <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" rel="stylesheet">
-    <!-- Preload Critical Assets -->
-    <link rel="preload" as="image" href="./images/bg.webp">
+    <!-- Inter + Noto Sans SC（异步） -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap"></noscript>
+    <!-- LXGW WenKai 霞鹜文楷（异步） -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css"></noscript>
+    <!-- Preload Critical Assets（LCP 关键路径） -->
+    <link rel="preload" as="image" href="./images/bg.webp" fetchpriority="high">
+    <link rel="preload" as="image" href="./images/heroes/lby1.webp">
     <!-- Prefetch 非首屏背景（低优先级，不阻塞首屏） -->
     <link rel="prefetch" as="image" href="./images/bg2.webp">
     <link rel="prefetch" as="image" href="./images/bg3.webp">
@@ -32,6 +36,14 @@
       }
       @supports (height: 100dvh) {
         html, body, #root { height: 100dvh; }
+      }
+      /* 安全区域适配 - 防止被浏览器地址栏/底部手势条遮挡 */
+      #root {
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        padding-left: env(safe-area-inset-left, 0px);
+        padding-right: env(safe-area-inset-right, 0px);
+        box-sizing: border-box;
       }
       
       /* Hide Scrollbar but allow functionality */
@@ -57,6 +69,12 @@
     </style>
 </head>
   <body class="bg-app-bg text-white antialiased overflow-hidden selection:bg-accent-blue selection:text-white">
+    <!-- 初始占位：React 挂载前立即可见，挂载后由 JS 移除 -->
+    <div id="initial-splash" aria-hidden="true" style="position:fixed;inset:0;z-index:0;background:#0a0a0c;">
+      <img src="./images/bg.webp" alt="" fetchpriority="high" style="width:100%;height:100%;object-fit:cover;opacity:0.8;" />
+      <img src="./images/heroes/lby1.webp" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.9;" />
+      <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,12,0.98) 0%,rgba(10,10,12,0.5) 30%,transparent 60%);"></div>
+    </div>
     <div id="root"></div>
     <script type="module" src="./index.tsx"></script>
   </body>

@@ -20,9 +20,7 @@ const ContactLinks: React.FC<ContactLinksProps> = ({ settings, className = '', l
     <div
       className={`${layout === 'grid' ? 'grid grid-cols-2' : 'flex flex-row justify-around items-center'} gap-x-3 gap-y-1.5 ${minimal ? '' : 'rounded-lg p-1'} ${className}`}
       style={minimal ? {} : {
-        background: `rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.05})`,
-        backdropFilter: `blur(${settings.glassBlur * 0.5}px)`,
-        WebkitBackdropFilter: `blur(${settings.glassBlur * 0.5}px)`,
+        background: `linear-gradient(135deg, rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.06}) 0%, rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.02}) 100%)`,
         border: `1px solid rgba(255,255,255,0.1)`,
         boxShadow: `inset 0 1px 0 rgba(255,255,255,0.05)`,
       }}
@@ -70,7 +68,7 @@ const ContactLinks: React.FC<ContactLinksProps> = ({ settings, className = '', l
                   scale-95 group-hover:scale-100
                   transition-all duration-200
                   whitespace-nowrap pointer-events-none z-50
-                  bg-black/70 backdrop-blur-xl border border-white/15"
+                  bg-black/85 border border-white/15"
                 style={{
                   boxShadow: `0 6px 24px rgba(0,0,0,0.4)`,
                 }}

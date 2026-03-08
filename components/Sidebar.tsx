@@ -29,7 +29,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, onSelectView, settings })
   return (
     <>
       <aside
-        className="w-20 lg:w-24 h-full flex flex-col hidden md:flex relative z-30 overflow-visible"
+        className="w-20 lg:w-24 h-full flex flex-col relative z-30 overflow-visible"
         style={{
           background: `linear-gradient(135deg, rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.08}) 0%, rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.04}) 100%)`,
           backdropFilter: `blur(${settings.glassBlur}px) saturate(${settings.glassSaturate}%)`,
@@ -83,8 +83,6 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, onSelectView, settings })
                   background: isActive
                     ? `rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.15})`
                     : 'transparent',
-                  backdropFilter: isActive ? `blur(${settings.glassBlur * 0.5}px)` : 'none',
-                  WebkitBackdropFilter: isActive ? `blur(${settings.glassBlur * 0.5}px)` : 'none',
                   border: isActive
                     ? `${borderThickness * 0.7}px solid rgba(255,255,255,${borderRefraction * 0.25})`
                     : '1px solid transparent',

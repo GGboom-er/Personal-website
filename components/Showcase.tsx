@@ -25,7 +25,7 @@ const ButtonGroup: React.FC<ButtonGroupProps> = ({ project }) => (
         target="_blank"
         rel="noopener noreferrer"
         className="bg-gradient-to-br from-[#00A1D6]/90 to-[#0088cc]/90
-          backdrop-blur-xl text-white font-bold rounded-full
+          text-white font-bold rounded-full
           border border-[#00A1D6]/50
           shadow-[0_4px_16px_rgba(0,161,214,0.4),inset_0_1px_0_rgba(255,255,255,0.2)]
           hover:from-[#00B5E5] hover:to-[#00A1D6]
@@ -43,7 +43,7 @@ const ButtonGroup: React.FC<ButtonGroupProps> = ({ project }) => (
         target="_blank"
         rel="noopener noreferrer"
         className="bg-gradient-to-br from-[#FF0000]/90 to-[#cc0000]/90
-          backdrop-blur-xl text-white font-bold rounded-full
+          text-white font-bold rounded-full
           border border-[#FF0000]/50
           shadow-[0_4px_16px_rgba(255,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.2)]
           hover:from-[#ff2020] hover:to-[#FF0000]
@@ -58,7 +58,7 @@ const ButtonGroup: React.FC<ButtonGroupProps> = ({ project }) => (
     {!project.bilibiliUrl && !project.youtubeUrl && (
       <button
         className="bg-gradient-to-br from-white/90 to-white/80
-          backdrop-blur-xl text-black font-bold rounded-full
+          text-black font-bold rounded-full
           border border-white/50
           shadow-[0_4px_16px_rgba(255,255,255,0.2),inset_0_1px_0_rgba(255,255,255,0.5)]
           hover:-translate-y-0.5 active:scale-[0.97]
@@ -80,9 +80,7 @@ const StatsGroup: React.FC<StatsGroupProps> = ({ stats, settings }) => (
     className="flex rounded-xl relative overflow-hidden flex-shrink-0
       gap-[clamp(4px,1.5vw,10px)] px-[clamp(6px,1.5vw,12px)] py-[clamp(4px,1vw,8px)]"
     style={{
-      background: `rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.1})`,
-      backdropFilter: `blur(${settings.glassBlur + 10}px) saturate(${settings.glassSaturate}%)`,
-      WebkitBackdropFilter: `blur(${settings.glassBlur + 10}px) saturate(${settings.glassSaturate}%)`,
+      background: `linear-gradient(135deg, rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.12}) 0%, rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.05}) 100%)`,
       border: `1px solid rgba(255,255,255,0.15)`,
       boxShadow: `0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)`,
     }}
@@ -116,9 +114,7 @@ const TagsGroup: React.FC<TagsGroupProps> = ({ tags, settings }) => (
         className="font-medium rounded-full text-white cursor-default whitespace-nowrap
           text-[clamp(8px,1.8vw,12px)] px-[clamp(6px,1.2vw,11px)] py-[clamp(2px,0.6vw,5px)]"
         style={{
-          background: `rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.12})`,
-          backdropFilter: `blur(${settings.glassBlur * 0.5 + 5}px)`,
-          WebkitBackdropFilter: `blur(${settings.glassBlur * 0.5 + 5}px)`,
+          background: `linear-gradient(135deg, rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.14}) 0%, rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.06}) 100%)`,
           border: `1px solid rgba(255,255,255,0.12)`,
           boxShadow: `0 2px 8px rgba(0,0,0,0.2)`,
         }}

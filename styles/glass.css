@@ -104,13 +104,9 @@
 }
 .glass-card-v2 .hover-overlay {
   opacity: 0;
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
 }
 .glass-card-v2:hover .hover-overlay {
   opacity: 1;
-  backdrop-filter: blur(var(--hover-blur));
-  -webkit-backdrop-filter: blur(var(--hover-blur));
 }
 .glass-card-v2 .hover-btn {
   transform: scale(0.9);

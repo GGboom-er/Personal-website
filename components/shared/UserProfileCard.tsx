@@ -18,9 +18,7 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({ settings, className =
     <div
       className={`flex ${isHorizontal ? 'flex-row text-left gap-5 items-center' : 'flex-col items-center text-center'} p-4.5 rounded-2xl transition-all duration-300 ease-out relative overflow-hidden ${className}`}
       style={{
-        background: `rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.08})`,
-        backdropFilter: `blur(${settings.glassBlur * 0.5}px)`,
-        WebkitBackdropFilter: `blur(${settings.glassBlur * 0.5}px)`,
+        background: `linear-gradient(135deg, rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.10}) 0%, rgba(255,255,255,${settings.glassBgOpacity / 100 * 0.04}) 100%)`,
         border: `${borderThickness}px solid rgba(255,255,255,${borderRefraction * 0.2})`,
         boxShadow: `
           0 8px 32px rgba(0,0,0,0.25),

@@ -81,75 +81,51 @@ const ImageFrame: React.FC<ImageFrameProps> = ({
         <img
           src={src}
           alt={alt}
+          decoding="async"
           className="w-full h-full object-cover transition-transform duration-500"
           style={{
             transform: `scale(${1 + distortNorm * 0.02})`,
           }}
         />
 
-        {/* 色散/折射效果层 - 锐利拉丝质感 */}
+        {/* 色散/折射效果层 - 合并红通道+蓝通道+拉丝纹理为 1 个 div */}
         {refractNorm > 0 && (
-          <>
-            {/* 红色通道偏移 */}
-            <div
-              className="absolute inset-0 pointer-events-none mix-blend-screen"
-              style={{
-                ...shimmerStyle,
-                background: `linear-gradient(${45 + distortNorm * 30}deg,
-                  rgba(255,100,100,${refractNorm * 0.15}) 0%,
-                  transparent 30%,
-                  transparent 70%,
-                  rgba(255,150,150,${refractNorm * 0.1}) 100%)`,
-                transform: `translateX(${chromaticOffset}px)`,
-              }}
-            />
-            {/* 蓝色通道偏移 */}
-            <div
-              className="absolute inset-0 pointer-events-none mix-blend-screen"
-              style={{
-                ...shimmerStyle,
-                background: `linear-gradient(${-45 - distortNorm * 30}deg,
-                  rgba(100,100,255,${refractNorm * 0.15}) 0%,
-                  transparent 30%,
-                  transparent 70%,
-                  rgba(150,150,255,${refractNorm * 0.1}) 100%)`,
-                transform: `translateX(${-chromaticOffset}px)`,
-              }}
-            />
-            {/* 锐利拉丝纹理 */}
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
-                background: `repeating-linear-gradient(
-                  ${90 + distortNorm * 45}deg,
-                  transparent 0px,
-                  transparent ${2 + distortionScale * 0.1}px,
-                  rgba(255,255,255,${refractNorm * 0.03}) ${2 + distortionScale * 0.1}px,
-                  rgba(255,255,255,${refractNorm * 0.03}) ${3 + distortionScale * 0.15}px
-                )`,
-                mixBlendMode: 'overlay',
+                ...shimmerStyle,
+                background: `
+                  linear-gradient(${45 + distortNorm * 30}deg,
+                    rgba(255,100,100,${refractNorm * 0.15}) 0%,
+                    transparent 30%,
+                    transparent 70%,
+                    rgba(255,150,150,${refractNorm * 0.1}) 100%),
+                  linear-gradient(${-45 - distortNorm * 30}deg,
+                    rgba(100,100,255,${refractNorm * 0.15}) 0%,
+                    transparent 30%,
+                    transparent 70%,
+                    rgba(150,150,255,${refractNorm * 0.1}) 100%),
+                  repeating-linear-gradient(
+                    ${90 + distortNorm * 45}deg,
+                    transparent 0px,
+                    transparent ${2 + distortionScale * 0.1}px,
+                    rgba(255,255,255,${refractNorm * 0.03}) ${2 + distortionScale * 0.1}px,
+                    rgba(255,255,255,${refractNorm * 0.03}) ${3 + distortionScale * 0.15}px
+                  )
+                `,
+                mixBlendMode: 'screen',
+                transform: `translateX(${chromaticOffset * 0.5}px)`,
               }}
             />
-          </>
         )}
 
-        {/* 扭曲效果层 - 边缘玻璃折射 */}
+        {/* 扭曲效果层 - box-shadow 模拟，移除 backdrop-filter */}
         {distortNorm > 0 && (
-          <>
-            {/* 边缘扭曲模糊 */}
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
-                backdropFilter: `blur(${distortionScale * distortNorm * 0.3}px)`,
-                WebkitBackdropFilter: `blur(${distortionScale * distortNorm * 0.3}px)`,
                 maskImage: `radial-gradient(ellipse at center, transparent ${50 - distortNorm * 20}%, black 100%)`,
                 WebkitMaskImage: `radial-gradient(ellipse at center, transparent ${50 - distortNorm * 20}%, black 100%)`,
-              }}
-            />
-            {/* 边缘色散加强 */}
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{
                 boxShadow: `
                   inset ${distortNorm * 3}px 0 ${distortionScale}px rgba(255,100,100,${distortNorm * 0.2}),
                   inset ${-distortNorm * 3}px 0 ${distortionScale}px rgba(100,100,255,${distortNorm * 0.2}),
@@ -158,44 +134,20 @@ const ImageFrame: React.FC<ImageFrameProps> = ({
                 borderRadius,
               }}
             />
-          </>
         )}
 
-        {/* 边缘模糊层 */}
+        {/* 边缘暗化层 - linear-gradient 模拟，移除 backdrop-filter */}
         {imageEdgeBlur > 0 && (
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              backdropFilter: `blur(${imageEdgeBlur * 0.8}px)`,
-              WebkitBackdropFilter: `blur(${imageEdgeBlur * 0.8}px)`,
-              maskImage: `linear-gradient(to bottom, black 0%, transparent 10%, transparent 90%, black 100%),
-                linear-gradient(to right, black 0%, transparent 10%, transparent 90%, black 100%)`,
-              WebkitMaskImage: `linear-gradient(to bottom, black 0%, transparent 10%, transparent 90%, black 100%),
-                linear-gradient(to right, black 0%, transparent 10%, transparent 90%, black 100%)`,
-              maskComposite: 'intersect',
-              WebkitMaskComposite: 'source-in',
+              background: `linear-gradient(to bottom, rgba(0,0,0,${imageEdgeBlur * 0.015}) 0%, transparent 10%, transparent 90%, rgba(0,0,0,${imageEdgeBlur * 0.015}) 100%),
+                linear-gradient(to right, rgba(0,0,0,${imageEdgeBlur * 0.015}) 0%, transparent 10%, transparent 90%, rgba(0,0,0,${imageEdgeBlur * 0.015}) 100%)`,
             }}
           />
         )}
 
-        {/* 玻璃边框 - 彩色折射 */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            borderRadius,
-            boxShadow: `
-              inset 0 ${borderThickness * 1.5}px ${borderThickness * 3}px rgba(255,255,255,${refractNorm * 0.35}),
-              inset 0 -${borderThickness}px ${borderThickness * 2}px rgba(0,0,0,${refractNorm * 0.25}),
-              inset ${borderThickness}px 0 ${borderThickness * 2}px rgba(255,180,180,${refractNorm * 0.2}),
-              inset -${borderThickness}px 0 ${borderThickness * 2}px rgba(180,180,255,${refractNorm * 0.2}),
-              0 0 ${glowNorm * 25}px rgba(255,255,255,${glowNorm * 0.35}),
-              0 ${shadowNorm * 20}px ${shadowNorm * 40}px rgba(0,0,0,${shadowNorm * 0.6})
-            `,
-            border: `${borderThickness}px solid rgba(255,255,255,${refractNorm * 0.25})`,
-          }}
-        />
-
-        {/* 高光层 - 锐利玻璃反射 */}
+        {/* 玻璃边框 + 高光层 - 合并为 1 个 div */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -213,6 +165,15 @@ const ImageFrame: React.FC<ImageFrameProps> = ({
                 transparent 95%,
                 rgba(0,0,0,${refractNorm * 0.05}) 100%)
             `,
+            boxShadow: `
+              inset 0 ${borderThickness * 1.5}px ${borderThickness * 3}px rgba(255,255,255,${refractNorm * 0.35}),
+              inset 0 -${borderThickness}px ${borderThickness * 2}px rgba(0,0,0,${refractNorm * 0.25}),
+              inset ${borderThickness}px 0 ${borderThickness * 2}px rgba(255,180,180,${refractNorm * 0.2}),
+              inset -${borderThickness}px 0 ${borderThickness * 2}px rgba(180,180,255,${refractNorm * 0.2}),
+              0 0 ${glowNorm * 25}px rgba(255,255,255,${glowNorm * 0.35}),
+              0 ${shadowNorm * 20}px ${shadowNorm * 40}px rgba(0,0,0,${shadowNorm * 0.6})
+            `,
+            border: `${borderThickness}px solid rgba(255,255,255,${refractNorm * 0.25})`,
           }}
         />
 
