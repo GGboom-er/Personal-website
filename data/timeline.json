@@ -6,7 +6,7 @@
       "endYear": 2021,
       "title": "吉林动画学院-动画艺术专业",
       "subtitle": "2017——2021\n\t参与学校项目《鼠年拜年》、《自然法则》动画短片",
-      "description": "\t《自然法则》分别获2023年第五届“社会主义核心价值观动画短片扶持创作活动”二类优秀作品奖。\n\t深圳青年影像节最佳技术作品奖。",
+      "description": "《自然法则》分别获2023年第五届“社会主义核心价值观动画短片扶持创作活动”二类优秀作品奖。\n深圳青年影像节最佳技术作品奖。",
       "type": "education",
       "overrides": {
         "lightConeOriginX": -13,
@@ -44,7 +44,7 @@
       "endYear": 2021,
       "title": "北京纸飞机动画",
       "subtitle": "2020——2021    实习",
-      "description": "\t参与制作《两不疑Ⅰ》、《两不疑Ⅱ》，负责角色、道具绑定制作，绑定、动画工具开发。",
+      "description": "参与制作《两不疑Ⅰ》、《两不疑Ⅱ》。\n√-制作角色、道具绑定以及绑定、动画工具开发。",
       "type": "internship",
       "overrides": {
         "lightConeOriginX": -83,
@@ -81,7 +81,7 @@
       "endYear": 2023,
       "title": "北京纸飞机动画",
       "subtitle": "2021——2023    绑定师、绑定TD",
-      "description": "\t参与制作《英雄联盟S11世界赛MV》、《凸变英雄X》pv，负责角色绑定、道具绑定、制作规范。开发绑定技术、工具。",
+      "description": "参与制作《英雄联盟S11世界赛MV》、《凸变英雄X》pv。\n√-负责角色绑定、道具绑定、制作规范。开发绑定技术、工具。",
       "type": "work",
       "overrides": {
         "lightConeOriginX": 95,
@@ -125,7 +125,7 @@
       "endYear": 2026,
       "title": "北京纸飞机动画",
       "subtitle": "2023——2026    绑定总监、制作TD",
-      "description": "\t参与制作《喵十一》、《凸变英雄X》剧集，负责绑定制作、技术、工具开发，配合开发maya、blender、UE软件pipeline管线",
+      "description": "参与制作《喵十一》、《凸变英雄X》剧集。\n√-负责绑定制作、技术、工具开发，联合开发maya、blender、UE软件pipeline管线",
       "type": "work",
       "overrides": {
         "lightConeOriginX": -4,

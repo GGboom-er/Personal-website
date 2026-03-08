@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { LayoutSettings } from '../../types';
 import ImageFrame from './ImageFrame';
+import GlowBorder from './GlowBorder';
 
 // 将 hex 颜色转换为带透明度的 rgba
 const hexToRgba = (hex: string, alpha: number): string => {
@@ -83,7 +84,17 @@ const GlassCard: React.FC<GlassCardProps> = React.memo(({
           className="card-content relative w-full transition-transform duration-300"
           style={{ borderRadius }}
         >
-          {/* Layer 1: 流光边框 - Removed GlowBorder */}
+          {/* Layer 1: 流光边框 */}
+          {isActive && (
+            <GlowBorder
+              intensity={cardGlowIntensity}
+              thickness={cardGlowThickness}
+              spread={cardGlowSpread}
+              flowSpeed={focusFlowSpeed}
+              flowColors={focusFlowColors}
+              borderRadius={borderRadius}
+            />
+          )}
 
           {/* Layer 2: 玻璃背景 */}
           <div
