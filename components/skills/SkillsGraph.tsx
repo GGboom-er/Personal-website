@@ -1,5 +1,6 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { useGlassSettings } from '../../contexts/GlassSettingsContext';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { getFlowGradient } from '../glass';
 import { getAssetPath } from '../../utils/assetPath';
 import skillsData from '../../data/skills.json';
@@ -18,27 +19,15 @@ interface SkillNode {
 // distanceBase(100) + satelliteSize/2(≈27) + 弧形标签突出(≈50) ≈ 177
 const REF_RADIUS = 177;
 
-// ──────────────────────────────────────────
-const useImageExists = (src: string | undefined): boolean => {
-  const [exists, setExists] = useState(false);
-  useEffect(() => {
-    if (!src || src.trim() === '') { setExists(false); return; }
-    const img = new Image();
-    img.onload = () => setExists(true);
-    img.onerror = () => setExists(false);
-    img.src = getAssetPath(src);
-    return () => { img.onload = null; img.onerror = null; };
-  }, [src]);
-  return exists;
-};
-
 const SafeImage: React.FC<{ src?: string; size: number; padding: number }> = ({ src, size, padding }) => {
-  const ok = useImageExists(src);
-  if (!ok || !src) return null;
+  const [visible, setVisible] = useState(true);
+  if (!src || !visible) return null;
   return (
     <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ padding: `${padding}px` }}>
-      <img src={getAssetPath(src)} alt="" className="w-full h-full object-contain opacity-90"
-        style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' }} />
+      <img src={getAssetPath(src)} alt="" loading="lazy"
+        className="w-full h-full object-contain opacity-90"
+        style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' }}
+        onError={() => setVisible(false)} />
     </div>
   );
 };
@@ -50,8 +39,8 @@ const seededRandom = (seed: number) => {
 
 // ──────────────────────────────────────────
 const GlassBubble: React.FC<{
-  size: number; color: string; settings: any; isCenter?: boolean; uniqueId?: string;
-}> = ({ size, color, settings, isCenter = false, uniqueId = 'default' }) => {
+  size: number; color: string; settings: any; isCenter?: boolean; uniqueId?: string; isMobile?: boolean;
+}> = ({ size, color, settings, isCenter = false, uniqueId = 'default', isMobile = false }) => {
   const { glassBlur, glassSaturate, focusGlowIntensity, focusFlowColors, focusFlowSpeed } = settings;
   const gi = focusGlowIntensity / 100;
   const eb = Math.max(8, glassBlur * 2.5);
@@ -59,38 +48,66 @@ const GlassBubble: React.FC<{
   const delay = (uniqueId.charCodeAt(0) + (uniqueId.charCodeAt(uniqueId.length - 1) || 0)) % 10;
 
   return (
-    <div className="relative rounded-full flex items-center justify-center bubble-breathe"
-      style={{ width: `${size}px`, height: `${size}px`, animationDelay: `${delay * 0.3}s` }}>
-      <svg width="0" height="0" style={{ position: 'absolute' }}>
-        <defs>
-          <filter id={`ed-${uniqueId}`} x="-50%" y="-50%" width="200%" height="200%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves={3} result="noise" seed={uniqueId.length * 7} />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale={6} xChannelSelector="R" yChannelSelector="G" />
-          </filter>
-        </defs>
-      </svg>
-      <div className="absolute rounded-full pointer-events-none" style={{ inset: `${size * 0.1}px`, backdropFilter: `blur(${glassBlur * 0.15}px) brightness(1.02)`, WebkitBackdropFilter: `blur(${glassBlur * 0.15}px) brightness(1.02)` }} />
-      <div className="absolute inset-0 rounded-full pointer-events-none overflow-hidden edge-distort" style={{
-        backdropFilter: `blur(${eb}px) saturate(${es}%) brightness(1.15) contrast(1.1)`,
-        WebkitBackdropFilter: `blur(${eb}px) saturate(${es}%) brightness(1.15) contrast(1.1)`,
-        maskImage: 'radial-gradient(circle at center,transparent 0%,transparent 75%,black 85%,black 100%)',
-        WebkitMaskImage: 'radial-gradient(circle at center,transparent 0%,transparent 75%,black 85%,black 100%)',
-      }} />
-      <div className="absolute inset-0 rounded-full pointer-events-none overflow-hidden" style={{
-        backdropFilter: `blur(${eb * 1.5}px) saturate(${es * 1.2}%) hue-rotate(5deg)`,
-        WebkitBackdropFilter: `blur(${eb * 1.5}px) saturate(${es * 1.2}%) hue-rotate(5deg)`,
-        maskImage: 'radial-gradient(circle at center,transparent 0%,transparent 85%,rgba(0,0,0,0.7) 92%,black 100%)',
-        WebkitMaskImage: 'radial-gradient(circle at center,transparent 0%,transparent 85%,rgba(0,0,0,0.7) 92%,black 100%)',
-      }} />
+    <div className={`relative rounded-full flex items-center justify-center${isMobile ? '' : ' bubble-breathe'}`}
+      style={{ width: `${size}px`, height: `${size}px`, ...(!isMobile ? { animationDelay: `${delay * 0.3}s` } : {}) }}>
+      {/* SVG feTurbulence 滤镜 — 移动端跳过 */}
+      {!isMobile && (
+        <svg width="0" height="0" style={{ position: 'absolute' }}>
+          <defs>
+            <filter id={`ed-${uniqueId}`} x="-50%" y="-50%" width="200%" height="200%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves={3} result="noise" seed={uniqueId.length * 7} />
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale={6} xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+          </defs>
+        </svg>
+      )}
+      {/* 主体模糊层 — 移动端仅保留此层 */}
+      {!isMobile && (
+        <div className="absolute rounded-full pointer-events-none" style={{ inset: `${size * 0.1}px`, backdropFilter: `blur(${glassBlur * 0.15}px) brightness(1.02)`, WebkitBackdropFilter: `blur(${glassBlur * 0.15}px) brightness(1.02)` }} />
+      )}
+      {/* 边缘增强层 — 移动端跳过 */}
+      {!isMobile && (
+        <div className="absolute inset-0 rounded-full pointer-events-none overflow-hidden edge-distort" style={{
+          backdropFilter: `blur(${eb}px) saturate(${es}%) brightness(1.15) contrast(1.1)`,
+          WebkitBackdropFilter: `blur(${eb}px) saturate(${es}%) brightness(1.15) contrast(1.1)`,
+          maskImage: 'radial-gradient(circle at center,transparent 0%,transparent 75%,black 85%,black 100%)',
+          WebkitMaskImage: 'radial-gradient(circle at center,transparent 0%,transparent 75%,black 85%,black 100%)',
+        }} />
+      )}
+      {/* 极边缘层 — 移动端跳过 */}
+      {!isMobile && (
+        <div className="absolute inset-0 rounded-full pointer-events-none overflow-hidden" style={{
+          backdropFilter: `blur(${eb * 1.5}px) saturate(${es * 1.2}%) hue-rotate(5deg)`,
+          WebkitBackdropFilter: `blur(${eb * 1.5}px) saturate(${es * 1.2}%) hue-rotate(5deg)`,
+          maskImage: 'radial-gradient(circle at center,transparent 0%,transparent 85%,rgba(0,0,0,0.7) 92%,black 100%)',
+          WebkitMaskImage: 'radial-gradient(circle at center,transparent 0%,transparent 85%,rgba(0,0,0,0.7) 92%,black 100%)',
+        }} />
+      )}
+      {/* 移动端：单层合并模糊 */}
+      {isMobile && (
+        <div className="absolute inset-0 rounded-full pointer-events-none" style={{
+          backdropFilter: `blur(${eb}px) saturate(${es}%)`,
+          WebkitBackdropFilter: `blur(${eb}px) saturate(${es}%)`,
+        }} />
+      )}
+      {/* 径向渐变高光 — 保留 */}
       <div className="absolute inset-0 rounded-full pointer-events-none" style={{ background: `radial-gradient(circle at 20% 20%,transparent 65%,rgba(255,255,255,.12) 80%,rgba(255,255,255,.2) 92%,transparent 100%),radial-gradient(circle at 80% 80%,transparent 65%,rgba(255,255,255,.06) 80%,rgba(255,255,255,.12) 92%,transparent 100%)` }} />
-      <div className="absolute inset-0 rounded-full pointer-events-none" style={{ background: `radial-gradient(circle at 15% 50%,transparent 75%,rgba(255,100,100,.08) 88%,transparent 100%),radial-gradient(circle at 85% 50%,transparent 75%,rgba(100,100,255,.08) 88%,transparent 100%),radial-gradient(circle at 50% 15%,transparent 75%,rgba(100,255,100,.06) 88%,transparent 100%)` }} />
+      {/* 色散层 — 移动端跳过 */}
+      {!isMobile && (
+        <div className="absolute inset-0 rounded-full pointer-events-none" style={{ background: `radial-gradient(circle at 15% 50%,transparent 75%,rgba(255,100,100,.08) 88%,transparent 100%),radial-gradient(circle at 85% 50%,transparent 75%,rgba(100,100,255,.08) 88%,transparent 100%),radial-gradient(circle at 50% 15%,transparent 75%,rgba(100,255,100,.06) 88%,transparent 100%)` }} />
+      )}
+      {/* 暗角 */}
       <div className="absolute inset-0 rounded-full pointer-events-none" style={{ background: `radial-gradient(circle at 50% 50%,transparent 0%,transparent 60%,rgba(0,0,0,.06) 70%,rgba(0,0,0,.12) 80%,rgba(0,0,0,.22) 90%,rgba(0,0,0,.35) 100%)` }} />
+      {/* 顶部高光 */}
       <div className="absolute inset-0 rounded-full pointer-events-none" style={{ background: `radial-gradient(ellipse 80% 50% at 50% 20%,rgba(255,255,255,.12) 0%,rgba(255,255,255,.05) 40%,transparent 70%)` }} />
+      {/* 边框 + box-shadow 发光 */}
       <div className="absolute inset-0 rounded-full" style={{
         border: '1px solid rgba(255,255,255,0.3)',
         boxShadow: `0 ${size * .15}px ${size * .5}px rgba(0,0,0,.35),0 ${size * .05}px ${size * .15}px rgba(0,0,0,.25),inset 0 ${size * .02}px ${size * .05}px rgba(255,255,255,.25),inset 0 -${size * .02}px ${size * .05}px rgba(0,0,0,.15),0 0 ${25 * gi}px ${color}${Math.round(40 * gi).toString(16).padStart(2, '0')}`
       }} />
+      {/* 颜色光晕 */}
       <div className="absolute inset-0 rounded-full pointer-events-none" style={{ background: `radial-gradient(circle,transparent 70%,${color}18 85%,${color}30 100%)` }} />
+      {/* 流光边框 — 保留 */}
       <div className="absolute inset-0 rounded-full overflow-hidden flow-animate pointer-events-none" style={{
         padding: isCenter ? '2px' : '1.5px',
         background: getFlowGradient(focusFlowColors, 0.6),
@@ -142,8 +159,8 @@ const FixedHighlight: React.FC<{ size: number; color: string }> = ({ size, color
 
 // ──────────────────────────────────────────
 const GlassRod: React.FC<{
-  centerSize: number; satelliteSize: number; distance: number; color: string; settings: any;
-}> = ({ centerSize, satelliteSize, distance, color, settings }) => {
+  centerSize: number; satelliteSize: number; distance: number; color: string; settings: any; isMobile?: boolean;
+}> = ({ centerSize, satelliteSize, distance, color, settings, isMobile = false }) => {
   const { focusFlowSpeed, focusGlowIntensity } = settings;
   const gi = focusGlowIntensity / 100;
   const rodTop = satelliteSize / 2 + 4;
@@ -151,7 +168,9 @@ const GlassRod: React.FC<{
   return (
     <div className="absolute left-1/2 -translate-x-1/2" style={{ top: `${rodTop}px`, height: `${rodLen}px`, width: '4px' }}>
       <div className="absolute rounded-full" style={{ top: '1px', left: '1px', right: '-1px', bottom: '-1px', background: 'rgba(0,0,0,.25)', filter: 'blur(2px)' }} />
-      <div className="absolute inset-0 rounded-full rod-glow" style={{ background: `linear-gradient(180deg,${color}70 0%,${color}40 50%,${color}70 100%)`, filter: 'blur(4px)', opacity: .6 * gi, transform: 'scaleX(3)' }} />
+      {!isMobile && (
+        <div className="absolute inset-0 rounded-full rod-glow" style={{ background: `linear-gradient(180deg,${color}70 0%,${color}40 50%,${color}70 100%)`, filter: 'blur(4px)', opacity: .6 * gi, transform: 'scaleX(3)' }} />
+      )}
       <div className="absolute inset-0 rounded-full" style={{ background: `linear-gradient(90deg,rgba(0,0,0,.15) 0%,rgba(255,255,255,.3) 30%,rgba(255,255,255,.5) 50%,rgba(255,255,255,.3) 70%,rgba(0,0,0,.1) 100%)`, boxShadow: `0 0 8px ${color}80,0 0 16px ${color}40,inset 1px 0 2px rgba(255,255,255,.5)` }} />
       <div className="absolute rounded-full" style={{ top: '5%', bottom: '5%', left: '15%', width: '25%', background: 'linear-gradient(180deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,.7) 50%,rgba(255,255,255,.5) 100%)' }} />
       <div className="absolute inset-0 rounded-full flow-animate overflow-hidden" style={{ background: `linear-gradient(180deg,transparent 0%,${color}80 50%,transparent 100%)`, backgroundSize: '100% 200%', animationDuration: `${focusFlowSpeed * 2}s` }} />
@@ -164,15 +183,16 @@ const SatelliteWithRod: React.FC<{
   node: SkillNode; distance: number; size: number; angle: number; centerSize: number;
   settings: any; floatDuration: number; floatDelay: number;
   rotationDuration: number; isReverse: boolean; groupIndex: number; satelliteIndex: number;
-}> = ({ node, distance, size, angle, centerSize, settings, floatDuration, floatDelay, rotationDuration, isReverse, groupIndex, satelliteIndex }) => {
+  isMobile?: boolean;
+}> = ({ node, distance, size, angle, centerSize, settings, floatDuration, floatDelay, rotationDuration, isReverse, groupIndex, satelliteIndex, isMobile = false }) => {
   const uid = `sat-${groupIndex}-${satelliteIndex}`;
   const cs: React.CSSProperties = { top: 0, left: 0, width: `${size}px`, height: `${size}px`, transformOrigin: 'center center', animationDuration: `${rotationDuration}s`, animationDirection: isReverse ? 'reverse' : 'normal' };
   return (
     <div className="absolute left-1/2 top-1/2" style={{ transform: `rotate(${angle}deg)`, transformOrigin: 'center center', width: 0, height: 0 }}>
       <div className="absolute satellite-float" style={{ left: '50%', bottom: '50%', width: `${size + 20}px`, height: `${distance}px`, transform: 'translateX(-50%)', animationDuration: `${floatDuration}s`, animationDelay: `${floatDelay}s` }}>
-        <GlassRod centerSize={centerSize} satelliteSize={size} distance={distance} color={node.color} settings={settings} />
+        <GlassRod centerSize={centerSize} satelliteSize={size} distance={distance} color={node.color} settings={settings} isMobile={isMobile} />
         <div className="absolute top-0 left-1/2" style={{ transform: 'translateX(-50%) translateY(-50%)', width: `${size}px`, height: `${size}px` }}>
-          <GlassBubble size={size} color={node.color} settings={settings} uniqueId={uid} />
+          <GlassBubble size={size} color={node.color} settings={settings} uniqueId={uid} isMobile={isMobile} />
           <div className="absolute highlight-counter-rotate" style={{ ...cs, ['--highlight-initial-angle' as string]: `${-angle}deg` }}>
             <SafeImage src={node.image} size={size} padding={size * 0.2} />
           </div>
@@ -180,7 +200,7 @@ const SatelliteWithRod: React.FC<{
             <FixedHighlight size={size} color={node.color} />
           </div>
           <div className="absolute text-counter-rotate" style={{ ...cs, ['--initial-angle' as string]: `${-angle}deg` }}>
-            <div className="text-wobble relative w-full h-full" style={{ animationDuration: `${floatDuration * 1.5}s`, animationDelay: `${floatDelay}s` }}>
+            <div className={`relative w-full h-full${isMobile ? '' : ' text-wobble'}`} style={isMobile ? {} : { animationDuration: `${floatDuration * 1.5}s`, animationDelay: `${floatDelay}s` }}>
               <CurvedLabel label={node.label} size={size} color={node.color} settings={settings} uniqueId={uid} />
             </div>
           </div>
@@ -195,8 +215,8 @@ const SatelliteWithRod: React.FC<{
 const SkillGroup: React.FC<{
   centerNode: SkillNode; satellites: SkillNode[];
   posX: number; posY: number;           // 0-100 百分比坐标（容器中心点）
-  settings: any; groupIndex: number; sizeScale: number;
-}> = ({ centerNode, satellites, posX, posY, settings, groupIndex, sizeScale }) => {
+  settings: any; groupIndex: number; sizeScale: number; isMobile?: boolean;
+}> = ({ centerNode, satellites, posX, posY, settings, groupIndex, sizeScale, isMobile = false }) => {
   const centerSize = Math.round(75 * sizeScale);
   const satBaseSize = Math.round(48 * sizeScale);
   const distBase = Math.round(100 * sizeScale);
@@ -225,12 +245,13 @@ const SkillGroup: React.FC<{
             floatDuration={floatDur} floatDelay={i * 0.3}
             rotationDuration={rotDur} isReverse={isRev}
             groupIndex={groupIndex} satelliteIndex={i}
+            isMobile={isMobile}
           />
         ))}
         {/* 中心球 */}
         <div className="absolute left-1/2 top-1/2" style={{ transform: 'translate(-50%,-50%)', width: `${centerSize}px`, height: `${centerSize}px` }}>
           <div className="center-float relative" style={{ width: `${centerSize}px`, height: `${centerSize}px`, animationDuration: `${floatDur * 1.2}s` }}>
-            <GlassBubble size={centerSize} color={centerNode.color} settings={settings} isCenter uniqueId={`center-${groupIndex}`} />
+            <GlassBubble size={centerSize} color={centerNode.color} settings={settings} isCenter uniqueId={`center-${groupIndex}`} isMobile={isMobile} />
             <div className="absolute highlight-counter-rotate" style={{ ...cs, ['--highlight-initial-angle' as string]: '0deg' }}>
               <SafeImage src={centerNode.image} size={centerSize} padding={centerSize * 0.18} />
             </div>
@@ -238,7 +259,7 @@ const SkillGroup: React.FC<{
               <FixedHighlight size={centerSize} color={centerNode.color} />
             </div>
             <div className="absolute text-counter-rotate" style={{ ...cs, ['--initial-angle' as string]: '0deg' }}>
-              <div className="text-wobble relative w-full h-full" style={{ animationDuration: `${floatDur * 1.5}s` }}>
+              <div className={`relative w-full h-full${isMobile ? '' : ' text-wobble'}`} style={isMobile ? {} : { animationDuration: `${floatDur * 1.5}s` }}>
                 <CurvedLabel label={centerNode.label} size={centerSize} color={centerNode.color} settings={settings} uniqueId={`center-${groupIndex}`} />
               </div>
             </div>
@@ -252,6 +273,7 @@ const SkillGroup: React.FC<{
 // ──────────────────────────────────────────
 const SkillsGraph: React.FC = () => {
   const { settings } = useGlassSettings();
+  const { isMobile } = useBreakpoint();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [cs, setCs] = useState({ width: 0, height: 0 });
@@ -372,6 +394,7 @@ const SkillsGraph: React.FC = () => {
               posX={g0.x} posY={g0.y}
               settings={settings} groupIndex={1}
               sizeScale={sizeScale}
+              isMobile={isMobile}
             />
           )}
 
@@ -384,6 +407,7 @@ const SkillsGraph: React.FC = () => {
               posX={g2.x} posY={g2.y}
               settings={settings} groupIndex={2}
               sizeScale={sizeScale}
+              isMobile={isMobile}
             />
           )}
 
@@ -396,6 +420,7 @@ const SkillsGraph: React.FC = () => {
               posX={g1.x} posY={g1.y}
               settings={settings} groupIndex={0}
               sizeScale={sizeScale}
+              isMobile={isMobile}
             />
           )}
         </>

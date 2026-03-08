@@ -36,3 +36,8 @@
 
 ## 剪贴板与配置导出
 - [触发条件] 无法导出配置至剪贴板 -> [根因] 导出函数中仅使用了 `console.log` 打印在控制台 -> [正确方案] 接入 `navigator.clipboard.writeText` 异步写入剪贴板，并提供成功或失败的 fallback (如 alert 提示和 console 打印)。
+
+## 移动端性能优化
+- [触发条件] 移动端 100vh 底部被浏览器地址栏遮挡 -> [根因] `100vh` 始终等于最大视口高度 -> [正确方案] 使用 `100dvh` + `@supports` fallback `100%`，viewport meta 添加 `viewport-fit=cover`。
+- [触发条件] 图片双重请求导致带宽浪费 -> [根因] `useImageExists` hook 用 `new Image()` 预探测后 React 再渲染 `<img>` -> [正确方案] 直接渲染 `<img>` + `onError` 隐藏，添加 `loading="lazy"`。
+- [触发条件] 移动端技能页 GPU 过载发烫 -> [根因] 每个 GlassBubble 含 3 层 backdrop-filter + SVG feTurbulence + 多个叠加动画 -> [正确方案] 移动端合并为 1 层 backdrop-filter，移除 SVG 滤镜和低贡献动画（bubble-breathe/edge-distort/rod-glow/text-wobble），保留旋转和流光。

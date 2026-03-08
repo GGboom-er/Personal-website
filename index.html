@@ -2,7 +2,7 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>我的作品集 | Showcase</title>
 
     <!-- ========== 加载所有字体（支持实时切换） ========== -->
@@ -21,10 +21,14 @@
     <style>
       /* Force full screen height for the app container */
       html, body, #root {
+        height: 100dvh;
         height: 100%;
         margin: 0;
         padding: 0;
         background: #0a0a0c;
+      }
+      @supports (height: 100dvh) {
+        html, body, #root { height: 100dvh; }
       }
       
       /* Hide Scrollbar but allow functionality */

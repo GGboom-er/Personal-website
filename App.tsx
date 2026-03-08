@@ -17,7 +17,7 @@ const AppContent: React.FC = () => {
   const { settings } = useGlassSettings();
   const { isMobile } = useBreakpoint();
 
-  // 预加载所有项目图片
+  // 预加载图片资源
   useEffect(() => {
     const preloadImages = () => {
       // 优先预加载当前视图的背景
@@ -34,24 +34,36 @@ const AppContent: React.FC = () => {
             img.src = getAssetPath(src);
           });
 
-        // 预加载项目图片
-        PROJECTS.forEach(project => {
-          if (project.icon) {
-            const img1 = new Image();
-            img1.src = getAssetPath(project.icon);
-          }
-          // 进一步延迟 Hero Images (通常较大)
-          if (project.heroImage) {
-            setTimeout(() => {
-              const img2 = new Image();
-              img2.src = getAssetPath(project.heroImage);
-            }, 1000);
-          }
-        });
-      }, 2000); // 首屏渲染2秒后再开始预加载
+        if (activeView === 'Skills') {
+          // Skills 视图：预加载技能图片
+          import('./data/skills.json').then(mod => {
+            (mod.default.nodes as Array<{ image?: string }>).forEach(n => {
+              if (n.image) {
+                const img = new Image();
+                img.src = getAssetPath(n.image);
+              }
+            });
+          });
+        } else {
+          // 预加载项目图片
+          PROJECTS.forEach(project => {
+            if (project.icon) {
+              const img1 = new Image();
+              img1.src = getAssetPath(project.icon);
+            }
+            // 移动端跳过 hero image 预加载（节省带宽给当前视图）
+            if (project.heroImage && !isMobile) {
+              setTimeout(() => {
+                const img2 = new Image();
+                img2.src = getAssetPath(project.heroImage);
+              }, 1000);
+            }
+          });
+        }
+      }, 2000);
     };
     preloadImages();
-  }, [activeView]); // 当视图切换时也会触发检查（已有缓存则不请求）
+  }, [activeView, isMobile]);
 
   // Filter projects based on the active sidebar view
   const currentProjects = useMemo(() => {
@@ -71,8 +83,8 @@ const AppContent: React.FC = () => {
 
   return (
     <div
-      className="flex h-screen min-h-[500px] text-white font-sans overflow-hidden relative"
-      style={{ background: '#0a0a0c' }}
+      className="flex min-h-[500px] text-white font-sans overflow-hidden relative"
+      style={{ height: '100dvh', background: '#0a0a0c' }}
     >
       {/* 全局背景层 - 与整体布局融合 */}
       <div className="absolute inset-0 z-0 overflow-hidden">
@@ -92,8 +104,8 @@ const AppContent: React.FC = () => {
             alt=""
             className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-out"
             style={{
-              transform: 'scale(1.2)',
-              filter: `blur(${40 + settings.imageEdgeBlur}px) saturate(120%)`,
+              transform: isMobile ? 'none' : 'scale(1.2)',
+              filter: `blur(${isMobile ? 20 : 40 + settings.imageEdgeBlur}px) saturate(120%)`,
               opacity: 0.35,
               mixBlendMode: 'soft-light',
             }}
