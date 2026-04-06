@@ -114,12 +114,12 @@ const AppContent: React.FC = () => {
             decoding="async"
             className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-out"
             style={{
-              transform: isMobile ? 'none' : 'scale(1.2)',
+              transform: isMobile ? 'translateZ(0)' : 'scale(1.2) translateZ(0)',
               filter: `blur(${isMobile ? 20 : 40 + settings.imageEdgeBlur}px) saturate(120%)`,
               opacity: 0.35,
               mixBlendMode: 'soft-light',
               contain: 'strict',
-              willChange: 'transform',
+              willChange: 'transform, opacity',
             }}
           />
         )}

@@ -52,3 +52,7 @@
 ## 组件定义与渲染性能
 - [触发条件] 渲染函数内定义子组件导致不必要的卸载/挂载 -> [根因] 每次父渲染创建新函数引用，React 视为不同组件类型 -> [正确方案] 提取为模块级组件，通过 props 传入数据。
 - [触发条件] resize 事件每像素触发 setState 导致卡顿 -> [根因] 多个组件各自监听 resize，同帧内多次 setState -> [正确方案] 在 handleResize 中用 `requestAnimationFrame` 节流，保证每帧最多更新一次。
+
+## iOS Safari & 极致性能优化
+- [触发条件] iOS Safari 上炫彩边框出现极度卡顿发热和“有棱角”被切断的直角 -> [根因] 移动端 Safari 对厚重 filter blur + `@property --angle` 动态改 CSS 变量的重构开销极大且不支持硬件加速，同时 WebkitMask 的默认复合在处理 border-radius 时截断发生 Bug -> [正确方案] 改用 `border: solid transparent` + `destination-out` 的掏空遮罩，动画使用内部超大方块进行彻底的硬件级 `transform: rotate(360deg)`。
+- [触发条件] 进入页面时首屏图片和背景大图拖慢响应速度 -> [根因] 大图主线程同步解码阻塞渲染，且隐藏元素在后台预加载但没有设定优选项 -> [正确方案] 为关键大图添加 `decoding="async"` 以及懒加载元素 `loading="lazy"`。并且对极吃性能的全局背景滤镜打底开启 `willChange: 'transform, opacity'` + `translateZ(0)` 迫使 GPU 介入。

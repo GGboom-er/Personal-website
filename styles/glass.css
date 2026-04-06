@@ -84,6 +84,15 @@
   animation: flowRotate 2s linear infinite;
 }
 
+@keyframes flowRotateTransform {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.flow-animate-rotate {
+  animation: flowRotateTransform 2s linear infinite;
+}
+
 /* ========== GlassCard 共享规则（通过 CSS 变量实现 per-instance 差异） ========== */
 .glass-card-v2 {
   --hover-scale: 1;

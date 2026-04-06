@@ -39,3 +39,10 @@
 - [x] 17. **useBreakpoint 防抖**: `handleResize` 加 `requestAnimationFrame` 节流
 - [x] 18. **Showcase 内部组件提取**: `ButtonGroup`/`StatsGroup`/`TagsGroup` 提取为模块级组件
 - [x] 19. **清理根目录杂项**: 删除 `49a3ff0c*.jpg` 和 `Snipaste_*.png`
+
+---
+## Phase 5: iOS 移动端核心性能与视觉修正
+- [x] 20. **重构 GlowBorder 流光层动画机制以开启硬件加速**: 将 `--angle` CSS 变量动画改写为物理 `transform: rotate`，并解决移动端疯狂发热和掉帧问题。
+- [x] 21. **修复 iOS Safari 的蒙版圆角切断**: 将原来 `padding` 撑起的遮罩改成 `border: solid transparent` + `padding-box / destination-out` 以避免出现难看的矩形直角。
+- [x] 22. **懒加载与异步加载提速**: 添加大量 `loading="lazy"` 以及 `decoding="async"`
+- [x] 23. **强制背景渲染 GPU 合成**: 开启 `will-change: transform` 与 `translateZ` 处理极耗性能的大图模糊 (`filter: blur`) 图层。

@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react';
 import { Project, LayoutSettings } from '../types';
-import { ImageFrame, getFlowGradient } from './glass';
+import { ImageFrame, getStaticFlowGradient, getFlowGradient } from './glass';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 import { getAssetPath } from '../utils/assetPath';
 
@@ -233,15 +233,16 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
       <div className="absolute inset-0">
         {/* 主背景图 - 清晰显示 */}
         {project.heroImage && (
-          <img
-            key={`${project.id}-main`}
-            src={getAssetPath(project.heroImage)}
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out"
-            style={{
-              opacity: 0.9,
-            }}
-          />
+            <img
+              key={`${project.id}-main`}
+              src={getAssetPath(project.heroImage)}
+              alt=""
+              decoding="async"
+              className="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out"
+              style={{
+                opacity: 0.9,
+              }}
+            />
         )}
 
         {/* 暗角/晕影效果 - 亮度降低20% */}
@@ -302,26 +303,48 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
                 {glowIntensity > 0 && (
                   <>
                     <div
-                      className="absolute rounded-xl pointer-events-none flow-animate"
+                      className="absolute pointer-events-none"
                       style={{
                         inset: -glowSpread / 2,
-                        background: getFlowGradient(flowColors, glowIntensity * 0.6),
+                        borderRadius: '0.75rem',
                         filter: `blur(${glowSpread}px)`,
                         opacity: glowIntensity * 0.8,
-                        animationDuration: `${flowSpeed}s`,
+                        transform: 'translateZ(0)',
                       }}
-                    />
+                    >
+                      <div className="absolute inset-0 overflow-hidden" style={{ borderRadius: '0.75rem' }}>
+                        <div
+                          className="absolute top-1/2 left-1/2 flow-animate-rotate"
+                          style={{
+                            width: '200vmax',
+                            height: '200vmax',
+                            background: getStaticFlowGradient(flowColors, 0.6),
+                            animationDuration: `${flowSpeed}s`,
+                          }}
+                        />
+                      </div>
+                    </div>
                     <div
-                      className="absolute inset-0 rounded-xl pointer-events-none overflow-hidden flow-animate"
+                      className="absolute inset-0 pointer-events-none overflow-hidden"
                       style={{
-                        padding: glowThickness,
-                        background: getFlowGradient(flowColors, 1),
-                        WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                        WebkitMaskComposite: 'xor',
+                        borderRadius: '0.75rem',
+                        border: `${glowThickness}px solid transparent`,
+                        WebkitMask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
+                        WebkitMaskComposite: 'destination-out',
                         maskComposite: 'exclude',
-                        animationDuration: `${flowSpeed}s`,
+                        transform: 'translateZ(0)',
                       }}
-                    />
+                    >
+                      <div
+                        className="absolute top-1/2 left-1/2 flow-animate-rotate"
+                        style={{
+                          width: '200vmax',
+                          height: '200vmax',
+                          background: getStaticFlowGradient(flowColors, 1),
+                          animationDuration: `${flowSpeed}s`,
+                        }}
+                      />
+                    </div>
                   </>
                 )}
                 <ImageFrame
@@ -425,26 +448,48 @@ const Showcase: React.FC<ShowcaseProps> = ({ project, settings }) => {
                 {glowIntensity > 0 && (
                   <>
                     <div
-                      className="absolute rounded-xl pointer-events-none flow-animate"
+                      className="absolute pointer-events-none"
                       style={{
                         inset: -glowSpread / 2,
-                        background: getFlowGradient(flowColors, glowIntensity * 0.6),
+                        borderRadius: '0.5rem',
                         filter: `blur(${glowSpread}px)`,
                         opacity: glowIntensity * 0.8,
-                        animationDuration: `${flowSpeed}s`,
+                        transform: 'translateZ(0)',
                       }}
-                    />
+                    >
+                      <div className="absolute inset-0 overflow-hidden" style={{ borderRadius: '0.5rem' }}>
+                        <div
+                          className="absolute top-1/2 left-1/2 flow-animate-rotate"
+                          style={{
+                            width: '200vmax',
+                            height: '200vmax',
+                            background: getStaticFlowGradient(flowColors, 0.6),
+                            animationDuration: `${flowSpeed}s`,
+                          }}
+                        />
+                      </div>
+                    </div>
                     <div
-                      className="absolute inset-0 rounded-xl pointer-events-none overflow-hidden flow-animate"
+                      className="absolute inset-0 pointer-events-none overflow-hidden"
                       style={{
-                        padding: glowThickness,
-                        background: getFlowGradient(flowColors, 1),
-                        WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                        WebkitMaskComposite: 'xor',
+                        borderRadius: '0.5rem',
+                        border: `${glowThickness}px solid transparent`,
+                        WebkitMask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
+                        WebkitMaskComposite: 'destination-out',
                         maskComposite: 'exclude',
-                        animationDuration: `${flowSpeed}s`,
+                        transform: 'translateZ(0)',
                       }}
-                    />
+                    >
+                      <div
+                        className="absolute top-1/2 left-1/2 flow-animate-rotate"
+                        style={{
+                          width: '200vmax',
+                          height: '200vmax',
+                          background: getStaticFlowGradient(flowColors, 1),
+                          animationDuration: `${flowSpeed}s`,
+                        }}
+                      />
+                    </div>
                   </>
                 )}
                 <ImageFrame

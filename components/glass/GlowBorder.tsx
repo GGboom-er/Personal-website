@@ -20,22 +20,28 @@ const FLOW_COLORS = [
   [255, 150, 100], // 橙色
 ];
 
-// 生成流光渐变色 (统一函数)
-// @param colors - 色彩数量 (2-6)
-// @param intensity - 透明度 (0-1)
-// @param angleVar - CSS 变量名 (默认 --flow-angle)
+// 生成流光渐变色 (包含 var--flow-angle 用于向下兼容)
 const getFlowGradient = (colors: number, intensity: number, angleVar = '--flow-angle') => {
   const colorStops = [];
-
   for (let i = 0; i <= colors; i++) {
     const color = FLOW_COLORS[i % FLOW_COLORS.length];
     const percent = (i / colors) * 100;
     colorStops.push(`rgba(${color.join(',')},${intensity}) ${percent}%`);
   }
-  // 闭环
   colorStops.push(`rgba(${FLOW_COLORS[0].join(',')},${intensity}) 100%`);
-
   return `conic-gradient(from var(${angleVar}, 0deg), ${colorStops.join(', ')})`;
+};
+
+// 为硬件加速动画生成静态流光渐变色（没有CSS变量）
+const getStaticFlowGradient = (colors: number, intensity: number) => {
+  const colorStops = [];
+  for (let i = 0; i <= colors; i++) {
+    const color = FLOW_COLORS[i % FLOW_COLORS.length];
+    const percent = (i / colors) * 100;
+    colorStops.push(`rgba(${color.join(',')},${intensity}) ${percent}%`);
+  }
+  colorStops.push(`rgba(${FLOW_COLORS[0].join(',')},${intensity}) 100%`);
+  return `conic-gradient(from 0deg, ${colorStops.join(', ')})`;
 };
 
 const GlowBorder: React.FC<GlowBorderProps> = ({
@@ -53,34 +59,52 @@ const GlowBorder: React.FC<GlowBorderProps> = ({
 
   return (
     <>
-      {/* 流光动画样式 - 使用全局 CSS 类 */}
-
-      {/* 外发光层 */}
+      {/* 外发光层 - 使用 translateZ 强制 GPU 加速并用 pseudo element 旋转 */}
       <div
-        className={`absolute pointer-events-none flow-animate ${className}`}
+        className={`absolute pointer-events-none ${className}`}
         style={{
           inset: -spread / 2,
           borderRadius,
-          background: getFlowGradient(flowColors, normalizedIntensity * 0.8),
           filter: `blur(${spread}px)`,
           opacity: normalizedIntensity,
-          animationDuration: `${flowSpeed}s`,
+          transform: 'translateZ(0)',
         }}
-      />
+      >
+        <div className="absolute inset-0 overflow-hidden" style={{ borderRadius }}>
+          <div
+            className="absolute top-1/2 left-1/2 flow-animate-rotate"
+            style={{
+              width: '200vmax',
+              height: '200vmax',
+              background: getStaticFlowGradient(flowColors, 0.8),
+              animationDuration: `${flowSpeed}s`,
+            }}
+          />
+        </div>
+      </div>
 
-      {/* 流光边框层 */}
+      {/* 流光边框层 - 修复 iOS 遮罩 bug 与卡顿现象 */}
       <div
-        className={`absolute inset-0 pointer-events-none overflow-hidden flow-animate ${className}`}
+        className={`absolute inset-0 pointer-events-none overflow-hidden ${className}`}
         style={{
           borderRadius,
-          padding: thickness,
-          background: getFlowGradient(flowColors, 1),
-          WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-          WebkitMaskComposite: 'xor',
+          border: `${thickness}px solid transparent`,
+          WebkitMask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
+          WebkitMaskComposite: 'destination-out',
           maskComposite: 'exclude',
-          animationDuration: `${flowSpeed}s`,
+          transform: 'translateZ(0)',
         }}
-      />
+      >
+        <div
+          className="absolute top-1/2 left-1/2 flow-animate-rotate"
+          style={{
+            width: '200vmax',
+            height: '200vmax',
+            background: getStaticFlowGradient(flowColors, 1),
+            animationDuration: `${flowSpeed}s`,
+          }}
+        />
+      </div>
 
       {/* 内发光层 */}
       <div
@@ -99,4 +123,4 @@ const GlowBorder: React.FC<GlowBorderProps> = ({
 };
 
 export default GlowBorder;
-export { getFlowGradient };
+export { getFlowGradient, getStaticFlowGradient };

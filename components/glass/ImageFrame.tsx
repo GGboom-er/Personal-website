@@ -25,6 +25,18 @@ export const getFlowGradient = (colors: number, intensity: number, angleVar = '-
   return `conic-gradient(from var(${angleVar}, 0deg), ${colorStops.join(', ')})`;
 };
 
+// 辅助函数：生成静态流光渐变色（硬件加速用）
+export const getStaticFlowGradient = (colors: number, intensity: number) => {
+  const colorStops = [];
+  for (let i = 0; i <= colors; i++) {
+    const color = FLOW_COLORS[i % FLOW_COLORS.length];
+    const percent = (i / colors) * 100;
+    colorStops.push(`rgba(${color.join(',')},${intensity}) ${percent}%`);
+  }
+  colorStops.push(`rgba(${FLOW_COLORS[0].join(',')},${intensity}) 100%`);
+  return `conic-gradient(from 0deg, ${colorStops.join(', ')})`;
+};
+
 interface ImageFrameProps {
   src: string;
   alt: string;
@@ -82,6 +94,7 @@ const ImageFrame: React.FC<ImageFrameProps> = ({
           src={src}
           alt={alt}
           decoding="async"
+          loading="lazy"
           className="w-full h-full object-cover transition-transform duration-500"
           style={{
             transform: `scale(${1 + distortNorm * 0.02})`,
@@ -114,7 +127,8 @@ const ImageFrame: React.FC<ImageFrameProps> = ({
                   )
                 `,
                 mixBlendMode: 'screen',
-                transform: `translateX(${chromaticOffset * 0.5}px)`,
+                transform: `translateX(${chromaticOffset * 0.5}px) translateZ(0)`,
+                willChange: 'opacity, transform',
               }}
             />
         )}
