@@ -9,7 +9,7 @@
     },
     {
       "id": "dcc",
-      "label": "Maya",
+      "label": "DCC绑定",
       "level": 1,
       "group": 1,
       "color": "#00d2ff",
@@ -66,7 +66,7 @@
     },
     {
       "id": "engine",
-      "label": "UnrealEngine",
+      "label": "引擎与流程",
       "level": 1,
       "group": 2,
       "color": "#ffffff",
@@ -114,16 +114,8 @@
       "image": "images/skills/cascadeur.webp"
     },
     {
-      "id": "opt",
-      "label": "UEPython开发",
-      "level": 2,
-      "group": 2,
-      "color": "#64748b",
-      "image": "images/skills/uepython.webp"
-    },
-    {
       "id": "dev",
-      "label": "AI+CG",
+      "label": "工具开发与AI",
       "level": 1,
       "group": 3,
       "color": "#ff4d4d",
@@ -148,7 +140,7 @@
     },
     {
       "id": "tool",
-      "label": "PyhonTools",
+      "label": "PythonTools",
       "level": 2,
       "group": 3,
       "color": "#22c55e",
@@ -235,10 +227,6 @@
     {
       "source": "engine",
       "target": "proc"
-    },
-    {
-      "source": "engine",
-      "target": "opt"
     },
     {
       "source": "dev",

@@ -1,0 +1,96 @@
+- generic [ref=e5]:
+  - complementary [ref=e8]:
+    - generic [ref=e10]:
+      - img "ME" [ref=e12]
+      - generic [ref=e14]:
+        - generic [ref=e15]: 余炜铭
+        - generic [ref=e16]: Rigger & TD
+    - navigation [ref=e17]:
+      - button " 个人信息" [ref=e19] [cursor=pointer]:
+        - generic [ref=e20]: 
+        - generic [ref=e21]: 个人信息
+      - button " 参与作品" [ref=e23] [cursor=pointer]:
+        - generic [ref=e24]: 
+        - generic [ref=e25]: 参与作品
+      - button " 技能分析" [ref=e27] [cursor=pointer]:
+        - generic [ref=e28]: 
+        - generic [ref=e29]: 技能分析
+    - generic [ref=e31]:
+      - generic [ref=e32]:
+        - link "" [ref=e33] [cursor=pointer]:
+          - /url: https://github.com/GGboom-er
+          - generic [ref=e34]: 
+        - generic:
+          - generic: "GitHub:"
+          - text: GGboom-er
+      - generic [ref=e35]:
+        - link "" [ref=e36] [cursor=pointer]:
+          - /url: mailto:ggbommer@gmail.com
+          - generic [ref=e37]: 
+        - generic:
+          - generic: "Email:"
+          - text: ggbommer@gmail.com
+      - generic [ref=e38]:
+        - button "" [ref=e39] [cursor=pointer]:
+          - generic [ref=e40]: 
+        - generic:
+          - generic: "WeChat:"
+          - text: Y_zhao15(点击复制)
+      - generic [ref=e41]:
+        - link "" [ref=e42] [cursor=pointer]:
+          - /url: tel:17607210929
+          - generic [ref=e43]: 
+        - generic:
+          - generic: "Phone:"
+          - text: "17607210929"
+  - main [ref=e44]:
+    - generic [ref=e46]:
+      - generic [ref=e54]:
+        - generic [ref=e55]:
+          - img "两不疑 I" [ref=e58]
+          - generic [ref=e59]:
+            - generic [ref=e60]:
+              - heading "两不疑 I" [level=1] [ref=e61]
+              - heading "No Doubt In Us I" [level=2] [ref=e62]
+            - paragraph [ref=e63]: 改编自绿野千鹤同名人气漫画，由纸飞机动画制作。采用2.5D还原漫画风格的制作手法，在保留漫画线条质感的同时实现流畅的3D动画运镜，开创国漫宫廷恋爱喜剧的技术新标杆。 豆瓣评分7.3，系列累计播放超3.3亿，追番539万。 √-主要参与剧集中角色、道具绑定制作。 √-开发同拓扑BS传递工具，提升绑定复用制作效率。 √-开发layout拆分动画文件工具，提升动画Layout文件制作效率。
+        - generic [ref=e66]:
+          - generic [ref=e67]:
+            - link " Bilibili" [ref=e68] [cursor=pointer]:
+              - /url: https://www.bilibili.com/bangumi/play/ep395848/?share_source=copy_web
+              - generic [ref=e69]: 
+              - text: Bilibili
+            - link " YouTube" [ref=e70] [cursor=pointer]:
+              - /url: https://youtu.be/hvF1SzaAcT8?si=KAMERYl91DGkY_BJ
+              - generic [ref=e71]: 
+              - text: YouTube
+          - generic [ref=e72]:
+            - generic [ref=e73]:
+              - generic [ref=e74]: 播放量
+              - generic [ref=e75]: 3.3亿
+            - generic [ref=e76]:
+              - generic [ref=e77]: 追番
+              - generic [ref=e78]: 539万
+            - generic [ref=e79]:
+              - generic [ref=e80]: 豆瓣
+              - generic [ref=e81]: "7.3"
+          - generic [ref=e82]:
+            - generic [ref=e83]: 纸飞机动画
+            - generic [ref=e84]: 漫改佳作
+            - generic [ref=e85]: 2.5D风格
+      - generic [ref=e89]:
+        - img "card" [ref=e96] [cursor=pointer]
+        - generic [ref=e99] [cursor=pointer]:
+          - img "card" [ref=e103]
+          - generic [ref=e105]: 点击查看详情
+        - generic [ref=e108] [cursor=pointer]:
+          - img "card" [ref=e112]
+          - generic [ref=e114]: 点击查看详情
+        - generic [ref=e117] [cursor=pointer]:
+          - img "card" [ref=e121]
+          - generic [ref=e123]: 点击查看详情
+        - generic [ref=e126] [cursor=pointer]:
+          - img "card" [ref=e130]
+          - generic [ref=e132]: 点击查看详情
+        - generic [ref=e135] [cursor=pointer]:
+          - img "card" [ref=e139]
+          - generic [ref=e141]: 点击查看详情

@@ -23,6 +23,11 @@ const GLOW_COLORS = {
   work: { primary: 'rgba(6,182,212,1)', glow: 'rgba(6,182,212,0.6)' },
 };
 
+// work2 单独颜色覆盖：在 work 青色基础上往绿色偏移 15%（色相 187° → 177°）
+const NODE_COLOR_OVERRIDES: Record<string, { primary: string; glow: string }> = {
+  work2: { primary: 'rgba(6,212,194,1)', glow: 'rgba(6,212,194,0.6)' },
+};
+
 const TIMELINE_CONFIG = {
   BASE_WIDTH: 900,
   BASE_HEIGHT: 500,
@@ -151,7 +156,7 @@ const TimelineContent: React.FC<TimelineProps> = ({ settings: globalSettings, da
               const endPos = getPosition(node.endYear);
               const centerPos = (startPos + endPos) / 2;
               const isLeft = index % 2 === 0;
-              const colors = GLOW_COLORS[node.type] || GLOW_COLORS.work;
+              const colors = NODE_COLOR_OVERRIDES[node.id] || GLOW_COLORS[node.type] || GLOW_COLORS.work;
               return (
                 <div key={node.id}>
                   <LayoutWrapper nodeId={node.id} elementType="mainCard" isMobile={true} className="absolute group z-10" style={{ top: `calc(${pipeMargin}px + (100% - ${pipeMargin * 2}px) * ${centerPos / 100})`, transform: 'translateY(-50%)', left: isLeft ? `${mobileCardOffsetX}px` : 'auto', right: isLeft ? 'auto' : `${mobileCardOffsetX}px`, width: `calc(50% - ${pipeWidth / 2 + 28}px)`, maxWidth: '260px' }}>
@@ -185,7 +190,7 @@ const TimelineContent: React.FC<TimelineProps> = ({ settings: globalSettings, da
         {!isMobile && data.map(node => {
           const hullConfig = hulls[node.id];
           if (!hullConfig) return null;
-          const colors = GLOW_COLORS[node.type] || GLOW_COLORS.work;
+          const colors = NODE_COLOR_OVERRIDES[node.id] || GLOW_COLORS[node.type] || GLOW_COLORS.work;
           return <LuminaHull key={`hull-${node.id}`} id={node.id} config={hullConfig} color={colors.primary} />;
         })}
         <div className="absolute left-8 right-8 rounded-full" style={{ height: `40px`, top: '50%', transform: 'translateY(-50%)' }}>
@@ -205,7 +210,7 @@ const TimelineContent: React.FC<TimelineProps> = ({ settings: globalSettings, da
           const endPos = getPosition(node.endYear);
           const centerPos = (startPos + endPos) / 2;
           const isAbove = index % 2 === 0;
-          const colors = GLOW_COLORS[node.type] || GLOW_COLORS.work;
+          const colors = NODE_COLOR_OVERRIDES[node.id] || GLOW_COLORS[node.type] || GLOW_COLORS.work;
           return (
             <div key={node.id}>
               <LayoutWrapper nodeId={node.id} elementType="mainCard" isMobile={false} className="absolute group" style={{ left: `calc(40px + (100% - 80px) * ${centerPos / 100})`, transform: 'translateX(-50%)', top: isAbove ? '0px' : 'auto', bottom: isAbove ? 'auto' : '0px' }}>

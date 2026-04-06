@@ -73,7 +73,7 @@ const INITIAL_DESKTOP_LAYOUTS: Record<string, NodeLayoutConfig> = {
     "glassLine": { "offsetX": 0, "offsetY": 0, "rotation": 0, "scale": 1 }
   },
   "work2": {
-    "mainCard": { "offsetX": 5.13, "offsetY": 6.06, "rotation": 0, "scale": 1 },
+    "mainCard": { "offsetX": 5.13, "offsetY": 50, "rotation": 0, "scale": 1 },
     "linkCard": { "offsetX": 0, "offsetY": 0, "rotation": 0, "scale": 1 },
     "lightCone": { "offsetX": 0, "offsetY": 0, "rotation": 0, "scale": 1 },
     "glassLine": { "offsetX": 0, "offsetY": 0, "rotation": 0, "scale": 1 }
